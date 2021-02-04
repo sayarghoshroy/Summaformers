@@ -40,6 +40,7 @@ parser.add_argument('-word2id',type=str,default='word2id_glove_100d.json')
 parser.add_argument('-report_every',type=int,default=1500)
 parser.add_argument('-seq_trunc',type=int,default=50)
 parser.add_argument('-max_norm',type=float,default=1.0)
+parser.add_argument('-retrain',type=bool,default=False)
 # test
 parser.add_argument('-load_dir',type=str,default='checkpoints/RNN_RNN_seed_1.pt')
 parser.add_argument('-test_dir',type=str,default='data/test.json')
@@ -107,16 +108,18 @@ def train():
     args.embed_dim = embed.size(1)
     args.kernel_sizes = [int(ks) for ks in args.kernel_sizes.split(',')]
     # build model
-    if use_gpu:
-        checkpoint = torch.load(args.load_dir)
+    if args.retrain:
+        if use_gpu:
+            checkpoint = torch.load(args.load_dir)
+        else:
+            checkpoint = torch.load(args.load_dir, map_location=lambda storage, loc: storage)
+        if not use_gpu:
+            checkpoint['args'].device = None
+        net = getattr(models,checkpoint['args'].model)(checkpoint['args'])
+        net.load_state_dict(checkpoint['model'])
     else:
-        checkpoint = torch.load(args.load_dir, map_location=lambda storage, loc: storage)
-    print(checkpoint)
-    if not use_gpu:
-        checkpoint['args'].device = None
-    net = getattr(models,checkpoint['args'].model)(checkpoint['args'])
-    net.load_state_dict(checkpoint['model'])
-    net = getattr(models,args.model)(args,embed)
+        net = getattr(models,args.model)(args,embed)
+    
     if use_gpu:
         net.cuda()
     # load dataset
