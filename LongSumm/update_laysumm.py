@@ -49,19 +49,3 @@ def update_format(paper):
     
 
 get_datapoints()
-# with open('pubmed_dataset_new/train_sample.txt','w+') as f:
-#     for doc in updated_data['train']:
-#         f.write(json.dumps(doc))
-#         f.write('\n')
-
-# with open('pubmed_dataset_new/test_sample.txt','w+') as f:
-#     for doc in updated_data['test']:
-#         f.write(json.dumps(doc))
-#         f.write('\n')
-
-# with open('pubmed_dataset_new/val_sample.txt','w+') as f:
-#     for doc in updated_data['val']:
-#         f.write(json.dumps(doc))
-#         f.write('\n')
-
-# print('Done :)')

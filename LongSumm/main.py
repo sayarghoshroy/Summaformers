@@ -13,6 +13,7 @@ from torch.utils.data import DataLoader
 from torch.nn.utils import clip_grad_norm
 from time import time
 from tqdm import tqdm
+from datetime import datetime
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s [INFO] %(message)s')
 parser = argparse.ArgumentParser(description='extractive summary')
@@ -32,19 +33,20 @@ parser.add_argument('-lr',type=float,default=1e-3)
 parser.add_argument('-batch_size',type=int,default=32)
 parser.add_argument('-epochs',type=int,default=5)
 parser.add_argument('-seed',type=int,default=1)
-parser.add_argument('-train_dir',type=str,default='../pubmed_dataset_new/train_split/train.txt')
-parser.add_argument('-val_dir',type=str,default='../pubmed_dataset_new/val_split/val.txt')
-parser.add_argument('-embedding',type=str,default='data/embedding.npz')
-parser.add_argument('-word2id',type=str,default='word2id_glove.json')
+parser.add_argument('-train_dir',type=str,default='/scratch/risubh/train_split/train.txt')
+parser.add_argument('-val_dir',type=str,default='/scratch/risubh/val_split/val.txt')
+parser.add_argument('-embedding',type=str,default='embedding_glove_100d.npz')
+parser.add_argument('-word2id',type=str,default='word2id_glove_100d.json')
 parser.add_argument('-report_every',type=int,default=1500)
 parser.add_argument('-seq_trunc',type=int,default=50)
 parser.add_argument('-max_norm',type=float,default=1.0)
 # test
 parser.add_argument('-load_dir',type=str,default='checkpoints/RNN_RNN_seed_1.pt')
-parser.add_argument('-test_dir',type=str,default='../pubmed_dataset_new/train_split/test.txt')
+parser.add_argument('-test_dir',type=str,default='data/test.json')
 parser.add_argument('-ref',type=str,default='outputs/ref')
 parser.add_argument('-hyp',type=str,default='outputs/hyp')
 parser.add_argument('-filename',type=str,default='x.txt') # TextFile to be summarized
+parser.add_argument('-foldername' ,type=str,default='def_folder')
 parser.add_argument('-topk',type=int,default=15)
 # device
 parser.add_argument('-device',type=int)
@@ -76,11 +78,8 @@ def eval(net,vocab,data_iter,criterion):
         if use_gpu:
             features = features.cuda()
             targets = targets.cuda()
-
         probs = net(features,doc_lens)
         loss = criterion(probs,targets)
-        #print(probs,targets)
-        #print(loss.item())
         total_loss += loss.item()
         batch_num += 1
     loss = total_loss / batch_num
@@ -91,20 +90,14 @@ def train():
     logging.info('Loading vocab,train and val dataset.Wait a second,please')
     
     embed = torch.Tensor(np.load(args.embedding)['embedding'])
-    #print(embed)
     with open(args.word2id) as f:
         word2id = json.load(f)
     vocab = utils.Vocab(embed, word2id)
-    #print(vocab[0])
-    #print(type(vocab))
-    #exit(0)
+
     with open(args.train_dir) as f:
         examples = [json.loads(line) for line in f]
     train_dataset = utils.Dataset(examples)
-    #print(type(train_dataset))
-    #print(len(train_dataset))
-    #print(train_dataset[0])
-    #exit(0)
+
     with open(args.val_dir) as f:
         examples = [json.loads(line) for line in f]
     val_dataset = utils.Dataset(examples)
@@ -114,11 +107,19 @@ def train():
     args.embed_dim = embed.size(1)
     args.kernel_sizes = [int(ks) for ks in args.kernel_sizes.split(',')]
     # build model
+    if use_gpu:
+        checkpoint = torch.load(args.load_dir)
+    else:
+        checkpoint = torch.load(args.load_dir, map_location=lambda storage, loc: storage)
+    print(checkpoint)
+    if not use_gpu:
+        checkpoint['args'].device = None
+    net = getattr(models,checkpoint['args'].model)(checkpoint['args'])
+    net.load_state_dict(checkpoint['model'])
     net = getattr(models,args.model)(args,embed)
     if use_gpu:
         net.cuda()
     # load dataset
-    #exit(0)
     train_iter = DataLoader(dataset=train_dataset,
             batch_size=args.batch_size,
             shuffle=True)
@@ -128,42 +129,29 @@ def train():
     # loss function
     criterion = nn.BCELoss()
     # model info
-    print(net)
+    print(net,flush = True)
     params = sum(p.numel() for p in list(net.parameters())) / 1e6
     print('#Params: %.1fM' % (params))
     
     min_loss = float('inf')
     optimizer = torch.optim.Adam(net.parameters(),lr=args.lr)
     net.train()
-    # exit(0)
+    
     t1 = time() 
     for epoch in range(1,args.epochs+1):
         for i,batch in enumerate(train_iter):
-            print('make_features',flush = True)
-            try:
-                features,targets,_,doc_lens = vocab.make_features(batch)
-            except:
-                print(batch)
-                exit(0)
-            print('done',flush = True)
-            # print(vocab.make_features(batch))
+            features,targets,_,doc_lens = vocab.make_features(batch)
             features,targets = Variable(features), Variable(targets.float())
-            # print(features,targets)
-            # exit(0)
             if use_gpu:
                 features = features.cuda()
                 targets = targets.cuda()
-            print(features,doc_lens,flush=True)
-            #exit(0)
             probs = net(features,doc_lens)
-            #exit(0)
             loss = criterion(probs,targets)
+
             optimizer.zero_grad()
-            #exit(0)
             loss.backward()
             clip_grad_norm(net.parameters(), args.max_norm)
             optimizer.step()
-            exit(0)
             if args.debug:
                 print('Batch ID:%d Loss:%f' %(i,loss.data[0]))
                 continue
@@ -242,11 +230,7 @@ def predict(examples):
     with open(args.word2id) as f:
         word2id = json.load(f)
     vocab = utils.Vocab(embed, word2id)
-    pred_dataset = utils.Dataset(examples)
-
-    pred_iter = DataLoader(dataset=pred_dataset,
-                            batch_size=args.batch_size,
-                            shuffle=False)
+    
     if use_gpu:
         checkpoint = torch.load(args.load_dir)
     else:
@@ -261,34 +245,58 @@ def predict(examples):
     if use_gpu:
         net.cuda()
     net.eval()
-    
-    doc_num = len(pred_dataset)
-    time_cost = 0
-    file_id = 1
-    for batch in tqdm(pred_iter):
-        features, doc_lens = vocab.make_predict_features(batch)
-        t1 = time()
-        if use_gpu:
-            probs = net(Variable(features).cuda(), doc_lens)
-        else:
-            probs = net(Variable(features), doc_lens)
-        t2 = time()
-        time_cost += t2 - t1
-        start = 0
-        for doc_id,doc_len in enumerate(doc_lens):
-            stop = start + doc_len
-            prob = probs[start:stop]
-            topk = min(args.topk,doc_len)
-            topk_indices = prob.topk(topk)[1].cpu().data.numpy()
-            topk_indices.sort()
-            doc = batch[doc_id].split('. ')[:doc_len]
-            hyp = [doc[index] for index in topk_indices]
-            with open(os.path.join(args.hyp,str(file_id)+'.txt'), 'w') as f:
-                f.write('. '.join(hyp))
-            start = stop
-            file_id = file_id + 1
-    print('Speed: %.2f docs / s' % (doc_num / time_cost))
+    folder_list = os.listdir(args.foldername)
+    ind = 0
+    for folder in tqdm(sorted(folder_list , key = lambda item : int(item))):
+        folder_path = os.path.join(args.foldername , folder)
+        print(folder_path , flush = True )
+        ind+=1
+        if (ind%500) == 0 : print( ind , "files done at " , datetime.now() , "for dataset ",args.foldername,flush = True)
+        file_list = os.listdir(folder_path)
+#        print(file_list , flush = True )
+        for file in file_list :
+            file_path = os.path.join(folder_path , file )
+            if '.txt' in file_path : continue
 
+            examples = [ open(file_path).read() ]
+            topk = int(file_path.split("_")[-1])
+            if topk == 0 : continue
+            #print(file , flush = True)
+            pred_dataset = utils.Dataset(examples)
+
+            pred_iter = DataLoader(dataset=pred_dataset,batch_size=args.batch_size,shuffle=False)
+            doc_num = len(pred_dataset)
+            time_cost = 0
+            file_id = 1
+
+            for batch in pred_iter:
+                features, doc_lens = vocab.make_predict_features(batch)
+                print(doc_lens)
+                if doc_lens[0] == 0 : continue
+                t1 = time()
+                if use_gpu:
+                    probs = net(Variable(features).cuda(), doc_lens)
+                else:
+                    probs = net(Variable(features), doc_lens)
+                t2 = time()
+                time_cost += t2 - t1
+                start = 0
+                try : len(probs)
+                except : continue
+                for doc_id,doc_len in enumerate(doc_lens):
+                    stop = start + doc_len
+                    prob = probs[start:stop]
+                    topk = min(topk,doc_len)
+                    topk_indices = prob.topk(topk)[1].cpu().data.numpy()
+                    topk_indices.sort()
+                    doc = batch[doc_id].replace("\n"," ").split('. ')[:doc_len]
+                    hyp = [doc[index] for index in topk_indices]
+                    with open(file_path + '.txt', 'w') as f:
+                        f.write('. '.join(hyp))
+                    start = stop
+                    file_id = file_id + 1
+#        print('Speed: %.2f docs / s' % (doc_num / time_cost),flush = True)
+#        break    
 if __name__=='__main__':
     if args.test:
         test()
