@@ -1,5 +1,6 @@
 ## Code for LongSumm part of the Challenge
 
+Original SummaRuNNer code taken from - [Link](https://github.com/hpzhao/SummaRuNNer)
 Download glove embeddings from - [Link](https://drive.google.com/file/d/10cizSzQq9-jsyS88KgtuTu3volGc0DKN/view?usp=sharing)
 
 - For Training 
