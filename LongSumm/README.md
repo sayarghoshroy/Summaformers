@@ -1,3 +1,4 @@
+
 ## Code for LongSumm part of the Challenge
 
 Original SummaRuNNer code taken from - [Link](https://github.com/hpzhao/SummaRuNNer)
@@ -17,3 +18,19 @@ Download glove embeddings from - [Link](https://drive.google.com/file/d/10cizSzQ
     ```python
     python main.py -batch_size 1 -device 0 -predict -load_dir checkpoints/model.pt -foldername PATH_TO_PREDICT_FOLDER    
     ```
+	Structure of the Predict Folder should of the form
+  
+	```bash
+	├── Predict Folder
+	│   ├── Document1
+	│   │   ├── Section1.txt
+	│   │   ├── Section2.txt
+	│   │   ├── Section3.txt
+	│   │   ├── Section4.txt
+	│   ├── Document2
+	│   │   ├── Section1.txt
+	│   │   ├── Section2.txt
+	│   │   ├── Section3.txt
+	│   │   ├── Section4.txt
+	...
+	```
