@@ -1,0 +1,563 @@
+15:28:01.486 [main] DEBUG com.amazonaws.AmazonWebServiceClient - Internal logging successfully configured to commons logger: true
+15:28:01.548 [main] DEBUG com.amazonaws.metrics.AwsSdkMetrics - Admin mbean registered under com.amazonaws.management:type=AwsSdkMetrics
+15:28:01.615 [main] DEBUG c.a.internal.config.InternalConfig - Configuration override awssdk_config_override.json not found.
+15:28:02.018 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:28:02.018 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loading model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:28:02.020 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:28:02.026 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Creating gazetteer cache at /tmp/gazetteer-v5.json-fa485aef.gazetteerCache.bin
+15:28:12.996 [scala-execution-context-global-12] INFO  o.a.scienceparse.ParserGroundTruth - Read 1609659 papers.
+15:28:28.107 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loaded model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:28:41.172 [scala-execution-context-global-12] INFO  o.a.scienceparse.ExtractReferences - could not load kermit gazetter
+15:28:41.230 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:28:41.230 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:28:41.235 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.RunSP$ - Starting /home/risubaba/LongSumm/pdf/K18-1043.pdf
+{
+  "name" : "/home/risubaba/LongSumm/pdf/K18-1043.pdf",
+  "metadata" : {
+    "source" : "CRF",
+    "title" : "DIMSIM: An Accurate Chinese Phonetic Similarity Algorithm based on Learned High Dimensional Encoding",
+    "authors" : [ "Min Li", "Marina Danilevsky", "Sara Noeman", "Yunyao Li" ],
+    "emails" : [ "minli@us.ibm.com", "mdanile@us.ibm.com", "noemans@eg.ibm.com", "yunyaoli@us.ibm.com" ],
+    "sections" : [ {
+      "heading" : null,
+      "text" : "Proceedings of the 22nd Conference on Computational Natural Language Learning (CoNLL 2018), pages 444–453 Brussels, Belgium, October 31 - November 1, 2018. c©2018 Association for Computational Linguistics\n444"
+    }, {
+      "heading" : "1 Introduction",
+      "text" : "Performing the mental gymnastics of transforming ‘I’m hear’ to ‘I’m here,’ or, ‘I can’t so buttons’ to ‘I can’t sew buttons,’ is familiar to anyone who has encountered autocorrected text messages, punny social media posts, or just friends with bad grammar. Although at first glance it may seem that phonetic similarity can only be quantified for audible words, this problem is often present in purely textual spaces, such as social media posts or text messages. Incorrect homophones and synophones, whether used in error or in jest, pose challenges for a wide range of NLP tasks, such as named entity identification, text normalization and spelling correction (Chung et al., 2011; Xia et al., 2006; Toutanova and Moore, 2002; Twiefel et al., 2014; Lee et al., 2013; Kessler, 2005). These tasks must therefore successfully transform incorrect words or phrases (‘hear’,’so’) to their phonetically similar correct counterparts (’here’,’sew’), which in turn requires a robust representation of phonetic similarity between word pairs. A reli-\nable approach for generating phonetically similar words is equally crucial for Chinese text (Xia et al., 2006).\nUnfortunately, most existing phonetic similarity algorithms such as Soundex (Archives and Administration, 2007) and Double Metaphone (DM) Philips (2000) are motivated by English and designed for Indo-European languages. Words are encoded to approximate phonetic presentations by ignoring vowels (except foremost ones), which is appropriate where phonetic transcription consists of a sequence of phonemes, such as for English. In contrast, the speech sound of a Chinese character is represented by a single syllable in Pinyin consisting of two or three parts: an initial (optional), a final or compound finals, and tone 1 (Table 1). As a result, phonetic similarity approaches designed for Indo-European languages often fall short when applied to Chinese text. Note that we use Pinyin as the phonetic representation because it is a widely accepted Romanization system (San, 2007; ISO, 2015) of Chinese syllables, used to teach pronunciation of standard Chinese. Table 2 shows two sentences from Chinese microblogs, containing informal words derived from phonetic transcription. The DM and Soundex encodings for\n1Chinese has five tones, represented on a 1-5 scale.\nnear-homonyms of 喜欢 from Table 2 are shown in Table 3. Since both DM and Soundex ignore vowels and tones, words with dissimilar pronunciations are incorrectly assigned to the same encoding (e.g. 稀饭 and 泄愤), while true nearhomonyms are encoded much further apart (e.g. 稀饭 and 喜欢). On the other hand, additional candidates with similar phonetic distances such as 心xin1烦fan2，西xi1方fang1 for稀饭 should be generated, for consumption by downstream applications such as text normalization.\nThe example highlights the importance of considering all Pinyin components and their characteristics when calculating Chinese phonetic similarity (Xia et al., 2006). One recent work (Yao, 2015) manually assigns a single numerical number to encode and derive phonetic similarity. However, this single-encoding approach is inaccurate since the phonetic distances between Pinyins are not captured well in a one dimensional space. Figure 1 illustrates the similarities between a subset of initials. Initial groups “z, c”, “zh, ch”, “z, zh” and “zh, ch” are all similar, which cannot be captured using a one dimensional representation (e.g., an encoding of “zh=0,z=1,c=2,ch=3” fails to identify the “zh, ch” pair as similar.) ALINE (Kondrak, 2003) is another illustration of the challenge of manually assigning numerical values in order to accurately represent the complex relative phonetic similarity relationships across various languages. Therefore, given the perceptual nature of the problem of phonetic similarity, it is critical to learn the distances based on as much empirical data as possible (Kessler, 2005), rather than using a manually encoded metric.\nThis paper presents DIMSIM, a learned ndimensional phonetic encoding for Chinese along with a phonetic similarity algorithm, which uses the encoding to generate and rank phonetically\nsimilar words. To address the complexity of relative phonetic similarities in Pinyin components, we propose a supervised learning approach to learn n dimensional encodings for finals and initials where n can be easily extended from one to two or higher dimensions. The learning model derives accurate encodings by jointly considering Pinyin linguistic characteristics, such as place of articulation and pronunciation methods, as well as high quality annotated training data sets. We compare DIMSIM to Double Metaphone(DM), Minimum edit distance(MED) and ALINE demonstrating that DIMSIM outperforms these algorithms by 7.5X on mean reciprocal rank, 1.4X on precision and 1.5X on recall on a real-world dataset. Our contributions are:\n1. An encoding for Chinese Pinyin leveraging Chinese pronunciation characteristics.\n2. A simple and effective phonetic similarity algorithm to generate and rank phonetically similar Chinese words.\n3. An implementation and a comprehensive evaluation showing the effectiveness of DIMSIM over the state-of-the-art algorithms.\n4. A package release of the implemented algorithm and a constructed dataset of Chinese words with phonetic corrections.2"
+    }, {
+      "heading" : "2 Generating Phonetic Candidates",
+      "text" : "DIMSIM generates ranked candidate words with similar pronunciation to a seed word. Similarity is measured by a phonetic distance metric based on n-dimensional encodings, as introduced below."
+    }, {
+      "heading" : "2.1 Phonetic Comparison for Pinyin",
+      "text" : "An important characteristic of Pinyin is that the three components, initial, final and tone, can be independently phonetically compared. For example, the phonetic similarity of the finals “ie” and “ue” is identical in the Pinyin pairs {“xie2”,“xue2”} and {“lie2”,“lue2”}, in spite of the varying initials. English, by contrast, does not have this characteristic. Consider as an example, the letter group “ough,” which is pronounced quite differently in “rough,” “through” and “though.”\nNote that depending on the initials, a final of same written form can represent different finals. For instance, ü is written as u after j, q and x; uo is written as o after b, p,m, f or w. There are a total\n2https://github.com/System-T/DimSim.\nof six rewritten rules in Pinyin (ISO, 2015). Since these rules are fixed, we preprocess the Pinyins according to these rules, transforming them into the original form for our internal representation (e.g., we represent ju as jü and bo as buo.)"
+    }, {
+      "heading" : "2.2 Measuring Phonetic Similarity",
+      "text" : "DIMSIM represents a given word w as a list of characters {ci|1 ≤ i ≤ K} where K is the number of characters and pci denotes the Pinyin of ith character. The initial, final, and tone components of pci are denoted as p I ci , p F ci , and p T ci , respectively.\nFormally, the phonetic similarity S between the pronunciation of ci and c′i is computed using Manhattan distance as the sum of the distances between the three pairs of components, as follows:\n∑ 1≤i≤K S(ci, c ′ i) = ∑ 1≤i≤K {Sp(pIci , pIc′i)+\nSp(p F ci , p F c′i ) + ST (p T ci , p T c′i )}\n(1)\nManhattan distance is an appropriate metric since the three components are independent. Any single change does not affect more than one component, and any change affecting several components is the result of multiple independent and additive changes. It follows that the similarity between two words is computed as the sum of the phonetic distances of characters. For example, the Pinyins of “童鞋” and “同学” are “tong2xie2” and “tong2xue2”. The distance between “童(tong2)” and “同(tong2)” is zero; the distance between “鞋(xie2)” and “学(xue2)” is calculated as S( “鞋” , “学” ) = Sp(x, x) + Sp(ie, ue) + ST (2, 2). Although the characters “鞋(xie2)” and “学(xue2)” are completely different, their Pinyins only differ in their finals."
+    }, {
+      "heading" : "2.3 Learning Pinyin Encodings",
+      "text" : "The next task is to compute encodings for initials, finals, and tones. While tonal similarity is easily handled (see Section 2.4), pairwise similarity for initials and finals is more complex. We adopt a supervised learning approach to obtain these encodings, using linguistic characteristics combined with a labeled dataset. The latter consists of word pairs, with specific pairs of initials or finals manually annotated for phonetic similarity. The set of annotated pairs between initials and finals are then used to learn the n-dimensional encodings of initials and finals, which will in turn be used for generating phonetically similar candidates.\n3\n200\n201\n202\n203\n204\n205\n206\n207\n208\n209\n210\n211\n212\n213\n214\n215\n216\n217\n218\n219\n220\n221\n222\n223\n224\n225\n226\n227\n228\n229\n230\n231\n232\n233\n234\n235\n236\n237\n238\n239\n240\n241\n242\n243\n244\n245\n246\n247\n248\n249\n260\n261\n262\n263\n264\n265\n266\n267\n268\n269\n270\n271\n272\n273\n274\n275\n276\n277\n278\n279\n280\n281\n282\n283\n284\n285\n286\n287\n288\n289\n290\n291\n292\n293\n294\n295\n296\n297\n298\n299\nConfidential Review Copy. DO NOT DISTRIBUTE.\nFor instance, ü is written as u after j, q, x. uo is written as o after b, p, m, f or w. There are a total of six rewritten rules in Pinyin (ISO, 2015). Since these rules are fixed, it is straightforward to preprocess the Pinyins according to these rules to turn them into the original form of Pinyins as a internal representation before conducting phonetic comparison. For example, we represent ju as jü, bo as buo. After the preprocessing step, we independently compare ompon nts.\n2.2 Measuring Phonetic Similarity\nDIMSIM represents a given Chinese word w as a list of Chinese characters {ci|1  i  K} where K is the umber of characters in w and pci denotes the Pinyin of ith character. The initial, final, and tone components of the Pinyin pci are denoted as pIci , p F ci , and p T ci , respectively.\nFormally, the phonetic similarity S between the pronunciation of two characters, ci and c0i is computed using Manhattan distance as the sum of the distances between the three pairs of components, as follows:\nX\n1iK S(ci, c\n0 i) =\nX\n1iK {Sp(pIci , p I c0i )+ Sp(p F ci , p F c0i ) + ST (p T ci , p T c0i )} (1)\nManhattan distance is an appropriate metric since the three components are independent. A single change in a Pinyin is therefore a change to the initial, the final, or the tone, but not to more than one of the components simultaneously. A change that affects more than one component is the result of multiple independent and therefore additive changes.\nFollowing the same logic, the phonetic similarity between two words w and w0 is computed as the sum of the distances between the Pinyins. For example, the Pinyins of “Âã” and “ f” are “tong2xie2” and “tong2xue2” respectively. The distance between “Â(tong2)” and “ (tong2)” is zero; the distance between “ã(xie2)” and “f(xue2)” is calculated as S(ie, ue) = Sp(x, x)+Sp(ie, ue)+ST (2, 2). We see that although the characters are completely different, “ã(xie2)” and “f(xue2)” only differ in their fina s, b t not thei initials and tones.\n2.3 Learning Pinyin Encodings\nTherefore, the next task is to generate an accurate representation of phonetic similarity for every pair of initials, finals, and tones. As there are only 5\nTable 4: Table of Pinyin initials (colors denote clusters).\ntones in Chinese, pairwise tonal similarity is easily handled (see section 2.4). However, pairwise similarity for initials and finals is more complex and must be learned. We use a supervised machine learning approach that uses Pinyin linguistic characteristics combined with manually labeled data sets of phonetic similarity. The training data sets consist of word pairs that highlight a pair of initials (or finals), and are used as the context for an annotator-provided phonetic similarity score. The manually labeled scores are transformed into similarity scores. The set of initials (or finals) is then mapped to the n-dimensional encodings by minimizing the difference between the resulting pairwise distances, and the distances obtained from the training data sets.\n2.3.1 Generating Similar Word Pairs Phonetically similar word pairs are used to create annotations representing the phonetic similarity of a pair of initials, or finals. Chinese has 253 pairs of initials and 666 pairs of finals. Manually annotating each pair similarity requires a very large number of examples: assuming ten or twenty word pairs are provided as context for each pair, the task quickly blows up to nine or eighteen thousand annotations. We observe that the phonetic similarity of Chinese Pinyin is greatly impacted by the pronunciation methods and the place of articulation. Leveraging known Pinyin linguistic characteristics can improve the accuracy of our model and reduce the size of the annotation task. Specifically, this is done by grouping the Pinyin components into initial clusters according to the Pinyin pronunciation tables (ISO, 2015) and only annotating the pairs within each cluster along with a single pairwise distance between clusters.\nTable 4 shows the the clustering of initials according to the Pinyin linguistic characteristics. We partition initials into 12 clusters, consisting"
+    }, {
+      "heading" : "2.3.1 Generating Similar Word Pairs",
+      "text" : "Phonetically sim lar wor pairs are used t create an otations repres nting the phon tic simil rity of initials, or finals. Chinese has 253 pairs of initials and 666 pairs of finals. Annotating examples of all these pairs is labor intensive and error-prone. Assuming twenty word pairs are provided as context per pair, the task quickly blows up to eighteen thousand annotations. However, we observe that the phonetic similarity of Pinyin is greatly impacted by the pronunciation methods and the place of articulation - this allows us to improve the accuracy and simplify the annotation task. Specifically, this is done by grouping Pinyin components into initial clusters and only annotating pairs within each cluster, and represent tive cluster pairs.\nFigure 2 partitions initials nto 12 clusters, consisti g of “bp”,“dt”,“gk”,“hf”,“nl”,“r”, “jqx”, “zcs”, “zhchsh”, “m” ,“y” and “w”, based on the pronunciatio method and the place of rticulation. “f” and “h” are grouped together as they are both fricative and sound very similar, especially for people from the southeast of China (Zhishihao, 2017). We then eliminate the comparison of pairs that are highly similar or highly dissimilar. For example, as the semivowel initials “y” and “w” are dissimilar to all other initials, we label every initial pair containing one of them with the lowest possible score. To compare between clusters, we randomly choose one initial from each cluster and generate just those comparison pairs. The number of pairs of initials decreases from 253 to 59.\nWe use a similar method for finals, partitioning them into six groups by the six basic vowels (“ ,o,e,i,u,ü”) (e.g., “i,in,ing” are clustered together.) We t n use ed t distance and common sequence length con traints to g ide the pair generation; specifically, we compare a pair of finals if the edit distance between them is 1 or 2. Since\nthe length of finals on average is two, an edit distance of three means a complete change to the final, resulting in pairs with the lowest similarity. To compare finals across clusters, since the edit distance between any such pair is at least two, we compare pairs only when the length of the common sequence is at least two (for example, “ian” and “uan”), and otherwise assign the lowest possible similarity to the pairs. This drops the number of comparison pairs of finals down to 113.\nAfter generating the comparison pairs, we create word pairs whose Pinyins only differ in the these pairs. We identify and account for several confounding factors that may affect annotation: 1) the position of the character containing the initial or final being compared; 2) the word length; and 3) the combination of initials and finals. Since most Chinese words are of length two, we only generate word pairs of length two for this task. Providing word pairs of length greater than two would not make much difference to learned encodings as long as word pairs are representative.\nFor a given initial (or final) pair (p1, p2), such as (b, p), we first generate the all possible Pinyins with a component of p1 such as bao and bing. For each Pinyin py, we retrieve all the words with length two in the dictionary which also have first or second character with the same py. Example words for py=“bao′′ include包bao1袱fu2. For each created word w, we change the initial (or final) from p1 to p2, retrieve the corresponding words from the dictionary and generate the word pairs to compare. One such example is (包bao1袱fu2, 泡pao4芙fu2). Finally, from the full list we randomly select five word pairs that vary the first character, and five word pairs that vary the second character.\nWe invite three native Chinese speakers to perform the annotations. For each word pair, the annotators give a label on a 7 point scale representing their agreement, where the labels range from ’Completely Disagree’ (1) to ’Completely Agree’ (7). We calculate Krippendorff’s α (Hayes and Krippendorff, 2007) for the initials and finals annotations to be 0.69 and 0.54, representing the inter-annotator agreement. For each word pair, we use Equation 2 to calculate the distance θ with the average value φ of labels across the annotators. Equation 2 inverts the labels so that the output can be used as a distance metric (phonetically similar initials or finals are closer together), and scales the\nresult to more accurately measure phonetic similarities. The parameters a and b are set 4 and 104 by default, but we also show that the performance of our method is not sensitive to the parameter settings (see Section 3.2).\nθ(φ) = 1/aφ ∗ b (2)"
+    }, {
+      "heading" : "2.3.2 Learning Model",
+      "text" : "Once the average distances between pairs are computed from the annotated data sets, we define a constrained optimization to compute encodings of the initials and finals. The final goal is to map each initial (or final) to an n-dimensional point.\nThe distance Sp of a pair p of points (x1, x2, ..., xn), (y1, y2, ..., yn) is calculated using Euclidean distance as shown in equation 3.\nSp = √ ∑ 1≤i≤n (xi − yi)2 (3)\nThe model aims to minimize the sum of the absolute differences between the Euclidean distances of component pairs and the average distances obtained from the annotated training data across all pairs for initials (or finals) C. We also incorporate a penalty function, τp, for pairs deviating from the manually annotated distance θ so that more phonetically similar pairs are penalized more highly (we discuss τ further in Section 3.2). Equation 4 represents the cost function:\nmin ∑ p∈C |S2p − θ2p| ∗ τp (4)\nOne main advantage of our learning model is that it is generic and can easily extend to any ndimensional space. Based on the structured of Table 2, we intuit that extending beyond one dimension will yield more accurate encodings. Figures 3 and 4 visualize the computed encodings of initials when setting n=1 and n=2 We see that when n = 2, the locations of initial coordinates align well with Table 2,. In particular, the twelve groups are clustered in a pattern that is defined in Section 2.3.1. For example, “bp,gk,jqx” are separated into different clusters. However, while Table 2 indicated the basic clusters for the initials, our learned model goes further than Table 2 by actually quantifying the inter- and intra-cluster similarities. Specifically, clusters “c, ch, j, q, x” are tighter than clusters “c, c, h” and “d, t”, whereas the clusters “m” and “n, r, l” are well separated from other clusters. Interestingly, the learning algorithms organically discovers new clusters that are not reflected in Table 2; namely that “r,n” and “r,l” are pairs of phonetically similar initials.\nWhen n = 1, the learned model collapses the coordinates into one dimension (Figure 3). We observe that the predefined clusters are not well aligned, and many clusters are mixed together (e.g., “bp,gk,nl,dt”), preventing DIMSIM from considering variations within a cluster to be more similar than variations between clusters. Visually comparing Figures 3 and 4 gives the intuition for why DIMSIM with n = 2 performs better than DIMSIM with n = 1, which is in turn reflected in our evaluation results. Section 3 presents the effects that varying the number of dimensions has on evaluation results."
+    }, {
+      "heading" : "2.4 Phonetic Tone Similarity",
+      "text" : "There are five tones in Chinese, represented by a tone number scale ranging from 1 to 5. It is simple to use tone numbers for tone encodings and the difference between the tones of two Pinyins as the raw measure of distance, ranging in value from 1 to 5 (e.g., ST (xue2, xue4) = 4− 2 = 2). One exception is that we encode tone 3 as the numerical value of 2.5 since tone 3 is more similar to tone 2 compared to tone 4 according to the relative pitch changes of the four tones (ISO, 2015). However, this measure must first be scaled to be comparable to the pairwise phonetic distances of initials and finals. There is an additional constraint: any pairwise difference in initials or finals must have\nInput : Word w, Threshold th,Dict dict; Output: Words outws; begin\npys = getPinyins(w,dict); headPys = getSimPinyins(pys(0), th); headWords = getWordswithHeadPy(headPys, dict); for cw ∈ headWords do\nif cw.size 6= w.size then continue; end sim = getSimilarity(cw,w); if sim ≤ th then\noutws.add(cw); end\nend sortByAscSim(outws); return outws;\nend Algorithm 1: Generating phonetic candidates.\na greater negative effect on the phonetic similarity between characters than any difference in tones. For example, S(xue1,lue1)<S(xue1,xue5) even though xue1 and xue5 are at opposite ends of the tone scale. We therefore scale ST such that Max(ST ) <Min(Sp)."
+    }, {
+      "heading" : "2.5 Candidate Generation and Ranking",
+      "text" : "Having determined the phonetic encodings and the mechanism to compute the phonetic similarity using learned phonetic encodings, we now describe how to generate and rank similar candidates in Algorithm 1. Given a word w, a similarity threshold th, and a Chinese Pinyin dictionary dict, we retrieve the Pinyin py of w from dict. We derive a list of Pinyins Pys whose similarity to py falls within the threshold th. These are used to generate a list of words with the same Pinyin in Pys and the same number of characters as w. We calculate the similarity of each candidate word with w using Equation 1 and filter out candidates that fall outside the similarity threshold th. Thus, th is a parameter that affects the precision and recall of the generated candidates. A larger th generates more candidates, increasing recall while decreasing precision.3 Finally, we output the candidates ranked in ascending order by similarity distance.\n3We study the impact of varying th in Section 3."
+    }, {
+      "heading" : "3 Evaluation",
+      "text" : "We collect 350 words from social media (Wu, 2016), and annotate each with 1-3 phonetically similar words. We use a communitymaintained free dictionary to map characters to Pinyins (CEDict, 2016). We compare DIMSIM with Double Metaphone (DM) (Philips, 2000), ALINE (Kondrak, 2003) and Minimum edit distance (MED) (Navarro, 2001) in terms of precision (P), recall (R), and average Mean Reciprocal Rank (MRR) (Voorhees and et al., 1999). We calculate recall automatically using the the full test set of word pairs (Wu, 2016). Since downstream applications will only consider a limited number of candidates in practice, we evaluate precision via a manual annotation task on the top-ranked candidates generated by each approach. DM considers word spelling, pronunciation and other miscellaneous characteristics to encode the word into a primary and a secondary code. DM as one of the baselines is known to perform poorly at ranking the candidates (Carstensen, 2005) since only two codes are used. We therefore use our method (Equation 1) to rank the DM-generated candidates, to create a second baseline, DM-rank.4 The third baseline, ALINE, measures phonetic similarity based on manually coded multi-valued articulatory features weighted by their relative importance with respect to feature salience (again, manually determined). MED, the last baseline, computes similarity as the minimum-weight series of edit operations that transforms one sound component into another."
+    }, {
+      "heading" : "3.1 The Effectiveness of DIMSIM",
+      "text" : "Recall and MRR: We compare DIMSIM to DM, DM-rank, ALINE and MED. DIMSIM1 and DIMSIM2 denotes DIMSIM encoding dimension n = 1 and n = 2, respectively. As shown in Figure 5, DIMSIM2 improves recall by factors of 1.5, 1.5, 1.3 and 1.2, and improves MRR by factors of 7.5, 1.4, 1.03 and 1.2 over DM, DM-Rank, ALINE and MED, respectively. DM performs relatively poorly, as it is designed for English, and does not accurately reflect Chinese pronunciation. Ranking DM candidates using the DIMSIM phonetic distance defined in Equation 1 improves its average MRR by a factor of 5.5. However, even DM-Rank is outperformed by the simple MED\n4We do not compare with Soundex as DM is accepted to be an improved phonetic similarity algorithm over Soundex.\nbaseline, demonstrating the inherent problem with DM’s coarse encodings. While ALINE has a similar recall to DIMSIM, it performs worse on MRR than DIMSIM2 because it does not have a direct representation of compound vowels for Pinyin. It measures distance between compound vowels using phonetic features of basic vowels which leads to inaccuracy. In turn, MED struggles with representing accurate phonetic distances between initials, since most initials are of length 1, and the edit distance between any two characters of length 1 is identical. In contrast, DIMSIM encodes initials and finals separately, and thus even a 1-dimensional encoding (DIMSIM1) outperforms the other baselines. Finally, the intuition of Figures 3 and 4 is reflected in the data, as DIMSIM2 outperforms DIMSIM1 by 14% (MRR).\nPrecision and MRR: Here we evaluate the quality of the candidate ranking since in practice, downstream applications consider only a small number of possible candidates for every word. We ask two native Chinese speakers to annotate the quality of the generated candidates. Choosing 100 words randomly from the test set, we use DMrank, MED, ALINE and DIMSIM2 to generate top-K candidates for each seed word (K = 5).5 The annotators mark each candidate as phonetically similar to the seed word (1) or not (0), also marking the one candidate they believe to be the most similar-sounding (2), which may be any of\n5We do not evaluate DM and DIMSIM1 as they perform worse than DM-Rank and DIMSIM2, respectively.\nthe top-K candidates. We then compute precision and average MRR using the obtained annotations. We achieve inter-level agreement(ILA) of 0.75 for P and ILA of 0.84 for average MRR. DIMSIM once again outperforms MED and DM-Rank by up to 1.4X for precision and 1.24X for MRR. Since the only criteria for picking the best top-K candidate is phonetic similarity, this demonstrates that DIMSIM ranks the most phonetically similar candidates higher than the other baselines."
+    }, {
+      "heading" : "3.2 Impact of Scoring and Penalty Functions",
+      "text" : "We study the sensitivity of DIMSIM to varying the scoring and penalty functions, using recall and average MRR for evaluation. Table 4 shows four different scoring functions θ and penalty functions τ (including the variation of not using a penalty\nfunction) to convert the annotator scores φ to pairwise distances S, following Equation 4.\nFigure 7 depicts the values of the four scoring functions θ as a function of the annotator scores on a log 10 scale, to demonstrate the effect of varying a and b, as well as using φ as the base or exponent. Figure 8 demonstrates how sensitive our model is to the different combinations of scoring and penalty functions. We see that although Recall is entirely insensitive to the variations, the performance of MRR is impacted. There is a clear preference for the variations on the “diagonal” of Table 4: F11, F22, F33, F44, but the nearidentical performance of these variations demonstrates DIMSIM’s robustness to the particular scoring and penalty functions used. Note that not using a penalty function impacts MRR significantly."
+    }, {
+      "heading" : "3.3 Impact of the Encoding Dimensions",
+      "text" : "As demonstrated above, encoding initials and finals into a two-dimensional space is more effective than a one-dimensional space. Figure 9 presents the results of continuing to increase the number of dimensions, n = [1, 4]. We observe that recall is barely affected, with all variations able to successfully identify the targeted words 98% to 99% of the time. We also see that moving from n=1 to n=2 increases the average MRR by 1.14X . However, further increasing the number of dimensions to n>2 no longer improves average MRR, indicating that learning a two-dimensional encoding is enough to capture the phonetic relationships between Pinyin components."
+    }, {
+      "heading" : "3.4 Impact of the Distance Threshold",
+      "text" : "We examine how the similarity distance threshold (th) impacts DIMSIM by varying th from 2 to 4096 (Figure 10) (using the scoring function F22). As th increases, recall increases from 0.75 to 0.99, converging when th reaches 2048. By increasing th DIMSIM matches more characters that are simi-\nlar to the first character of the given word, which in turn increases the number of candidates within the distance. Thus, the probability of including the labeled gold standard words in the results increases. MMR is less sensitive to th, converging when th reaches 128. However, the generated set of candidate words is reduced too much for th < 128, hurting the performance of MMR. To ensure both high recall and MRR we set th = 2500."
+    }, {
+      "heading" : "3.5 Impact of Number of Candidates",
+      "text" : "While generating more candidates improves the recall, presenting too many candidates to a downstream application is not desirable. To find a balance, we study the impact of varying the upper limit of the number of generated candidates nc from 2 to 2048 (Figure 11). We find that MRR converges at 64 candidates, while recall takes longer; however, setting the upper limit at 64 candidates already achieves almost 98% recall, suggesting it as a reasonable cutoff in practice. Unless otherwise mentioned, we set nc = 1, 000 for experiments, to isolate the impact of this parameter."
+    }, {
+      "heading" : "3.6 Error Analysis",
+      "text" : "We analyze and summarize three types of errors made by DIMSIM. The first occurs when targeted words are out of vocabulary(OOV). For instance, for the original word “药丸” , the targed word is\n“要完” which is OOV. As is commonly the case in text normalization applications which convert informal language to well-formed terms, our method works as long as the targeted words are in the dictionary. This shortcoming is generally alleviated by adding new terms to the dictionary. Second, DIMSIM cannot derive phonetic candidates from dialects that are not encoded in our mapping table. For example, for “冻(dong4)蒜(suan4)” , the targeted word “当(dang1)选(xuan2)” is obtained using the pronunciation of southern Fujian dialect. However, our approach can easily be extended to incorporate and capture such variants by learning mapping tables for each dialect and using them to generate corresponding candidates. Finally, we constrain DIMSIM to not identify candidates that differ in length from the seed word, as we observe that most transcriptions have the same word length - though some corner cases do occur."
+    }, {
+      "heading" : "4 Related Work",
+      "text" : "There is a plethora of work focusing on the phonetic similarities between words and characters (Archives and Administration, 2007; Mokotoff, 1997; Taft, 1970; Philips, 1990, 2000; Elsner et al., 2013). These algorithms encode words with similar pronunciation into the same code. For example, Soundex (Archives and Administration, 2007) converts words into fixed length code through a mapping table of initial groups to ordinal numbers. These algorithms fail to capture Chinese phonetic similarity since the conversion rules do not consider pronunciation properties of Pinyin. Linguists in the phonetic and phonology community have also proposed several phonetic comparison algorithms (Kessler, 2005; Mak and Barnard, 1996; Nerbonne and Heeringa, 1997; Ladefoged, 1969; Kondrak, 2003) for determining the similarity between speech forms. However, as features of articulatory phonetics are manually assigned, these algorithms fall short in capturing the perceptual essence of phonetic similarity through empirical data (Kessler, 2005). In contrast, DIMSIM achieves high accuracy by learning the encodings both from high quality training data sets and linguistic Pinyin features.\nSeveral works in Named Entity translation (Lin and Chen, 2002; Lam et al., 2004; Kuo et al., 2007; Chung et al., 2011) focus on learning the phonetic similarity between English and Chinese automatically. These approaches first represent English and\nChinese words in basic phoneme units and apply edit distance algorithms to compute the similarity. Training frameworks are then used to learn the similarity. However, the phonetic similarity used in these systems cannot be applied to Chinese words since Pinyin has its own specific characteristics, which do not easily map to English, for determining phonetic similarity. Another main application of phonetic similarity algorithms is text normalization (Xia et al., 2006; Li et al., 2003; Han et al., 2012; Sonmez and Ozgur, 2014; Qian et al., 2015), where phonetic similarity is measured by a combination of initial and final similarities. However, the encodings used in these approaches are too coarse-grained, yielding low F1 measures. DIMSIM learns separate high dimensional encodings for initials and finals, and uses them to calculate and rank the distances between Pinyin representations of Chinese word pairs. Karl Stratos (Stratos, 2017) proposes a sub-character architecture to deal with the data sparsity problem in Korean language processing by breaking down each Korean character into a small set of primitive phonetic units. However, this work does not address the problem of the phonetic similarity and is thus orthogonal to DIMSIM."
+    }, {
+      "heading" : "5 Conclusion",
+      "text" : "Motivated by phonetic transcription as a widely observed phenomenon in Chinese social media and informal language, we have designed an accurate phonetic similarity algorithm. DIMSIM generates phonetically similar candidate words based on learned encodings that capture the pronunciation characteristics of Pinyin initial, final, and tone components. Using a real world dataset, we demonstrate that DIMSIM effectively improves MRR by 7.5X , recall by 1.5X and precision by 1.4X over existing approaches.\nThe original motivation for this work was to improve the quality of downstream NLP tasks, such as named entity identification, text normalization and spelling correction. These tasks all share a dependency on reliable phonetic similarity as an intermediate step, especially for languages such as Chinese where incorrect homophones and synophones abound. We therefore plan to extend this line of work by applying DIMSIM to downstream applications, such as text normalization."
+    } ],
+    "references" : [ {
+      "title" : "The Soundex Indexing System",
+      "author" : [ "National Archives", "Records Administration." ],
+      "venue" : "https://www.archives.gov/research/ census/soundex.html.",
+      "citeRegEx" : "Archives and Administration.,? 2007",
+      "shortCiteRegEx" : "Archives and Administration.",
+      "year" : 2007
+    }, {
+      "title" : "An Introduction to Double Metaphone and the Principles Behind Soundex",
+      "author" : [ "Adam Carstensen." ],
+      "venue" : "http://www.b-eye-network. com/view/1596.",
+      "citeRegEx" : "Carstensen.,? 2005",
+      "shortCiteRegEx" : "Carstensen.",
+      "year" : 2005
+    }, {
+      "title" : "CC-CEDICT",
+      "author" : [ "CEDict." ],
+      "venue" : "https: //www.mdbg.net/chindict/chindict. php?page=cc-cedict.",
+      "citeRegEx" : "CEDict.,? 2016",
+      "shortCiteRegEx" : "CEDict.",
+      "year" : 2016
+    }, {
+      "title" : "Automatic english-chinese name translation by using webmining and phonetic similarity",
+      "author" : [ "Jen-Ming Chung", "Fu-Yuan Hsu", "Cheng-Yu Lu", "HahnMing Lee", "Jan-Ming Ho." ],
+      "venue" : "IEEE International Conference on Information Reuse and Inte-",
+      "citeRegEx" : "Chung et al\\.,? 2011",
+      "shortCiteRegEx" : "Chung et al\\.",
+      "year" : 2011
+    }, {
+      "title" : "A joint learning model of word segmentation, lexical acquisition, and phonetic variability",
+      "author" : [ "Micha Elsner", "Sharon Goldwater", "Naomi Feldman", "Frank Wood." ],
+      "venue" : "Proc. EMNLP.",
+      "citeRegEx" : "Elsner et al\\.,? 2013",
+      "shortCiteRegEx" : "Elsner et al\\.",
+      "year" : 2013
+    }, {
+      "title" : "Automatically constructing a normalisation dictionary for microblogs",
+      "author" : [ "Bo Han", "Paul Cook", "Timothy Baldwin." ],
+      "venue" : "Proc. of the joint conference on EMNLP and CoNLL, pages 421–432. ACL.",
+      "citeRegEx" : "Han et al\\.,? 2012",
+      "shortCiteRegEx" : "Han et al\\.",
+      "year" : 2012
+    }, {
+      "title" : "Answering the call for a standard reliability measure for coding data",
+      "author" : [ "Andrew F. Hayes", "Klaus Krippendorff." ],
+      "venue" : "Communication Methods and Measures, 1(1):77–89.",
+      "citeRegEx" : "Hayes and Krippendorff.,? 2007",
+      "shortCiteRegEx" : "Hayes and Krippendorff.",
+      "year" : 2007
+    }, {
+      "title" : "ISO 7098: Romanization of Chinese",
+      "author" : [ "ISO." ],
+      "venue" : "https://www.iso.org/standard/ 61420.html.",
+      "citeRegEx" : "ISO.,? 2015",
+      "shortCiteRegEx" : "ISO.",
+      "year" : 2015
+    }, {
+      "title" : "Phonetic comparison algorithms",
+      "author" : [ "Brett Kessler." ],
+      "venue" : "Transactions of the Philological Society, 103(2):243–260.",
+      "citeRegEx" : "Kessler.,? 2005",
+      "shortCiteRegEx" : "Kessler.",
+      "year" : 2005
+    }, {
+      "title" : "Phonetic alignment and similarity",
+      "author" : [ "Grzegorz Kondrak." ],
+      "venue" : "Computers and the Humanities, 37(3):273– 291.",
+      "citeRegEx" : "Kondrak.,? 2003",
+      "shortCiteRegEx" : "Kondrak.",
+      "year" : 2003
+    }, {
+      "title" : "A phonetic similarity model for automatic extraction of transliteration pairs",
+      "author" : [ "Jin-Shea Kuo", "Haizhou Li", "Ying-Kuei Yang." ],
+      "venue" : "ACM Transactions on Asian Language Information Processing (TALIP), 6(2):6.",
+      "citeRegEx" : "Kuo et al\\.,? 2007",
+      "shortCiteRegEx" : "Kuo et al\\.",
+      "year" : 2007
+    }, {
+      "title" : "The measurement of phonetic similarity",
+      "author" : [ "Peter Ladefoged." ],
+      "venue" : "Proceedings of the 1969 conference on Computational linguistics, pages 1–14. Association for Computational Linguistics.",
+      "citeRegEx" : "Ladefoged.,? 1969",
+      "shortCiteRegEx" : "Ladefoged.",
+      "year" : 1969
+    }, {
+      "title" : "Learning phonetic similarity for matching named entity translations and mining new translations",
+      "author" : [ "Wai Lam", "Ruizhang Huang", "Pik-Shan Cheung." ],
+      "venue" : "Proc. ACM SIGIR, pages 289–296.",
+      "citeRegEx" : "Lam et al\\.,? 2004",
+      "shortCiteRegEx" : "Lam et al\\.",
+      "year" : 2004
+    }, {
+      "title" : "Joint learning of phonetic units and word pronunciations for asr",
+      "author" : [ "Chia-ying Lee", "Yu Zhang", "James R Glass." ],
+      "venue" : "EMNLp, pages 182–192.",
+      "citeRegEx" : "Lee et al\\.,? 2013",
+      "shortCiteRegEx" : "Lee et al\\.",
+      "year" : 2013
+    }, {
+      "title" : "An kind of chinese text strings’ similarity and its application in speech recognition",
+      "author" : [ "Hong-lian Li", "Wei He", "Bao-zong Yuan." ],
+      "venue" : "Journal of Chinese Information Processing, 17(1):60–64.",
+      "citeRegEx" : "Li et al\\.,? 2003",
+      "shortCiteRegEx" : "Li et al\\.",
+      "year" : 2003
+    }, {
+      "title" : "Backward machine transliteration by learning phonetic similarity",
+      "author" : [ "Wei-Hao Lin", "Hsin-Hsi Chen." ],
+      "venue" : "Proc. CoNLL, pages 1–7. ACL.",
+      "citeRegEx" : "Lin and Chen.,? 2002",
+      "shortCiteRegEx" : "Lin and Chen.",
+      "year" : 2002
+    }, {
+      "title" : "Phone clustering using the bhattacharyya distance",
+      "author" : [ "Brian Mak", "Etienne Barnard." ],
+      "venue" : "Spoken Language, 1996. ICSLP 96. Proceedings., Fourth International Conference on, volume 4, pages 2005– 2008. IEEE.",
+      "citeRegEx" : "Mak and Barnard.,? 1996",
+      "shortCiteRegEx" : "Mak and Barnard.",
+      "year" : 1996
+    }, {
+      "title" : "Soundexing and genealogy",
+      "author" : [ "Gary Mokotoff." ],
+      "venue" : "Avotaynu.",
+      "citeRegEx" : "Mokotoff.,? 1997",
+      "shortCiteRegEx" : "Mokotoff.",
+      "year" : 1997
+    }, {
+      "title" : "A guided tour to approximate string matching",
+      "author" : [ "Gonzalo Navarro." ],
+      "venue" : "ACM computing surveys (CSUR), 33(1):31–88.",
+      "citeRegEx" : "Navarro.,? 2001",
+      "shortCiteRegEx" : "Navarro.",
+      "year" : 2001
+    }, {
+      "title" : "Measuring dialect distance phonetically",
+      "author" : [ "John Nerbonne", "Wilbert Heeringa." ],
+      "venue" : "Proceedings of the Third Meeting of the ACL Special Interest Group in Computational Phonology (SIGPHON-97).",
+      "citeRegEx" : "Nerbonne and Heeringa.,? 1997",
+      "shortCiteRegEx" : "Nerbonne and Heeringa.",
+      "year" : 1997
+    }, {
+      "title" : "Hanging on the metaphone",
+      "author" : [ "Lawrence Philips." ],
+      "venue" : "Computer Language, 7(2):6.",
+      "citeRegEx" : "Philips.,? 1990",
+      "shortCiteRegEx" : "Philips.",
+      "year" : 1990
+    }, {
+      "title" : "The double metaphone search algorithm",
+      "author" : [ "Lawrence Philips." ],
+      "venue" : "C/C++ users journal, 18(6):38–43.",
+      "citeRegEx" : "Philips.,? 2000",
+      "shortCiteRegEx" : "Philips.",
+      "year" : 2000
+    }, {
+      "title" : "A transition-based model for joint segmentation, pos-tagging and normalization",
+      "author" : [ "Tao Qian", "Yue Zhang", "Meishan Zhang", "Yafeng Ren", "Dong-Hong Ji." ],
+      "venue" : "EMNLP, pages 1837–1846.",
+      "citeRegEx" : "Qian et al\\.,? 2015",
+      "shortCiteRegEx" : "Qian et al\\.",
+      "year" : 2015
+    }, {
+      "title" : "The Phonology of Standard Chinese",
+      "author" : [ "Duanmu San." ],
+      "venue" : "Oxford University Press.",
+      "citeRegEx" : "San.,? 2007",
+      "shortCiteRegEx" : "San.",
+      "year" : 2007
+    }, {
+      "title" : "A graphbased approach for contextual text normalization",
+      "author" : [ "Cagil Sonmez", "Arzucan Ozgur." ],
+      "venue" : "EMNLP, pages 313–324.",
+      "citeRegEx" : "Sonmez and Ozgur.,? 2014",
+      "shortCiteRegEx" : "Sonmez and Ozgur.",
+      "year" : 2014
+    }, {
+      "title" : "A sub-character architecture for korean language processing",
+      "author" : [ "Karl Stratos." ],
+      "venue" : "Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing, pages 721–726.",
+      "citeRegEx" : "Stratos.,? 2017",
+      "shortCiteRegEx" : "Stratos.",
+      "year" : 2017
+    }, {
+      "title" : "Name search techniques",
+      "author" : [ "Robert L Taft." ],
+      "venue" : "1. Bureau of Systems Development, New York State Identification and Intelligence System.",
+      "citeRegEx" : "Taft.,? 1970",
+      "shortCiteRegEx" : "Taft.",
+      "year" : 1970
+    }, {
+      "title" : "Pronunciation modeling for improved spelling correction",
+      "author" : [ "Kristina Toutanova", "Robert C. Moore." ],
+      "venue" : "Proc. ACL, ACL ’02, pages 144–151, Stroudsburg, PA, USA.",
+      "citeRegEx" : "Toutanova and Moore.,? 2002",
+      "shortCiteRegEx" : "Toutanova and Moore.",
+      "year" : 2002
+    }, {
+      "title" : "Improving domainindependent cloud-based speech recognition with domain-dependent phonetic post-processing",
+      "author" : [ "Johannes Twiefel", "Timo Baumann", "Stefan Heinrich", "Stefan Wermter." ],
+      "venue" : "AAAI, pages 1529–1536.",
+      "citeRegEx" : "Twiefel et al\\.,? 2014",
+      "shortCiteRegEx" : "Twiefel et al\\.",
+      "year" : 2014
+    }, {
+      "title" : "The trec-8 question answering track report",
+      "author" : [ "Ellen M Voorhees" ],
+      "venue" : "Trec, volume 99, pages 77–82.",
+      "citeRegEx" : "Voorhees,? 1999",
+      "shortCiteRegEx" : "Voorhees",
+      "year" : 1999
+    }, {
+      "title" : "Commonly used phonetic vocabulary",
+      "author" : [ "You Wu." ],
+      "venue" : "http://www.51wendang.com/doc/ 97585e99067d692a1bbaec92.",
+      "citeRegEx" : "Wu.,? 2016",
+      "shortCiteRegEx" : "Wu.",
+      "year" : 2016
+    }, {
+      "title" : "A phonetic-based approach to chinese chat text normalization",
+      "author" : [ "Yunqing Xia", "Kam-Fai Wong", "Wenjie Li." ],
+      "venue" : "Proc. ACL, pages 993–1000.",
+      "citeRegEx" : "Xia et al\\.,? 2006",
+      "shortCiteRegEx" : "Xia et al\\.",
+      "year" : 2006
+    }, {
+      "title" : "An algorithm for Chinese Similarity based on phonetic grapheme coding",
+      "author" : [ "Mabus Yao." ],
+      "venue" : "http: //mabusyao.iteye.com/blog/2267661.",
+      "citeRegEx" : "Yao.,? 2015",
+      "shortCiteRegEx" : "Yao.",
+      "year" : 2015
+    }, {
+      "title" : "Differentiating f and h",
+      "author" : [ "Zhishihao." ],
+      "venue" : "http:// www.zhishihao.com/xue/show/51763.",
+      "citeRegEx" : "Zhishihao.,? 2017",
+      "shortCiteRegEx" : "Zhishihao.",
+      "year" : 2017
+    } ],
+    "referenceMentions" : [ {
+      "referenceID" : 3,
+      "context" : "Incorrect homophones and synophones, whether used in error or in jest, pose challenges for a wide range of NLP tasks, such as named entity identification, text normalization and spelling correction (Chung et al., 2011; Xia et al., 2006; Toutanova and Moore, 2002; Twiefel et al., 2014; Lee et al., 2013; Kessler, 2005).",
+      "startOffset" : 198,
+      "endOffset" : 318
+    }, {
+      "referenceID" : 31,
+      "context" : "Incorrect homophones and synophones, whether used in error or in jest, pose challenges for a wide range of NLP tasks, such as named entity identification, text normalization and spelling correction (Chung et al., 2011; Xia et al., 2006; Toutanova and Moore, 2002; Twiefel et al., 2014; Lee et al., 2013; Kessler, 2005).",
+      "startOffset" : 198,
+      "endOffset" : 318
+    }, {
+      "referenceID" : 27,
+      "context" : "Incorrect homophones and synophones, whether used in error or in jest, pose challenges for a wide range of NLP tasks, such as named entity identification, text normalization and spelling correction (Chung et al., 2011; Xia et al., 2006; Toutanova and Moore, 2002; Twiefel et al., 2014; Lee et al., 2013; Kessler, 2005).",
+      "startOffset" : 198,
+      "endOffset" : 318
+    }, {
+      "referenceID" : 28,
+      "context" : "Incorrect homophones and synophones, whether used in error or in jest, pose challenges for a wide range of NLP tasks, such as named entity identification, text normalization and spelling correction (Chung et al., 2011; Xia et al., 2006; Toutanova and Moore, 2002; Twiefel et al., 2014; Lee et al., 2013; Kessler, 2005).",
+      "startOffset" : 198,
+      "endOffset" : 318
+    }, {
+      "referenceID" : 13,
+      "context" : "Incorrect homophones and synophones, whether used in error or in jest, pose challenges for a wide range of NLP tasks, such as named entity identification, text normalization and spelling correction (Chung et al., 2011; Xia et al., 2006; Toutanova and Moore, 2002; Twiefel et al., 2014; Lee et al., 2013; Kessler, 2005).",
+      "startOffset" : 198,
+      "endOffset" : 318
+    }, {
+      "referenceID" : 8,
+      "context" : "Incorrect homophones and synophones, whether used in error or in jest, pose challenges for a wide range of NLP tasks, such as named entity identification, text normalization and spelling correction (Chung et al., 2011; Xia et al., 2006; Toutanova and Moore, 2002; Twiefel et al., 2014; Lee et al., 2013; Kessler, 2005).",
+      "startOffset" : 198,
+      "endOffset" : 318
+    }, {
+      "referenceID" : 31,
+      "context" : "able approach for generating phonetically similar words is equally crucial for Chinese text (Xia et al., 2006).",
+      "startOffset" : 92,
+      "endOffset" : 110
+    }, {
+      "referenceID" : 0,
+      "context" : "Unfortunately, most existing phonetic similarity algorithms such as Soundex (Archives and Administration, 2007) and Double Metaphone (DM) Philips (2000) are motivated by English and designed for Indo-European languages.",
+      "startOffset" : 76,
+      "endOffset" : 111
+    }, {
+      "referenceID" : 23,
+      "context" : "Note that we use Pinyin as the phonetic representation because it is a widely accepted Romanization system (San, 2007; ISO, 2015) of Chinese syllables, used to teach pronunciation of standard Chinese.",
+      "startOffset" : 107,
+      "endOffset" : 129
+    }, {
+      "referenceID" : 7,
+      "context" : "Note that we use Pinyin as the phonetic representation because it is a widely accepted Romanization system (San, 2007; ISO, 2015) of Chinese syllables, used to teach pronunciation of standard Chinese.",
+      "startOffset" : 107,
+      "endOffset" : 129
+    }, {
+      "referenceID" : 31,
+      "context" : "The example highlights the importance of considering all Pinyin components and their characteristics when calculating Chinese phonetic similarity (Xia et al., 2006).",
+      "startOffset" : 146,
+      "endOffset" : 164
+    }, {
+      "referenceID" : 32,
+      "context" : "One recent work (Yao, 2015) manually assigns a single numerical number to encode and derive phonetic similarity.",
+      "startOffset" : 16,
+      "endOffset" : 27
+    }, {
+      "referenceID" : 9,
+      "context" : ") ALINE (Kondrak, 2003) is another illustration of the challenge of manually assigning numerical values in order to accurately represent the complex relative phonetic similarity relationships across various languages.",
+      "startOffset" : 8,
+      "endOffset" : 23
+    }, {
+      "referenceID" : 8,
+      "context" : "Therefore, given the perceptual nature of the problem of phonetic similarity, it is critical to learn the distances based on as much empirical data as possible (Kessler, 2005), rather than using a manually encoded metric.",
+      "startOffset" : 160,
+      "endOffset" : 175
+    }, {
+      "referenceID" : 7,
+      "context" : "446 of six rewritten rules in Pinyin (ISO, 2015).",
+      "startOffset" : 37,
+      "endOffset" : 48
+    }, {
+      "referenceID" : 7,
+      "context" : "There are a total of six rewritten rules in Pinyin (ISO, 2015).",
+      "startOffset" : 51,
+      "endOffset" : 62
+    }, {
+      "referenceID" : 7,
+      "context" : "Specifically, this is done by grouping the Pinyin components into initial clusters according to the Pinyin pronunciation tables (ISO, 2015) and only annotating the pairs within each cluster along with a single pairwise distance between clusters.",
+      "startOffset" : 128,
+      "endOffset" : 139
+    }, {
+      "referenceID" : 33,
+      "context" : "“f” and “h” are grouped together as they are both fricative and sound very similar, especially for people from the southeast of China (Zhishihao, 2017).",
+      "startOffset" : 134,
+      "endOffset" : 151
+    }, {
+      "referenceID" : 6,
+      "context" : "We calculate Krippendorff’s α (Hayes and Krippendorff, 2007) for the initials and finals annotations to be 0.",
+      "startOffset" : 30,
+      "endOffset" : 60
+    }, {
+      "referenceID" : 7,
+      "context" : "5 since tone 3 is more similar to tone 2 compared to tone 4 according to the relative pitch changes of the four tones (ISO, 2015).",
+      "startOffset" : 118,
+      "endOffset" : 129
+    }, {
+      "referenceID" : 30,
+      "context" : "We collect 350 words from social media (Wu, 2016), and annotate each with 1-3 phonetically similar words.",
+      "startOffset" : 39,
+      "endOffset" : 49
+    }, {
+      "referenceID" : 2,
+      "context" : "We use a communitymaintained free dictionary to map characters to Pinyins (CEDict, 2016).",
+      "startOffset" : 74,
+      "endOffset" : 88
+    }, {
+      "referenceID" : 21,
+      "context" : "We compare DIMSIM with Double Metaphone (DM) (Philips, 2000), ALINE (Kondrak, 2003) and Minimum edit distance (MED) (Navarro, 2001) in terms of precision (P), recall (R), and average Mean Reciprocal Rank (MRR) (Voorhees and et al.",
+      "startOffset" : 45,
+      "endOffset" : 60
+    }, {
+      "referenceID" : 9,
+      "context" : "We compare DIMSIM with Double Metaphone (DM) (Philips, 2000), ALINE (Kondrak, 2003) and Minimum edit distance (MED) (Navarro, 2001) in terms of precision (P), recall (R), and average Mean Reciprocal Rank (MRR) (Voorhees and et al.",
+      "startOffset" : 68,
+      "endOffset" : 83
+    }, {
+      "referenceID" : 18,
+      "context" : "We compare DIMSIM with Double Metaphone (DM) (Philips, 2000), ALINE (Kondrak, 2003) and Minimum edit distance (MED) (Navarro, 2001) in terms of precision (P), recall (R), and average Mean Reciprocal Rank (MRR) (Voorhees and et al.",
+      "startOffset" : 116,
+      "endOffset" : 131
+    }, {
+      "referenceID" : 30,
+      "context" : "We calculate recall automatically using the the full test set of word pairs (Wu, 2016).",
+      "startOffset" : 76,
+      "endOffset" : 86
+    }, {
+      "referenceID" : 1,
+      "context" : "DM as one of the baselines is known to perform poorly at ranking the candidates (Carstensen, 2005) since only two codes are used.",
+      "startOffset" : 80,
+      "endOffset" : 98
+    }, {
+      "referenceID" : 0,
+      "context" : "There is a plethora of work focusing on the phonetic similarities between words and characters (Archives and Administration, 2007; Mokotoff, 1997; Taft, 1970; Philips, 1990, 2000; Elsner et al., 2013).",
+      "startOffset" : 95,
+      "endOffset" : 200
+    }, {
+      "referenceID" : 17,
+      "context" : "There is a plethora of work focusing on the phonetic similarities between words and characters (Archives and Administration, 2007; Mokotoff, 1997; Taft, 1970; Philips, 1990, 2000; Elsner et al., 2013).",
+      "startOffset" : 95,
+      "endOffset" : 200
+    }, {
+      "referenceID" : 26,
+      "context" : "There is a plethora of work focusing on the phonetic similarities between words and characters (Archives and Administration, 2007; Mokotoff, 1997; Taft, 1970; Philips, 1990, 2000; Elsner et al., 2013).",
+      "startOffset" : 95,
+      "endOffset" : 200
+    }, {
+      "referenceID" : 4,
+      "context" : "There is a plethora of work focusing on the phonetic similarities between words and characters (Archives and Administration, 2007; Mokotoff, 1997; Taft, 1970; Philips, 1990, 2000; Elsner et al., 2013).",
+      "startOffset" : 95,
+      "endOffset" : 200
+    }, {
+      "referenceID" : 0,
+      "context" : "For example, Soundex (Archives and Administration, 2007) converts words into fixed length code through a mapping table of initial groups to ordinal numbers.",
+      "startOffset" : 21,
+      "endOffset" : 56
+    }, {
+      "referenceID" : 8,
+      "context" : "Linguists in the phonetic and phonology community have also proposed several phonetic comparison algorithms (Kessler, 2005; Mak and Barnard, 1996; Nerbonne and Heeringa, 1997; Ladefoged, 1969; Kondrak, 2003) for determining the similarity between speech forms.",
+      "startOffset" : 108,
+      "endOffset" : 207
+    }, {
+      "referenceID" : 16,
+      "context" : "Linguists in the phonetic and phonology community have also proposed several phonetic comparison algorithms (Kessler, 2005; Mak and Barnard, 1996; Nerbonne and Heeringa, 1997; Ladefoged, 1969; Kondrak, 2003) for determining the similarity between speech forms.",
+      "startOffset" : 108,
+      "endOffset" : 207
+    }, {
+      "referenceID" : 19,
+      "context" : "Linguists in the phonetic and phonology community have also proposed several phonetic comparison algorithms (Kessler, 2005; Mak and Barnard, 1996; Nerbonne and Heeringa, 1997; Ladefoged, 1969; Kondrak, 2003) for determining the similarity between speech forms.",
+      "startOffset" : 108,
+      "endOffset" : 207
+    }, {
+      "referenceID" : 11,
+      "context" : "Linguists in the phonetic and phonology community have also proposed several phonetic comparison algorithms (Kessler, 2005; Mak and Barnard, 1996; Nerbonne and Heeringa, 1997; Ladefoged, 1969; Kondrak, 2003) for determining the similarity between speech forms.",
+      "startOffset" : 108,
+      "endOffset" : 207
+    }, {
+      "referenceID" : 9,
+      "context" : "Linguists in the phonetic and phonology community have also proposed several phonetic comparison algorithms (Kessler, 2005; Mak and Barnard, 1996; Nerbonne and Heeringa, 1997; Ladefoged, 1969; Kondrak, 2003) for determining the similarity between speech forms.",
+      "startOffset" : 108,
+      "endOffset" : 207
+    }, {
+      "referenceID" : 8,
+      "context" : "However, as features of articulatory phonetics are manually assigned, these algorithms fall short in capturing the perceptual essence of phonetic similarity through empirical data (Kessler, 2005).",
+      "startOffset" : 180,
+      "endOffset" : 195
+    }, {
+      "referenceID" : 15,
+      "context" : "Several works in Named Entity translation (Lin and Chen, 2002; Lam et al., 2004; Kuo et al., 2007; Chung et al., 2011) focus on learning the phonetic similarity between English and Chinese automatically.",
+      "startOffset" : 42,
+      "endOffset" : 118
+    }, {
+      "referenceID" : 12,
+      "context" : "Several works in Named Entity translation (Lin and Chen, 2002; Lam et al., 2004; Kuo et al., 2007; Chung et al., 2011) focus on learning the phonetic similarity between English and Chinese automatically.",
+      "startOffset" : 42,
+      "endOffset" : 118
+    }, {
+      "referenceID" : 10,
+      "context" : "Several works in Named Entity translation (Lin and Chen, 2002; Lam et al., 2004; Kuo et al., 2007; Chung et al., 2011) focus on learning the phonetic similarity between English and Chinese automatically.",
+      "startOffset" : 42,
+      "endOffset" : 118
+    }, {
+      "referenceID" : 3,
+      "context" : "Several works in Named Entity translation (Lin and Chen, 2002; Lam et al., 2004; Kuo et al., 2007; Chung et al., 2011) focus on learning the phonetic similarity between English and Chinese automatically.",
+      "startOffset" : 42,
+      "endOffset" : 118
+    }, {
+      "referenceID" : 31,
+      "context" : "Another main application of phonetic similarity algorithms is text normalization (Xia et al., 2006; Li et al., 2003; Han et al., 2012; Sonmez and Ozgur, 2014; Qian et al., 2015), where phonetic similarity is measured by a combination of initial and final similarities.",
+      "startOffset" : 81,
+      "endOffset" : 177
+    }, {
+      "referenceID" : 14,
+      "context" : "Another main application of phonetic similarity algorithms is text normalization (Xia et al., 2006; Li et al., 2003; Han et al., 2012; Sonmez and Ozgur, 2014; Qian et al., 2015), where phonetic similarity is measured by a combination of initial and final similarities.",
+      "startOffset" : 81,
+      "endOffset" : 177
+    }, {
+      "referenceID" : 5,
+      "context" : "Another main application of phonetic similarity algorithms is text normalization (Xia et al., 2006; Li et al., 2003; Han et al., 2012; Sonmez and Ozgur, 2014; Qian et al., 2015), where phonetic similarity is measured by a combination of initial and final similarities.",
+      "startOffset" : 81,
+      "endOffset" : 177
+    }, {
+      "referenceID" : 24,
+      "context" : "Another main application of phonetic similarity algorithms is text normalization (Xia et al., 2006; Li et al., 2003; Han et al., 2012; Sonmez and Ozgur, 2014; Qian et al., 2015), where phonetic similarity is measured by a combination of initial and final similarities.",
+      "startOffset" : 81,
+      "endOffset" : 177
+    }, {
+      "referenceID" : 22,
+      "context" : "Another main application of phonetic similarity algorithms is text normalization (Xia et al., 2006; Li et al., 2003; Han et al., 2012; Sonmez and Ozgur, 2014; Qian et al., 2015), where phonetic similarity is measured by a combination of initial and final similarities.",
+      "startOffset" : 81,
+      "endOffset" : 177
+    }, {
+      "referenceID" : 25,
+      "context" : "Karl Stratos (Stratos, 2017) proposes a sub-character architecture to deal with the data sparsity problem in Korean language processing by breaking down each Korean character into a small set of primitive phonetic units.",
+      "startOffset" : 13,
+      "endOffset" : 28
+    } ],
+    "year" : 2018,
+    "abstractText" : "Phonetic similarity algorithms identify words and phrases with similar pronunciation which are used in many natural language processing tasks. However, existing approaches are designed mainly for Indo-European languages and fail to capture the unique properties of Chinese pronunciation. In this paper, we propose a high dimensional encoded phonetic similarity algorithm for Chinese, DIMSIM. The encodings are learned from annotated data to separately map initial and final phonemes into n-dimensional coordinates. Pinyin phonetic similarities are then calculated by aggregating the similarities of initial, final and tone. DIMSIM demonstrates a 7.5X improvement on mean reciprocal rank over the state-of-theart phonetic similarity approaches.",
+    "creator" : "LaTeX with hyperref package"
+  }
+}

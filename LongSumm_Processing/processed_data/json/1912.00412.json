@@ -1,0 +1,992 @@
+15:16:29.013 [main] DEBUG com.amazonaws.AmazonWebServiceClient - Internal logging successfully configured to commons logger: true
+15:16:29.068 [main] DEBUG com.amazonaws.metrics.AwsSdkMetrics - Admin mbean registered under com.amazonaws.management:type=AwsSdkMetrics
+15:16:29.128 [main] DEBUG c.a.internal.config.InternalConfig - Configuration override awssdk_config_override.json not found.
+15:16:29.538 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loading model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:16:29.538 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:16:29.540 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:16:29.543 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Creating gazetteer cache at /tmp/gazetteer-v5.json-fa485aef.gazetteerCache.bin
+15:16:41.292 [scala-execution-context-global-12] INFO  o.a.scienceparse.ParserGroundTruth - Read 1609659 papers.
+15:16:55.030 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loaded model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:17:06.847 [scala-execution-context-global-12] INFO  o.a.scienceparse.ExtractReferences - could not load kermit gazetter
+15:17:06.907 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:17:06.907 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:17:06.911 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.RunSP$ - Starting /home/risubaba/LongSumm/pdf/1912.00412.pdf
+{
+  "name" : "/home/risubaba/LongSumm/pdf/1912.00412.pdf",
+  "metadata" : {
+    "source" : "CRF",
+    "title" : "MetAdapt: Meta-Learned Task-Adaptive Architecture for Few-Shot Classification",
+    "authors" : [ "Sivan Doveh", "Eli Schwartz", "Chao Xue", "Rogerio Feris", "Alex Bronstein", "Raja Giryes", "Leonid Karlinsky" ],
+    "emails" : [ "sivan.doveh@ibm.com", "leonidka@il.ibm.com" ],
+    "sections" : [ {
+      "heading" : null,
+      "text" : "Keywords: Few-Shot, Few-Shot Learning, Meta-Learning, Task-Adaptive Architecture"
+    }, {
+      "heading" : "1 Introduction",
+      "text" : "Recently, there has been a lot of exciting progress in the field of few-shot learning in general, and in few-shot classification (FSC) in particular. A popular method for approaching FSC is meta-learning, or learning-to-learn. In meta-learning, the inputs to both train and test phases are not images, but instead a set of few-shot tasks, {Ti}, each K-shot / N -way task containing a small amount K (usually 1-5) of labeled support images and some amount of unlabeled query images for each of the N categories of the task. The goal of meta-learning is to find a base model that is easily adapted to the specific task at hand, so that it will generalize well to tasks built from novel unseen categories and fulfill the goal of FSC (see Section 2 for further review).\n* Equal contributors Corresponding authors: Sivan Doveh sivan.doveh@ibm.com and Leonid Karlinsky leonidka@il.ibm.com\nar X\niv :1\n91 2.\n00 41\n2v 3\n[ cs\n.C V\n] 9\nM ar\n2 02\nMany successful meta-learning based approaches have been developed for FSC [60,55,13,39,51,41,29] advancing its state-of-the-art. Besides continuous improvements offered by the FSC methods, some general trends affecting the performance of FSC have become apparent. One of such major factors is the CNN backbone architecture at the basis of all the modern FSC methods. Carefully reviewing and placing on a single chart the test accuracies of top-performing FSC approaches w.r.t. the backbone architecture employed reveals an interesting trend (Figure 1). It is apparent that larger architectures increase FSC performance, up to a certain size, where performance seems to saturate or even degrade. This happens since bigger backbones carry higher risk of over-fitting. It seems the overall performance of the FSC techniques cannot continue to grow by simply expanding the backbone size.\nIn light of the above, in this paper we set to explore methods for architecture search, their meta-adaptation and optimization for FSC. Neural Architecture Search (NAS) is a very active research field that has contributed significantly to overall improvement of the state of the art in supervised classification. Some of the recent NAS techniques, and in particular Differentiable-NAS (D-NAS), such as DARTS [34], are capable of finding optimal (and transferable) architectures given a particular task using a single GPU in the course of 1-2 days. This is\ndue to incorporating the architecture as an additional set of neural network parameters to be optimized, and solving this optimization using SGD. Due to this use of additional architectural parameters, the training tends to over-fit. D-NAS optimization techniques are especially designed to mitigate over-fitting, making them attractive to extreme situations with the greatest risk of overfitting, such as in the case of FSC.\nSo far, D-NAS techniques have been explored mainly in the context of large scale tasks, involving thousands of labeled examples for each class. Very little work has been done on NAS for few-shot. D-NAS in particular, to the best of our knowledge, has not been applied to few-shot problems yet. Meta-adaption of the architecture in task dependent manner to accommodate for novel tasks also has not been explored.\nIn this work, we build our few-shot task-adaptive architecture search upon a technique from D-NAS (DARTS [34]). Our goal is to learn a neural network where connections are controllable and adapt to the few-shot task with novel categories. Similarly to DARTS, we have a neural network in the form of a Directed Acyclic Graph (DAG), where the nodes are the intermediate feature maps tensors, and edges are operations. Each edge is a weighted sum of operations (with weights summing to 1), each operation is a different preset sequence of layers (convolution, pooling, BatchNorm and non-linearity). The operations set includes the identity-operation and the zero-operation to either keep the representation untouched or cut the connection. To avoid over-fitting, a bi-level (two-fold) optimization is performed where first the operation layers’ weights are trained on one fold of the data and then the connections’ weights are trained on the other fold.\nHowever, unlike DARTS, our goal is not to learn a one time architecture to be used for all tasks. To be successful at FSC, we need to make our architecture task adaptive so it would be able to quickly rewire for each new target task. To this end, we employ a set of small neural networks, MetAdapt Controllers, responsible for controlling the connections in the DAG given the current task. The MetAdapt Controllers adjust the weights of the different operations, such that if some operations are better for the current task they will get higher weights, thus, effectively modifying the architecture and adapting it to the task.\nTo summarize, our contributions in this work are as follows: (1) We show that DARTS-like bi-level iterative optimization of layer weights and network connections performs well for few-shot classification without suffering from overfitting due to over-parameterization; (2) We show that adding small neural networks, MetAdapt Controllers, that adapt the connections in the main network according to the given task further (and significantly) improves performance; (3) using the proposed method, we obtain improvements over FSC state-of-the-art on two popular FSC benchmarks: miniImageNet [60] and FC100 [41]."
+    }, {
+      "heading" : "2 Related Work",
+      "text" : "Few-Shot Learning. The major approaches to few-shot learning include: metric learning, generative (or augmentation) based methods, and meta learning (or learning-to-learn).\nFew-shot learning by metric learning. This type of methods [64,55,49] learn a non-linear embedding into a metric space where L2 nearest neighbor (or similar) approach is used to classify instances of new categories according to their proximity to the few labeled training examples embedded in the same space. Additional proposed variants include using a metric learning method based on graph neural networks [16], that goes beyond the L2 metric. Similarly, [52,58] introduce metric learning methods where the similarity is computed by an implicit learned function rather than via the L2 metric over an embedding space.\nThe embedding space based metric-learning approaches are either posed as a general discriminative distance metric learning [49,8], or optimized on the fewshot tasks [55,64,16,41], via the meta-learning paradigm that will be described next. These approaches show a great promise, and in some cases are able to learn embedding spaces with some meaningful semantics embedded in the metric [49]. Improved performance in the metric learning based methods has been achieved when combined with some additional semantic information. In [24], class conditioned embedding is used. In [66], the visual prototypes are refined using a corresponding label embedding and in [53] it is extended to using multiple semantics, such as textual descriptions.\nAugmentation-based few-shot learning. This family of approaches refers to methods that (learn to) generate more samples from the one or a few examples available for training in a given few-shot learning task. These methods include synthesizing new data from few examples using a generative model, or using external data for obtaining additional examples that facilitate learning on a given few shot task. These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].\nIn [22,54] additional examples are synthesized via extracting, encoding, and transferring to the novel category instances, of the intra-class relations between pairs of instances of reference categories. In [61], a generator sub-net is added to a classifier network and is trained to synthesize new examples on the fly in order to improve the classifier performance when being fine-tuned on a novel (few-shot) task. In [48], a few-shot class density estimation is performed with an auto-regressive model, augmented with an attention mechanism, where examples are synthesized by a sequential process. In [7,67] label and attribute semantics\nare used as additional information for training an example synthesis network. In [1] models are trained to perform set-operations (e.g. union) and then can be used to synthesise samples for few-shot multi-label classifications.\nFew-shot meta-learning (learning-to-learn). These methods are trained on a set of few-shot tasks (also known as ‘episodes’) instead of a set of object instances, with the motivation to learn a learning strategy that will allow effective adaptation to new such (few-shot) tasks using one or few examples.\nAn important sub-category of meta learning methods is metric-meta-learning, combining metric learning as explained above with task-based (episodic) training of meta-learning. In Matching Networks [60], a non-parametric k-NN classifier is meta-learned such that for each few-shot task the learned model generates an adaptive embedding space for which the task can be better solved. In [55] the metric (embedding) space is optimized such that in the resulting space different categories form compact and well separated uni-modal distributions around the category ‘prototypes’ (centers of the category modes).\nAnother family of meta-learning approaches is the so-called ‘gradient based approaches’, that try to maximize the ‘adaptability’, or speed of convergence, of the networks they train to new (few-shot) tasks (usually assuming an SGD optimizer). In other words, the meta-learned classifiers are optimized to be easily fine-tuned on new few-shot tasks using small training data. The first of these approaches is MAML [13] that due to its universality was later extended through many works such as, Meta-SGD [30], DEML+Meta-SGD [68], MetaLearn LSTM [46], and Meta-Networks [37]. In LEO [51], a MAML like loss is applied not directly on the model parameters, but rather on a latent representation encoding them. This approach featured an encoder and a decoder to and from that latent space and achieved state-of-the-art results on miniImagenet few-shot benchmark among models relying on visual information alone.\nIn MetaOptNet [29] a CNN backbone is trained end-to-end with an unrolled convex optimization solution of an optimal classifier, such as SVM. In this work, we use their suggested construction of performing SGD through an unrolled SVM optimization to train the backbone. Our work is focused on optimizing the backbone architecture.\nOther methods focus on regularization for mitigating the over-fitting. In BF3S [17] auxiliary self-supervision tasks are added, such as predicting image rotation or patch location. In Robust-dist [12] first an ensemble of up to 20 models is learned, so each model by itself cannot overfit the data. Then, the the final model is distilled from all those models. Notably, our method which also deals with training large architecture without over-fitting is orthogonal to these two approaches. It is likely that further improvement can be achieved by combining these methods with ours.\nNotably, in all previous meta-learning methods, only the parameters of a (fixed) neural network are optimized through meta-learning in order to become adaptable (or partially adaptable) to novel few-shot tasks. In this work, we both learn a specialized backbone architecture that would facilitate this adaptability, as well as meta-learn to become capable of adapting that architecture itself to\nthe task, thus going beyond the parameter only adaptation of all previous metalearning approaches.\nNeural Architecture Search. Over the last few years Neural Architecture Search (NAS) have enabled automatic design of novel architectures that outperformed previous hand-designed architectures in terms of accuracy. Two notable works on NAS are AmoebaNet [47] and NASnet [70]. The first one used a genetic algorithm and the second used a reinforcement learning based method. Although achieving state of the art performance at the time, these methods required enormous amount of GPU-hours . Efficient NAS (ENAS) [43], a reinforcement learning based method, used weight sharing across its child models, which are sub graphs of a larger one. By that, they managed to accelerate the search process. The work in [59] shows how to scale the size of such learned architectures with the size of the input data.\nRecently, differentiable methods with lower demand for computing have been introduced. Notable among them are differentiable architecture search (DARTS) [34] and SNAS [65]. These methods managed to search for architecture in just a few GPU days. DARTS relaxes the search space into a continuous one, allowing a differentiable search. The DARTS method includes two stages. First, basic structures are learned, by placing coefficients attached to operations between feature maps. These coefficients indicate the importance of the attached operations and connections. After the search is done, the final basic structures are formed by pruning and keeping only the most important operations. At the second stage, the final network is built by repeatedly concatenating the found basic structures.\nASAP [40] addresses the issue that harsh pruning at the end of the search makes the found architecture sub-optimal. It does so by performing gradual pruning. ASAP achieves higher accuracy with a shorter training time. In SNAS [65], the search is done by learning a continuous architectures distribution and sampling from it. This distribution is pushed closer to binary by using a temperature parameter and gradually decreasing it. Then, the chosen architecture is the one that has the higher probability. In [4] a binary mask is learned and used to keep a single path of the network graph. By doing so, they managed to search for the whole network and not only cells. PNAS [33] suggested a method for progressively searching for a larger architecture. P-DARTS [6] do the same but with differentiable architecture search.\nThese methods are mostly focused, and perform well, on datasets such as CIFAR and ImageNet. So far, little attention has been given to their adaptation to few-shot learning. Auto-Meta [26] used PNAS [33] based search for few-shot classification, but with a focus on searching for a small architecture (resulting in a relatively low performance w.r.t. to current state-of-the-art). In particular, the possibility of adapting the architecture at test-time to a specific novel task, as proposed in this work, has not been explored before."
+    }, {
+      "heading" : "3 MetAdapt",
+      "text" : "In this section we describe the architecture and training procedure for MetAdapt. We introduce the task-adaptable block, it has a graph structure with adaptable connections that can modulate the architecture, adapting it to the few-shot task at hand. We then describe the sub-models, MetAdapt Controllers, that predict the change in connectivity that is needed in the learned graph as a function of the current task. Finally, we describe the training procedure."
+    }, {
+      "heading" : "3.1 Task-Adaptable Block",
+      "text" : "The architecture of the adaptable block used in MetAdapt is defined, similarly to DARTS [34], as a Directed Acyclic Graph (DAG). The block is built from feature maps V = {xi} that are linked by mixtures of operations. The input feature map to the block is x0 and its output is x|V |−1. A Mixed Operation, ō(i,j), is defined as\nō(i,j)(x) =\n∑ o∈O exp(α\n(i,j) o )o(x)∑\no∈O exp(α (i,j) o )\n, (1)\nwhere O is a set of the search space operations, o(x) is an operation applied to x, and α (i,j) o is an optimised coefficient for operation o at edge (i, j). Later, we will describe how αs can be adapted per task (K-shot, N -way episode). The list of search space operations used in our experiments is provided in Table 1. This list includes the zero-operation and identity-operation that can fully or partially (depending on the corresponding α (i,j) o ) cut the connection or make it\na residual one (skip-connection). Each feature map xi in the block is connected to all previous maps by setting it to be:\nxi = ∑ j<i ō(j,i)(xj). (2)\nThe task-adaptive block defined above can be appended to any backbone feature extractor. Potentially, more than one block can be used. We use ResNet9 followed by a single task-adaptive block with 4 nodes (|V | = 4) in our experiments, resulting in about 8 times more parameters compared with the original ResNet12 (due to large set of operations on all connections combined). Note that as we use 4 nodes in our block, there exists a single path in our search space that is the regular residual block (ResNet3 block). Figure 2a schematically illustrates the block architecture."
+    }, {
+      "heading" : "3.2 MetAdapt Controllers",
+      "text" : "The task-adaptive block is accompanied by a set of MetAdapt Controller modules, one per edge. They are responsible for predicting, given a few-shot task, the best way of adapting the mixing coefficients (α (i,j) o ) for the corresponding edge operations. Let α(i,j) be the vector of all α (i,j) o . Let α̂(i,j) be the globally optimized coefficients (optimization process described below), then MetAdapt\ncontrollers predict the task-specific residuals ∆α(i,j), that is the modification required to make to α̂(i,j) for the current task (few-shot episode). Finally,\nα(i,j) = α̂(i,j) +∆α(i,j) (3)\nare the final task-adapted coefficients used for the Mixed Operation calculation as in Equation 1.\nThe architecture for each MetAdapt Controller, predicting ∆α(i,j), is as follows. It receives the input feature maps of the corresponding edge xi, computed for all the support samples of the episode. For a support-set of size S, number of channels D and feature map spatial resolution M ×M , the input is a tensor of dimensions (S,D,M,M). We perform global average pooling to obtain a (S,D) tensor, followed by a bottleneck linear layer (with ReLU activation) that operates on each sample individually, to get a (S,Dbottleneck) size tensor. Then, all support samples representations are concatenated to form a single vector of size S · Dbottleneck. Finally, another linear layer maps the concatenation of all support-samples to the predicted ∆α(i,j). The MetAdapt controller architecture and the way it is used in our adaptable block structure are schematically illustrated on Figure 2b+c. Figures 4 and 3 present an example of adaptation made by the MetAdapt Controller for a specific episode."
+    }, {
+      "heading" : "3.3 Training",
+      "text" : "Replacing simple sequence of convolutional layers with the suggested DAG, with its many layers and parameters, in conventional gradient descent training will result in a larger over-fitting. This is even worse for FSL, where it is harder to achieve generalization due to scarcity of the data and the domain differences between the training and test sets. Researchers have faced the same problem with differentiable architecture search, where the objective is to train a large neural network with weighted connections that are then pruned to form the final chosen architecture.\nWe follow the solution proposed in DARTS [34], solving a bi-level iterative optimization of the layers’ weights w and the coefficients of operations α between the nodes. The training set is split to trainw for weights training and trainα for training the α’s. Iteratively optimizing w and α to convergence is prohibitively slow. So, like in DARTS, w is optimized with a standard SGD:\nw = w − µ∇wLosstrainw(w,α), (4)\nwhere µ is the learning rate. The α’s are optimized using SGD with a secondorder approximation of the model after convergence of w, by applying:\nα = α− η∇αLosstrainα(w − µLosstrainw(w,α), α) (5)\nwhere η is the learning rate for α. The MetAdapt Controllers’ parameters are trained as a final step, with all other parameters freezed, using SGD on the entire training set for a single epoch."
+    }, {
+      "heading" : "4 Experiments",
+      "text" : "Datasets. We use the popular miniImageNet and FC100 few-shot benchmarks to evaluate our method.\nThe miniImageNet dataset [60] is a standard benchmark for few-shot image classification, that has 100 randomly chosen classes from ILSVRC-2012 [50]. These classes are randomly split into 64 meta-training, 16 meta-validation, and 20 meta-testing classes. Each class has 600 images of size 84 × 84. We use the same classes splits as [29] and prior works.\nThe FC100 dataset [41] is constructed from the CIFAR-100 dataset [27], which contains 100 classes that are grouped into 20 super-classes. These are in turn partitioned into 60 classes from 12 super-classes for meta-training, 20 classes from 4 super-classes for meta-validation, and 20 classes from 4 super-classes for meta-testing. This minimizes the semantic overlap between classes of different splits. Each class contains 600 images of size 32× 32."
+    }, {
+      "heading" : "4.1 Implementation Details",
+      "text" : "We use the SVM classifier head as suggested in MetaOptNet [29]. We begin with training a ResNet12 backbone on the training set of the relevant dataset for 60 epochs. We then replace the last residual block of the ResNet12 backbone\nwith our DAG task-adaptive block, keeping the first 3 ResNet blocks (ResNet9) fixed and perform the architecture search for 10 epochs. Finally, we train the ‘MetAdapt controllers’ for a single epoch. Each epoch consists of 8000 episodes with mini-batch of 4 episodes.\nFor the initial training we use the SGD optimizer with intial learning rate = 0.1, momentum = 0.9 and weight decay = 5 · 10−4. Decreasing the learning rate to 0.006 at epoch 20, 0.0012 at epoch 40 and 0.00024 at epoch 50. For weights optimization during the search and meta adaptation phases we use the SGD optimizer with learning rate = 0.001, momentum = 0.9 and weight decay = 5 · 10−4. For the architecture optimization we use Adam optimizer with learning rate = 3 · 10−4, β = [0.5, 0.99], weight decay = 10−3 and the Cosine Annealing learning rate scheduler with ηmin = 0.004.\nFollowing previous works, e.g. [13,5], we perform test time augmentations and fine-tuning. We perform horizontal flip augmentation, effectively doubling the number of support-set. We fine-tune the DAG weights for 10 iterations where the horizontally flipped support set serves as our labeled query set."
+    }, {
+      "heading" : "4.2 Results",
+      "text" : "Tables 2 and 3 compare the MetAdapt performance with the state-of-the-art few-shot classification methods that use plain ResNet backbones. We observe improved results for FC100 1-shot (+3.46%) and 5-shot (+3.17%) and also for miniImageNet 1-shot (+1.74%) and similar results for 5-shot. We see that despite having a larger model we do not suffer from severe over-fitting and perform comparably or better than top performing methods.\nArchitecture Transferability. It has been shown, in the case of architecture search, that it is possible to learn an architecture on a smaller dataset, e.g. CIFAR-10, and then the optimized architecture is transferable to a larger datasets, e.g. ImageNet. This helps mitigating the costly architecture search process. We follow this route, showing in our experiment that we can learn the α̂ values on FC100 and transfer them to miniImageNet (and then train the weights w of the transferred architecture on this dataset).\nFor miniImageNet we set the α’s to be fixed to values obtained for the FC100, while the rest of the parameters of the searched top block are randomly initialized. We find that the architecture transferred from FC100 to miniImageNet is performing well, with results comparable to other state-of-the-art methods, 62.82/79.35 for 1/5-shot. But a search performed on the actual dataset (miniImageNet training set) is outperforming the transferred one."
+    }, {
+      "heading" : "4.3 Ablation studies",
+      "text" : "Next, we explore the effect of the different design choices made in our approach.\nLarge model effect. We hypothesize that simply using the same algorithm with a larger model architecture would not result in better performance and it might even harm performance. This is evident in Figure 1 when comparing the performance of different methods across increasingly larger architectures. This is also evident by observing the architectures usually used in the few-shot literature.\nIt is already been shown in DARTS that training α together with w simultaneously decrease performance. They attribute this decrease to α over-fitting the training-set. To confirm our hypothesis, we used SGD to train our suggested DAG architecture, using fixed uniform α instead of the learned α (making it even less likely to over-fit compared to the ablation in DARTS). To this end αi,j are initialized so each operation is given the same weight and are kept fixed. We observed that indeed in this case our large architecture is not performing as well as ResNet12 (a smaller architecture). See Table 5b.\n40\n1 2 3 4 5 6 7 8 9 10\nEpochs\nFig. 5: Training curves with and without optimization of α for FC100. The generalization gap (gap between training-set and validationset accuracies) is smaller when α is optimized using our method, suggesting it has a regularization effect. The uniform-α and optimized-α experiments are described in Sec. 4.3.\nFC100 Method 1-shot 5-shot\nProtoNet [55] 37.50 52.50 TADAM [41] 40.10 56.10 MetaOptNet [29] 41.37 55.30\nMetAdapt (Ours) 44.83 58.47\nTable 4: MetAdapt vs. S-MetAdapt (Stochastic MetAdapt); CIFAR-100 (FC100) 5-way accuracy\nFC100 Method 1-shot 5-shot\nS-MetAdapt (Ours) 41.97 55.31 MetAdapt (Ours) 44.83 58.47\nDARTS Without Meta-Adaptation. Next we test the effect of optimizing α using iterative intermittent optimization for w and α using different folds of the training set. Here, w and α are updated intermittently one mini-batch at a time. In order to see the importance of using second-order approximation of w after convergence, we perform training with and without it.\nWithout: The α updates are done without the second-order approximation of w after a gradient descent step, i.e., the updates are performed according to:\nw = w − µ∇wLosstrainw(w,α) (6)\nWe find the α optimization is helping at improving the performance by about 1% compared to the fixed architecture (See Table 5c).\nWith: The α updates are done not according to current value of w but at an approximation of its value after convergence (see Equation 5). The update of w is performed according to Equations 4. We find that this change gives a moderate improvement of about 0.3% (see Table 5d).\nFigure 5 presents the training curves for training with the proposed bi-level optimization of w and α vs. training the large model when α is fixed. It shows that the generalization gap is larger for the latter case and confirms our hypothesis that simply adding more parameters is not sufficient for good performance.\nNumber of Operations. In the ablation experiments described till now, we used a slightly smaller model. Each edge is composed of 6 operations out of the 8 listed in Table 1, excluding the 5× 5 operations. Now, we add these operations to test the effect of a larger set of operations. Adding these operations improves slightly further the performance (see Table 5e).\nMetAdapt Controllers. Then, we add the MetAdapt Controllers, so the architecture is adapted to the current task according to the support samples. This brings us to the full MetAdapt method. We find that indeed the adaptations to each task are beneficial. The meta-adaptations improve the accuracy by around 2% (see Table 5f).\nTest time augmentations and fine-tuning. Finally, we add test time flip augmentations and fine-tuning as described in 4.1. This helps in the case of 1-shot with +0.41% improvement, but has no noticeable effect for 5-shot (see Table 5g-h).\nS-MetAdapt. A recent approach suggested for architecture search is Stochastic Neural Architecture Search (SNAS [65]). Usually for D-NAS, e.g. DARTS, at search time the training is done on the full model at each iteration where each edge is a weighted-sum of its operations according to αi,j . Contrarily, in SNAS αi,j are treated as probabilities of a Multinomial Distribution and at each iteration a single operation is sampled accordingly. So at each iteration only a single operation per edge affects the classification outcome and only this operation is be updated in the gradient descent backward step. Of course sampling from a Multinomial Distribution directly is not differentiable, so at training time the Gumbel Distribution is used as a differentiable approximation.\nWe tested a SNAS version of MetAdapt, named S-MetAdapt, on the few-shot classification task. Other than the modifications specified below S-MetAdapt is similar to MetAdapt. At training time, instead of the Mixed Operation defined in Equation 1, we define the Mixed Operation to be:\nōi,j(x) = ∑ o∈O zi,jo o(x) (8)\nwhere z(i,j) is a continuous approximation of a one-hot vector sampled from a Gumbel Distribution:\nzi,j ∼ Gumbel(αi,j). (9)\nHere αi,j are after softmax normalization and summed to 1. At test time, rather than the one-hot approximation, we use the operation with the top probability\nzi,jk =\n{ 1, if k = argmax(αi,j)\n0, otherwise (10)\nUsing this method we get better results for FC100 1-shot and comparable results for 5-shot, compared to vanilla MetaOptNet. However, it does not perform as well as the non-stochastic version of MetAdapt. See Table 4."
+    }, {
+      "heading" : "5 Conclusions",
+      "text" : "In this work we have proposed MetAdapt, a few-shot learning approach that enables meta-learned network architecture that is adaptive to novel few-shot tasks. The proposed approach effectively applies tools from the Neural Architecture Search (NAS) literature, extended with the concept of ‘MetAdapt Controllers’, in order to learn adaptive architectures. These tools help mitigate over-fitting to the extremely small data of the few-shot tasks and domain shift between the training set and the test set. We demonstrate that the proposed approach successfully improves state-of-the-art results on two popular few-shot benchmarks, miniImageNet and FC100, and carefully ablate the different optimization steps and design choices of the proposed approach.\nSome interesting future work directions include extending the proposed approach to progressively searching the full network architecture (instead of just\nthe last block), applying the approach to other few-shot tasks such as detection and segmentation, and researching into different variants of task-adaptivity including global connections modifiers and inter block adaptive wiring."
+    } ],
+    "references" : [ {
+      "title" : "Laso: Label-set operations networks for multi-label few-shot learning",
+      "author" : [ "A. Alfassy", "L. Karlinsky", "A. Aides", "J. Shtok", "S. Harary", "R. Feris", "R. Giryes", "A.M. Bronstein" ],
+      "venue" : "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. pp. 6548–6557",
+      "citeRegEx" : "1",
+      "shortCiteRegEx" : null,
+      "year" : 2019
+    }, {
+      "title" : "Data Augmentation Generative Adversarial Networks",
+      "author" : [ "A. Antoniou", "A. Storkey", "H. Edwards" ],
+      "venue" : null,
+      "citeRegEx" : "2",
+      "shortCiteRegEx" : "2",
+      "year" : 2017
+    }, {
+      "title" : "Predicting deep zero-shot convolutional neural networks using textual descriptions",
+      "author" : [ "J.L. Ba", "K. Swersky", "S. Fidler", "R. Salakhutdinov" ],
+      "venue" : "Proceedings of the IEEE International Conference on Computer Vision 2015 Inter, 4247–4255",
+      "citeRegEx" : "3",
+      "shortCiteRegEx" : null,
+      "year" : 2015
+    }, {
+      "title" : "Proxylessnas: Direct neural architecture search on target task and hardware",
+      "author" : [ "H. Cai", "L. Zhu", "S. Han" ],
+      "venue" : "ICLR",
+      "citeRegEx" : "4",
+      "shortCiteRegEx" : null,
+      "year" : 2019
+    }, {
+      "title" : "A Closer Look At Few-Shot Classification",
+      "author" : [ "W.Y. Chen" ],
+      "venue" : "ICLR. pp. 1–16",
+      "citeRegEx" : "5",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "Progressive differentiable architecture search: Bridging the depth gap between search and evaluation",
+      "author" : [ "X. Chen", "L. Xie", "J. Wu", "Q. Tian" ],
+      "venue" : "arXiv preprint arXiv:1904.12760",
+      "citeRegEx" : "6",
+      "shortCiteRegEx" : null,
+      "year" : 2019
+    }, {
+      "title" : "Semantic Feature Augmentation in Few-shot Learning",
+      "author" : [ "Z. Chen", "Y. Fu", "Y. Zhang", "Y.G. Jiang", "X. Xue", "L. Sigal" ],
+      "venue" : null,
+      "citeRegEx" : "7",
+      "shortCiteRegEx" : "7",
+      "year" : 2018
+    }, {
+      "title" : "Learning a Similarity Metric Discriminatively , with Application to Face Verification",
+      "author" : [ "S. Chopra", "R. Hadsell" ],
+      "venue" : "CVPR",
+      "citeRegEx" : "8",
+      "shortCiteRegEx" : null,
+      "year" : 2005
+    }, {
+      "title" : "Learning to Generate Chairs, Tables and Cars with Convolutional Networks",
+      "author" : [ "A. Dosovitskiy", "J.T. Springenberg", "M. Tatarchenko", "T. Brox" ],
+      "venue" : "IEEE Transactions on Pattern Analysis and Machine Intelligence 39(4), 692–705",
+      "citeRegEx" : "10",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "Generative Multi-Adversarial Networks",
+      "author" : [ "I. Durugkar", "I. Gemp", "S. Mahadevan" ],
+      "venue" : "International Conference on Learning Representations (ICLR) pp. 1–14",
+      "citeRegEx" : "11",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "Diversity with cooperation: Ensemble methods for few-shot classification",
+      "author" : [ "N. Dvornik", "C. Schmid", "J. Mairal" ],
+      "venue" : "The IEEE International Conference on Computer Vision (ICCV)",
+      "citeRegEx" : "12",
+      "shortCiteRegEx" : null,
+      "year" : 2019
+    }, {
+      "title" : "Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks",
+      "author" : [ "C. Finn", "P. Abbeel", "S. Levine" ],
+      "venue" : "arXiv:1703.03400 (2017),",
+      "citeRegEx" : "13",
+      "shortCiteRegEx" : "13",
+      "year" : 2017
+    }, {
+      "title" : "Transductive Multi-View Zero-Shot Learning",
+      "author" : [ "Y. Fu", "T.M. Hospedales", "T. Xiang", "S. Gong" ],
+      "venue" : "IEEE Transactions on Pattern Analysis and Machine Intelligence 37(11), 2332–2345",
+      "citeRegEx" : "14",
+      "shortCiteRegEx" : null,
+      "year" : 2015
+    }, {
+      "title" : "Semi-supervised Vocabulary-informed Learning",
+      "author" : [ "Y. Fu", "L. Sigal" ],
+      "venue" : "IEEE Conference on Computer Vision and Pattern Recognition (CVPR) pp. 5337–5346",
+      "citeRegEx" : "15",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Few-Shot Learning with Graph",
+      "author" : [ "V. Garcia", "J. Bruna" ],
+      "venue" : "Neural Networks",
+      "citeRegEx" : "16",
+      "shortCiteRegEx" : "16",
+      "year" : 2017
+    }, {
+      "title" : "Boosting few-shot visual learning with self-supervision",
+      "author" : [ "S. Gidaris", "A. Bursuc", "N. Komodakis", "P. Pérez", "M. Cord" ],
+      "venue" : "Proceedings of the IEEE International Conference on Computer Vision",
+      "citeRegEx" : "17",
+      "shortCiteRegEx" : null,
+      "year" : 2019
+    }, {
+      "title" : "Dynamic few-shot visual learning without forgetting",
+      "author" : [ "S. Gidaris", "N. Komodakis" ],
+      "venue" : "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. pp. 4367–4375",
+      "citeRegEx" : "18",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "Generating classification weights with gnn denoising autoencoders for few-shot learning",
+      "author" : [ "S. Gidaris", "N. Komodakis" ],
+      "venue" : "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. pp. 21–30",
+      "citeRegEx" : "19",
+      "shortCiteRegEx" : null,
+      "year" : 2019
+    }, {
+      "title" : "Generative Adversarial Nets",
+      "author" : [ "I. Goodfellow", "J. Pouget-Abadie", "M. Mirza", "B. Xu", "D. Warde-Farley", "S. Ozair", "A. Courville", "Y. Bengio" ],
+      "venue" : "Advances in Neural Information Processing Systems 27 pp. 2672–2680",
+      "citeRegEx" : "20",
+      "shortCiteRegEx" : null,
+      "year" : 2014
+    }, {
+      "title" : "Generating Sentences by Editing Prototypes",
+      "author" : [ "K. Guu", "T.B. Hashimoto", "Y. Oren", "P. Liang" ],
+      "venue" : null,
+      "citeRegEx" : "21",
+      "shortCiteRegEx" : "21",
+      "year" : 2017
+    }, {
+      "title" : "Low-shot Visual Recognition by Shrinking and Hallucinating Features",
+      "author" : [ "B. Hariharan", "R. Girshick" ],
+      "venue" : "IEEE International Conference on Computer Vision (ICCV) (2017),",
+      "citeRegEx" : "22",
+      "shortCiteRegEx" : "22",
+      "year" : 2017
+    }, {
+      "title" : "Densely Connected Convolutional Networks",
+      "author" : [ "G. Huang", "Z. Liu", "L. v. d. Maaten", "K.Q. Weinberger" ],
+      "venue" : "2017 IEEE Conference on Computer Vision and Pattern Recognition (CVPR) pp. 2261–2269",
+      "citeRegEx" : "23",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "Learning to learn with conditional class dependencies",
+      "author" : [ "X. Jiang", "M. Havaei", "F. Varno", "G. Chartrand", "N. Chapados", "S. Matwin" ],
+      "venue" : "ICLR",
+      "citeRegEx" : "24",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "Generative Visual Manipulation on the Natural Image Manifold",
+      "author" : [ "Jun-Yan Zhu", "E.S. Philipp Krahenbuhl", "A. Efros" ],
+      "venue" : "European Conference on Computer Vision (ECCV). pp. 597–613",
+      "citeRegEx" : "25",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Auto-meta: Automated gradient based meta learner search",
+      "author" : [ "J. Kim", "S. Lee", "S. Kim", "M. Cha", "J.K. Lee", "Y. Choi", "Y. Choi", "D.Y. Cho", "J. Kim" ],
+      "venue" : "arXiv preprint arXiv:1806.06927",
+      "citeRegEx" : "26",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "Learning Multiple Layers of Features from Tiny Images",
+      "author" : [ "A. Krizhevsky" ],
+      "venue" : "Technical report. Science Department, University of Toronto, Tech. pp. 1–60",
+      "citeRegEx" : "27",
+      "shortCiteRegEx" : null,
+      "year" : 2009
+    }, {
+      "title" : "ImageNet Classification with Deep Convolutional Neural Networks",
+      "author" : [ "A. Krizhevsky", "I. Sutskever", "G.E. Hinton" ],
+      "venue" : "Advances In Neural Information Processing Systems pp. 1–9",
+      "citeRegEx" : "28",
+      "shortCiteRegEx" : null,
+      "year" : 2012
+    }, {
+      "title" : "Meta-learning with differentiable convex optimization",
+      "author" : [ "K. Lee", "S. Maji", "A. Ravichandran", "S. Soatto" ],
+      "venue" : "CVPR",
+      "citeRegEx" : "29",
+      "shortCiteRegEx" : null,
+      "year" : 2019
+    }, {
+      "title" : "Meta-SGD: Learning to Learn Quickly for FewShot Learning",
+      "author" : [ "Z. Li", "F. Zhou", "F. Chen", "H. Li" ],
+      "venue" : null,
+      "citeRegEx" : "30",
+      "shortCiteRegEx" : "30",
+      "year" : 2017
+    }, {
+      "title" : "Learning without Forgetting",
+      "author" : [ "Z. Li", "D. Hoiem" ],
+      "venue" : "IEEE Transactions on Pattern Analysis and Machine Intelligence pp. 1–13",
+      "citeRegEx" : "31",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Transfer Learning by Borrowing Examples for Multiclass Object Detection",
+      "author" : [ "J.J. Lim", "R. Salakhutdinov", "A. Torralba" ],
+      "venue" : "Advances in Neural Information Processing Systems 26 (NIPS) pp. 1–9",
+      "citeRegEx" : "32",
+      "shortCiteRegEx" : null,
+      "year" : 2012
+    }, {
+      "title" : "Progressive neural architecture search",
+      "author" : [ "C. Liu", "B. Zoph", "M. Neumann", "J. Shlens", "W. Hua", "L.J. Li", "L. Fei-Fei", "A. Yuille", "J. Huang", "K. Murphy" ],
+      "venue" : "Proceedings of the European Conference on Computer Vision (ECCV). pp. 19–34",
+      "citeRegEx" : "33",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "Darts: Differentiable architecture search",
+      "author" : [ "H. Liu", "K. Simonyan", "Y. Yang" ],
+      "venue" : "International Conference on Learning Representations (ICLR)",
+      "citeRegEx" : "34",
+      "shortCiteRegEx" : null,
+      "year" : 2019
+    }, {
+      "title" : "Least Squares Generative Adversarial Networks",
+      "author" : [ "X. Mao", "Q. Li", "H. Xie", "R.Y.K. Lau", "Z. Wang", "S.P. Smolley" ],
+      "venue" : "IEEE International Conference on Computer Vision (ICCV) pp. 1–16",
+      "citeRegEx" : "35",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "A Simple Neural Attentive Meta-Learner",
+      "author" : [ "N. Mishra", "M. Rohaninejad", "X. Chen", "P. Abbeel" ],
+      "venue" : "Advances In Neural Information Processing Systems",
+      "citeRegEx" : "36",
+      "shortCiteRegEx" : "36",
+      "year" : 2017
+    }, {
+      "title" : "Meta Networks",
+      "author" : [ "T. Munkhdalai", "H. Yu" ],
+      "venue" : "arXiv:1703.00837",
+      "citeRegEx" : "37",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "Rapid adaptation with conditionally shifted neurons",
+      "author" : [ "T. Munkhdalai", "X. Yuan", "S. Mehri", "A. Trischler" ],
+      "venue" : "International Conference on Machine Learning. pp. 3661–3670",
+      "citeRegEx" : "38",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "On first-order meta-learning algorithms",
+      "author" : [ "A. Nichol", "J. Achiam", "J. Schulman" ],
+      "venue" : "arXiv preprint arXiv:1803.02999",
+      "citeRegEx" : "39",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "Asap: Architecture search, anneal and prune",
+      "author" : [ "A. Noy", "N. Nayman", "T. Ridnik", "N. Zamir", "S. Doveh", "I. Friedman", "R. Giryes", "L. Zelnik-Manor" ],
+      "venue" : "arXiv:1904.04123",
+      "citeRegEx" : "40",
+      "shortCiteRegEx" : null,
+      "year" : 2019
+    }, {
+      "title" : "TADAM: Task dependent adaptive metric for improved few-shot learning",
+      "author" : [ "B.N. Oreshkin", "P. Rodriguez", "A. Lacoste" ],
+      "venue" : "NeurIPS",
+      "citeRegEx" : "41",
+      "shortCiteRegEx" : "41",
+      "year" : 2018
+    }, {
+      "title" : "Articulated pose estimation with tiny synthetic videos",
+      "author" : [ "D. Park", "D. Ramanan" ],
+      "venue" : "IEEE Conference on Computer Vision and Pattern Recognition (CVPR) 2015Octob, 58–66",
+      "citeRegEx" : "42",
+      "shortCiteRegEx" : null,
+      "year" : 2015
+    }, {
+      "title" : "Efficient neural architecture search via parameter sharing",
+      "author" : [ "H. Pham", "M. Y Guan", "B. Zoph", "Q.V. Le", "J. Dean" ],
+      "venue" : "International Conference on Machine Learning (ICML)",
+      "citeRegEx" : "43",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "Few-shot image recognition by predicting parameters from activations",
+      "author" : [ "S. Qiao", "C. Liu", "W. Shen", "A.L. Yuille" ],
+      "venue" : "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. pp. 7229–7238",
+      "citeRegEx" : "44",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks",
+      "author" : [ "A. Radford", "L. Metz", "S. Chintala" ],
+      "venue" : "arXiv:1511.06434 pp. 1–16",
+      "citeRegEx" : "45",
+      "shortCiteRegEx" : null,
+      "year" : 2015
+    }, {
+      "title" : "Optimization As a Model for Few-Shot Learning",
+      "author" : [ "S. Ravi", "H. Larochelle" ],
+      "venue" : "ICLR pp",
+      "citeRegEx" : "46",
+      "shortCiteRegEx" : "46",
+      "year" : 2017
+    }, {
+      "title" : "Regularized evolution for image classifier architecture search",
+      "author" : [ "E. Real", "A. Aggarwal", "Y. Huang", "Q.V. Le" ],
+      "venue" : "International Conference on Machine Learning ICML AutoML Workshop",
+      "citeRegEx" : "47",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "Few-shot autoregressive density estimation: towards learning to learn distributions",
+      "author" : [ "S. Reed", "Y. Chen", "T. Paine", "A. van den Oord", "S.M.A. Eslami", "D. Rezende", "O. Vinyals", "N. de Freitas" ],
+      "venue" : "arXiv:1710.10304",
+      "citeRegEx" : "48",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "Metric Learning with Adaptive Density Discrimination",
+      "author" : [ "O. Rippel", "M. Paluri", "P. Dollar", "L. Bourdev" ],
+      "venue" : "arXiv:1511.05939 pp",
+      "citeRegEx" : "49",
+      "shortCiteRegEx" : "49",
+      "year" : 2015
+    }, {
+      "title" : "ImageNet Large Scale Visual Recognition Challenge",
+      "author" : [ "O. Russakovsky", "J. Deng", "H. Su", "J. Krause", "S. Satheesh", "S. Ma", "Z. Huang", "A. Karpathy", "A. Khosla", "M. Bernstein", "A.C. Berg", "L. Fei-Fei" ],
+      "venue" : null,
+      "citeRegEx" : "50",
+      "shortCiteRegEx" : "50",
+      "year" : 2015
+    }, {
+      "title" : "Meta-Learning with Latent Embedding Optimization",
+      "author" : [ "A.A. Rusu", "D. Rao", "J. Sygnowski", "O. Vinyals", "R. Pascanu", "S. Osindero", "R. Hadsell" ],
+      "venue" : null,
+      "citeRegEx" : "51",
+      "shortCiteRegEx" : "51",
+      "year" : 2018
+    }, {
+      "title" : "Meta-Learning with Memory-Augmented Neural Networks",
+      "author" : [ "A. Santoro", "S. Bartunov", "M. Botvinick", "D. Wierstra", "T. Lillicrap" ],
+      "venue" : "Journal of Machine Learning Research 48(Proceedings of The 33rd International Conference on Machine Learning), 1842– 1850",
+      "citeRegEx" : "52",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Baby steps towards few-shot learning with multiple semantics",
+      "author" : [ "E. Schwartz", "L. Karlinsky", "R. Feris", "R. Giryes", "A.M. Bronstein" ],
+      "venue" : "arXiv preprint arXiv:1906.01905",
+      "citeRegEx" : "53",
+      "shortCiteRegEx" : null,
+      "year" : 2019
+    }, {
+      "title" : "Delta-Encoder: an Effective Sample Synthesis Method for Few-Shot Object Recognition",
+      "author" : [ "E. Schwartz", "L. Karlinsky", "J. Shtok", "S. Harary", "M. Marder", "A. Kumar", "R. Feris", "R. Giryes", "A.M. Bronstein" ],
+      "venue" : null,
+      "citeRegEx" : "54",
+      "shortCiteRegEx" : "54",
+      "year" : 2018
+    }, {
+      "title" : "Prototypical Networks for Few-shot Learning",
+      "author" : [ "J. Snell", "K. Swersky", "R. Zemel" ],
+      "venue" : "NIPS (2017),",
+      "citeRegEx" : "55",
+      "shortCiteRegEx" : "55",
+      "year" : 2017
+    }, {
+      "title" : "Render for CNN Viewpoint Estimation in Images Using CNNs Trained with Rendered 3D Model Views.pdf",
+      "author" : [ "H. Su", "C.R. Qi", "Y. Li", "L.J. Guibas" ],
+      "venue" : "IEEE International Conference on Computer Vision (ICCV) pp",
+      "citeRegEx" : "56",
+      "shortCiteRegEx" : "56",
+      "year" : 2015
+    }, {
+      "title" : "Learning to Compare: Relation Network for Few-Shot Learning",
+      "author" : [ "F. Sung", "Y. Yang", "L. Zhang", "T. Xiang", "P.H.S. Torr", "T.M. Hospedales" ],
+      "venue" : null,
+      "citeRegEx" : "57",
+      "shortCiteRegEx" : "57",
+      "year" : 2017
+    }, {
+      "title" : "Learning to compare: Relation network for few-shot learning",
+      "author" : [ "F. Sung", "Y. Yang", "L. Zhang", "T. Xiang", "P.H. Torr", "T.M. Hospedales" ],
+      "venue" : "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. pp. 1199–1208",
+      "citeRegEx" : "58",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "Efficientnet: Rethinking model scaling for convolutional neural networks",
+      "author" : [ "M. Tan", "Q.V. Le" ],
+      "venue" : "arXiv preprint arXiv:1905.11946",
+      "citeRegEx" : "59",
+      "shortCiteRegEx" : null,
+      "year" : 2019
+    }, {
+      "title" : "Matching Networks for One Shot Learning",
+      "author" : [ "O. Vinyals", "C. Blundell", "T. Lillicrap", "K. Kavukcuoglu", "D. Wierstra" ],
+      "venue" : "NIPS",
+      "citeRegEx" : "60",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Low-Shot Learning from Imaginary Data",
+      "author" : [ "Y.X. Wang", "R. Girshick", "M. Hebert", "B. Hariharan" ],
+      "venue" : null,
+      "citeRegEx" : "61",
+      "shortCiteRegEx" : "61",
+      "year" : 2018
+    }, {
+      "title" : "Learning from Small Sample Sets by Combining Unsupervised Meta-Training with CNNs",
+      "author" : [ "Y.X. Wang", "M. Hebert" ],
+      "venue" : "Advances In Neural Information Processing Systems",
+      "citeRegEx" : "62",
+      "shortCiteRegEx" : "62",
+      "year" : 2016
+    }, {
+      "title" : "Learning to Learn: Model Regression Networks for Easy Small Sample Learning",
+      "author" : [ "Y.X. Wang", "M. Hebert" ],
+      "venue" : "European Conference on Computer Vision (ECCV) pp. 616–634",
+      "citeRegEx" : "63",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Distance Metric Learning for Large Margin Nearest Neighbor Classification",
+      "author" : [ "K.Q. Weinberger", "L.K. Saul" ],
+      "venue" : "The Journal of Machine Learning Research 10, 207–244",
+      "citeRegEx" : "64",
+      "shortCiteRegEx" : null,
+      "year" : 2009
+    }, {
+      "title" : "Snas: Stochastic neural architecture search",
+      "author" : [ "S. Xie", "H. Zheng", "C. Liu", "L. Lin" ],
+      "venue" : "International Conference on Learning Representations (ICLR)",
+      "citeRegEx" : "65",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "Adaptive Cross-Modal Few-Shot Learning",
+      "author" : [ "C. Xing", "N. Rostamzadeh", "B.N. Oreshkin", "P.O. Pinheiro" ],
+      "venue" : "Arxiv (2019),",
+      "citeRegEx" : "66",
+      "shortCiteRegEx" : "66",
+      "year" : 1902
+    }, {
+      "title" : "Semantic Jitter: Dense Supervision for Visual Comparisons via Synthetic Images",
+      "author" : [ "A. Yu", "K. Grauman" ],
+      "venue" : "Proceedings of the IEEE International Conference on Computer Vision 2017-Octob, 5571–5580",
+      "citeRegEx" : "67",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "Deep Meta-Learning: Learning to Learn in the Concept Space",
+      "author" : [ "F. Zhou", "B. Wu", "Z. Li" ],
+      "venue" : null,
+      "citeRegEx" : "68",
+      "shortCiteRegEx" : "68",
+      "year" : 2018
+    }, {
+      "title" : "Unpaired Image-to-Image Translation Using Cycle-Consistent Adversarial Networks",
+      "author" : [ "J.Y. Zhu", "T. Park", "P. Isola", "A.A. Efros" ],
+      "venue" : "Proceedings of the IEEE International Conference on Computer Vision 2017-Octob, 2242–2251",
+      "citeRegEx" : "69",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "Neural architecture search with reinforcement learning",
+      "author" : [ "B. Zoph", "Q.V. Le" ],
+      "venue" : "International Conference on Learning Representations (ICLR)",
+      "citeRegEx" : "70",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    } ],
+    "referenceMentions" : [ {
+      "referenceID" : 58,
+      "context" : "Many successful meta-learning based approaches have been developed for FSC [60,55,13,39,51,41,29] advancing its state-of-the-art.",
+      "startOffset" : 75,
+      "endOffset" : 97
+    }, {
+      "referenceID" : 53,
+      "context" : "Many successful meta-learning based approaches have been developed for FSC [60,55,13,39,51,41,29] advancing its state-of-the-art.",
+      "startOffset" : 75,
+      "endOffset" : 97
+    }, {
+      "referenceID" : 11,
+      "context" : "Many successful meta-learning based approaches have been developed for FSC [60,55,13,39,51,41,29] advancing its state-of-the-art.",
+      "startOffset" : 75,
+      "endOffset" : 97
+    }, {
+      "referenceID" : 37,
+      "context" : "Many successful meta-learning based approaches have been developed for FSC [60,55,13,39,51,41,29] advancing its state-of-the-art.",
+      "startOffset" : 75,
+      "endOffset" : 97
+    }, {
+      "referenceID" : 49,
+      "context" : "Many successful meta-learning based approaches have been developed for FSC [60,55,13,39,51,41,29] advancing its state-of-the-art.",
+      "startOffset" : 75,
+      "endOffset" : 97
+    }, {
+      "referenceID" : 39,
+      "context" : "Many successful meta-learning based approaches have been developed for FSC [60,55,13,39,51,41,29] advancing its state-of-the-art.",
+      "startOffset" : 75,
+      "endOffset" : 97
+    }, {
+      "referenceID" : 27,
+      "context" : "Many successful meta-learning based approaches have been developed for FSC [60,55,13,39,51,41,29] advancing its state-of-the-art.",
+      "startOffset" : 75,
+      "endOffset" : 97
+    }, {
+      "referenceID" : 32,
+      "context" : "Some of the recent NAS techniques, and in particular Differentiable-NAS (D-NAS), such as DARTS [34], are capable of finding optimal (and transferable) architectures given a particular task using a single GPU in the course of 1-2 days.",
+      "startOffset" : 95,
+      "endOffset" : 99
+    }, {
+      "referenceID" : 32,
+      "context" : "In this work, we build our few-shot task-adaptive architecture search upon a technique from D-NAS (DARTS [34]).",
+      "startOffset" : 105,
+      "endOffset" : 109
+    }, {
+      "referenceID" : 58,
+      "context" : "To summarize, our contributions in this work are as follows: (1) We show that DARTS-like bi-level iterative optimization of layer weights and network connections performs well for few-shot classification without suffering from overfitting due to over-parameterization; (2) We show that adding small neural networks, MetAdapt Controllers, that adapt the connections in the main network according to the given task further (and significantly) improves performance; (3) using the proposed method, we obtain improvements over FSC state-of-the-art on two popular FSC benchmarks: miniImageNet [60] and FC100 [41].",
+      "startOffset" : 587,
+      "endOffset" : 591
+    }, {
+      "referenceID" : 39,
+      "context" : "To summarize, our contributions in this work are as follows: (1) We show that DARTS-like bi-level iterative optimization of layer weights and network connections performs well for few-shot classification without suffering from overfitting due to over-parameterization; (2) We show that adding small neural networks, MetAdapt Controllers, that adapt the connections in the main network according to the given task further (and significantly) improves performance; (3) using the proposed method, we obtain improvements over FSC state-of-the-art on two popular FSC benchmarks: miniImageNet [60] and FC100 [41].",
+      "startOffset" : 602,
+      "endOffset" : 606
+    }, {
+      "referenceID" : 62,
+      "context" : "This type of methods [64,55,49] learn a non-linear embedding into a metric space where L2 nearest neighbor (or similar) approach is used to classify instances of new categories according to their proximity to the few labeled training examples embedded in the same space.",
+      "startOffset" : 21,
+      "endOffset" : 31
+    }, {
+      "referenceID" : 53,
+      "context" : "This type of methods [64,55,49] learn a non-linear embedding into a metric space where L2 nearest neighbor (or similar) approach is used to classify instances of new categories according to their proximity to the few labeled training examples embedded in the same space.",
+      "startOffset" : 21,
+      "endOffset" : 31
+    }, {
+      "referenceID" : 47,
+      "context" : "This type of methods [64,55,49] learn a non-linear embedding into a metric space where L2 nearest neighbor (or similar) approach is used to classify instances of new categories according to their proximity to the few labeled training examples embedded in the same space.",
+      "startOffset" : 21,
+      "endOffset" : 31
+    }, {
+      "referenceID" : 14,
+      "context" : "Additional proposed variants include using a metric learning method based on graph neural networks [16], that goes beyond the L2 metric.",
+      "startOffset" : 99,
+      "endOffset" : 103
+    }, {
+      "referenceID" : 50,
+      "context" : "Similarly, [52,58] introduce metric learning methods where the similarity is computed by an implicit learned function rather than via the L2 metric over an embedding space.",
+      "startOffset" : 11,
+      "endOffset" : 18
+    }, {
+      "referenceID" : 56,
+      "context" : "Similarly, [52,58] introduce metric learning methods where the similarity is computed by an implicit learned function rather than via the L2 metric over an embedding space.",
+      "startOffset" : 11,
+      "endOffset" : 18
+    }, {
+      "referenceID" : 47,
+      "context" : "The embedding space based metric-learning approaches are either posed as a general discriminative distance metric learning [49,8], or optimized on the fewshot tasks [55,64,16,41], via the meta-learning paradigm that will be described next.",
+      "startOffset" : 123,
+      "endOffset" : 129
+    }, {
+      "referenceID" : 7,
+      "context" : "The embedding space based metric-learning approaches are either posed as a general discriminative distance metric learning [49,8], or optimized on the fewshot tasks [55,64,16,41], via the meta-learning paradigm that will be described next.",
+      "startOffset" : 123,
+      "endOffset" : 129
+    }, {
+      "referenceID" : 53,
+      "context" : "The embedding space based metric-learning approaches are either posed as a general discriminative distance metric learning [49,8], or optimized on the fewshot tasks [55,64,16,41], via the meta-learning paradigm that will be described next.",
+      "startOffset" : 165,
+      "endOffset" : 178
+    }, {
+      "referenceID" : 62,
+      "context" : "The embedding space based metric-learning approaches are either posed as a general discriminative distance metric learning [49,8], or optimized on the fewshot tasks [55,64,16,41], via the meta-learning paradigm that will be described next.",
+      "startOffset" : 165,
+      "endOffset" : 178
+    }, {
+      "referenceID" : 14,
+      "context" : "The embedding space based metric-learning approaches are either posed as a general discriminative distance metric learning [49,8], or optimized on the fewshot tasks [55,64,16,41], via the meta-learning paradigm that will be described next.",
+      "startOffset" : 165,
+      "endOffset" : 178
+    }, {
+      "referenceID" : 39,
+      "context" : "The embedding space based metric-learning approaches are either posed as a general discriminative distance metric learning [49,8], or optimized on the fewshot tasks [55,64,16,41], via the meta-learning paradigm that will be described next.",
+      "startOffset" : 165,
+      "endOffset" : 178
+    }, {
+      "referenceID" : 47,
+      "context" : "These approaches show a great promise, and in some cases are able to learn embedding spaces with some meaningful semantics embedded in the metric [49].",
+      "startOffset" : 146,
+      "endOffset" : 150
+    }, {
+      "referenceID" : 22,
+      "context" : "In [24], class conditioned embedding is used.",
+      "startOffset" : 3,
+      "endOffset" : 7
+    }, {
+      "referenceID" : 64,
+      "context" : "In [66], the visual prototypes are refined using a corresponding label embedding and in [53] it is extended to using multiple semantics, such as textual descriptions.",
+      "startOffset" : 3,
+      "endOffset" : 7
+    }, {
+      "referenceID" : 51,
+      "context" : "In [66], the visual prototypes are refined using a corresponding label embedding and in [53] it is extended to using multiple semantics, such as textual descriptions.",
+      "startOffset" : 88,
+      "endOffset" : 92
+    }, {
+      "referenceID" : 12,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 89,
+      "endOffset" : 95
+    }, {
+      "referenceID" : 29,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 138,
+      "endOffset" : 148
+    }, {
+      "referenceID" : 60,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 138,
+      "endOffset" : 148
+    }, {
+      "referenceID" : 61,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 138,
+      "endOffset" : 148
+    }, {
+      "referenceID" : 30,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 228,
+      "endOffset" : 232
+    }, {
+      "referenceID" : 2,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 264,
+      "endOffset" : 270
+    }, {
+      "referenceID" : 13,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 264,
+      "endOffset" : 270
+    }, {
+      "referenceID" : 40,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 306,
+      "endOffset" : 316
+    }, {
+      "referenceID" : 8,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 306,
+      "endOffset" : 316
+    }, {
+      "referenceID" : 54,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 306,
+      "endOffset" : 316
+    }, {
+      "referenceID" : 26,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 403,
+      "endOffset" : 407
+    }, {
+      "referenceID" : 19,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 453,
+      "endOffset" : 457
+    }, {
+      "referenceID" : 67,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 527,
+      "endOffset" : 554
+    }, {
+      "referenceID" : 23,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 527,
+      "endOffset" : 554
+    }, {
+      "referenceID" : 18,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 527,
+      "endOffset" : 554
+    }, {
+      "referenceID" : 46,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 527,
+      "endOffset" : 554
+    }, {
+      "referenceID" : 43,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 527,
+      "endOffset" : 554
+    }, {
+      "referenceID" : 33,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 527,
+      "endOffset" : 554
+    }, {
+      "referenceID" : 9,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 527,
+      "endOffset" : 554
+    }, {
+      "referenceID" : 21,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 527,
+      "endOffset" : 554
+    }, {
+      "referenceID" : 1,
+      "context" : "These approaches include: (i) semi-supervised approaches using additional unlabeled data [9,14]; (ii) fine tuning from pre-trained models [31,62,63]; (iii) applying domain transfer by borrowing examples from relevant categories [32] or using semantic vocabularies [3,15]; (iv) rendering synthetic examples [42,10,56]; (v) augmenting the training examples using geometric and photometric transformations [28] or learning adaptive augmentation strategies [21]; (vi) example synthesis using Generative Adversarial Networks (GANs) [69,25,20,48,45,35,11,23,2].",
+      "startOffset" : 527,
+      "endOffset" : 554
+    }, {
+      "referenceID" : 20,
+      "context" : "In [22,54] additional examples are synthesized via extracting, encoding, and transferring to the novel category instances, of the intra-class relations between pairs of instances of reference categories.",
+      "startOffset" : 3,
+      "endOffset" : 10
+    }, {
+      "referenceID" : 52,
+      "context" : "In [22,54] additional examples are synthesized via extracting, encoding, and transferring to the novel category instances, of the intra-class relations between pairs of instances of reference categories.",
+      "startOffset" : 3,
+      "endOffset" : 10
+    }, {
+      "referenceID" : 59,
+      "context" : "In [61], a generator sub-net is added to a classifier network and is trained to synthesize new examples on the fly in order to improve the classifier performance when being fine-tuned on a novel (few-shot) task.",
+      "startOffset" : 3,
+      "endOffset" : 7
+    }, {
+      "referenceID" : 46,
+      "context" : "In [48], a few-shot class density estimation is performed with an auto-regressive model, augmented with an attention mechanism, where examples are synthesized by a sequential process.",
+      "startOffset" : 3,
+      "endOffset" : 7
+    }, {
+      "referenceID" : 0,
+      "context" : "In [1] models are trained to perform set-operations (e.",
+      "startOffset" : 3,
+      "endOffset" : 6
+    }, {
+      "referenceID" : 58,
+      "context" : "In Matching Networks [60], a non-parametric k-NN classifier is meta-learned such that for each few-shot task the learned model generates an adaptive embedding space for which the task can be better solved.",
+      "startOffset" : 21,
+      "endOffset" : 25
+    }, {
+      "referenceID" : 53,
+      "context" : "In [55] the metric (embedding) space is optimized such that in the resulting space different categories form compact and well separated uni-modal distributions around the category ‘prototypes’ (centers of the category modes).",
+      "startOffset" : 3,
+      "endOffset" : 7
+    }, {
+      "referenceID" : 11,
+      "context" : "The first of these approaches is MAML [13] that due to its universality was later extended through many works such as, Meta-SGD [30], DEML+Meta-SGD [68], MetaLearn LSTM [46], and Meta-Networks [37].",
+      "startOffset" : 38,
+      "endOffset" : 42
+    }, {
+      "referenceID" : 28,
+      "context" : "The first of these approaches is MAML [13] that due to its universality was later extended through many works such as, Meta-SGD [30], DEML+Meta-SGD [68], MetaLearn LSTM [46], and Meta-Networks [37].",
+      "startOffset" : 128,
+      "endOffset" : 132
+    }, {
+      "referenceID" : 66,
+      "context" : "The first of these approaches is MAML [13] that due to its universality was later extended through many works such as, Meta-SGD [30], DEML+Meta-SGD [68], MetaLearn LSTM [46], and Meta-Networks [37].",
+      "startOffset" : 148,
+      "endOffset" : 152
+    }, {
+      "referenceID" : 44,
+      "context" : "The first of these approaches is MAML [13] that due to its universality was later extended through many works such as, Meta-SGD [30], DEML+Meta-SGD [68], MetaLearn LSTM [46], and Meta-Networks [37].",
+      "startOffset" : 169,
+      "endOffset" : 173
+    }, {
+      "referenceID" : 35,
+      "context" : "The first of these approaches is MAML [13] that due to its universality was later extended through many works such as, Meta-SGD [30], DEML+Meta-SGD [68], MetaLearn LSTM [46], and Meta-Networks [37].",
+      "startOffset" : 193,
+      "endOffset" : 197
+    }, {
+      "referenceID" : 49,
+      "context" : "In LEO [51], a MAML like loss is applied not directly on the model parameters, but rather on a latent representation encoding them.",
+      "startOffset" : 7,
+      "endOffset" : 11
+    }, {
+      "referenceID" : 27,
+      "context" : "In MetaOptNet [29] a CNN backbone is trained end-to-end with an unrolled convex optimization solution of an optimal classifier, such as SVM.",
+      "startOffset" : 14,
+      "endOffset" : 18
+    }, {
+      "referenceID" : 15,
+      "context" : "In BF3S [17] auxiliary self-supervision tasks are added, such as predicting image rotation or patch location.",
+      "startOffset" : 8,
+      "endOffset" : 12
+    }, {
+      "referenceID" : 10,
+      "context" : "In Robust-dist [12] first an ensemble of up to 20 models is learned, so each model by itself cannot overfit the data.",
+      "startOffset" : 15,
+      "endOffset" : 19
+    }, {
+      "referenceID" : 45,
+      "context" : "Two notable works on NAS are AmoebaNet [47] and NASnet [70].",
+      "startOffset" : 39,
+      "endOffset" : 43
+    }, {
+      "referenceID" : 68,
+      "context" : "Two notable works on NAS are AmoebaNet [47] and NASnet [70].",
+      "startOffset" : 55,
+      "endOffset" : 59
+    }, {
+      "referenceID" : 41,
+      "context" : "Efficient NAS (ENAS) [43], a reinforcement learning based method, used weight sharing across its child models, which are sub graphs of a larger one.",
+      "startOffset" : 21,
+      "endOffset" : 25
+    }, {
+      "referenceID" : 57,
+      "context" : "The work in [59] shows how to scale the size of such learned architectures with the size of the input data.",
+      "startOffset" : 12,
+      "endOffset" : 16
+    }, {
+      "referenceID" : 32,
+      "context" : "Notable among them are differentiable architecture search (DARTS) [34] and SNAS [65].",
+      "startOffset" : 66,
+      "endOffset" : 70
+    }, {
+      "referenceID" : 63,
+      "context" : "Notable among them are differentiable architecture search (DARTS) [34] and SNAS [65].",
+      "startOffset" : 80,
+      "endOffset" : 84
+    }, {
+      "referenceID" : 38,
+      "context" : "ASAP [40] addresses the issue that harsh pruning at the end of the search makes the found architecture sub-optimal.",
+      "startOffset" : 5,
+      "endOffset" : 9
+    }, {
+      "referenceID" : 63,
+      "context" : "In SNAS [65], the search is done by learning a continuous architectures distribution and sampling from it.",
+      "startOffset" : 8,
+      "endOffset" : 12
+    }, {
+      "referenceID" : 3,
+      "context" : "In [4] a binary mask is learned and used to keep a single path of the network graph.",
+      "startOffset" : 3,
+      "endOffset" : 6
+    }, {
+      "referenceID" : 31,
+      "context" : "PNAS [33] suggested a method for progressively searching for a larger architecture.",
+      "startOffset" : 5,
+      "endOffset" : 9
+    }, {
+      "referenceID" : 5,
+      "context" : "P-DARTS [6] do the same but with differentiable architecture search.",
+      "startOffset" : 8,
+      "endOffset" : 11
+    }, {
+      "referenceID" : 24,
+      "context" : "Auto-Meta [26] used PNAS [33] based search for few-shot classification, but with a focus on searching for a small architecture (resulting in a relatively low performance w.",
+      "startOffset" : 10,
+      "endOffset" : 14
+    }, {
+      "referenceID" : 31,
+      "context" : "Auto-Meta [26] used PNAS [33] based search for few-shot classification, but with a focus on searching for a small architecture (resulting in a relatively low performance w.",
+      "startOffset" : 25,
+      "endOffset" : 29
+    }, {
+      "referenceID" : 32,
+      "context" : "The architecture of the adaptable block used in MetAdapt is defined, similarly to DARTS [34], as a Directed Acyclic Graph (DAG).",
+      "startOffset" : 88,
+      "endOffset" : 92
+    }, {
+      "referenceID" : 32,
+      "context" : "We follow the solution proposed in DARTS [34], solving a bi-level iterative optimization of the layers’ weights w and the coefficients of operations α between the nodes.",
+      "startOffset" : 41,
+      "endOffset" : 45
+    }, {
+      "referenceID" : 42,
+      "context" : "70 Activation to Parameter [44] WResNet28 59.",
+      "startOffset" : 27,
+      "endOffset" : 31
+    }, {
+      "referenceID" : 58,
+      "context" : "The miniImageNet dataset [60] is a standard benchmark for few-shot image classification, that has 100 randomly chosen classes from ILSVRC-2012 [50].",
+      "startOffset" : 25,
+      "endOffset" : 29
+    }, {
+      "referenceID" : 48,
+      "context" : "The miniImageNet dataset [60] is a standard benchmark for few-shot image classification, that has 100 randomly chosen classes from ILSVRC-2012 [50].",
+      "startOffset" : 143,
+      "endOffset" : 147
+    }, {
+      "referenceID" : 27,
+      "context" : "We use the same classes splits as [29] and prior works.",
+      "startOffset" : 34,
+      "endOffset" : 38
+    }, {
+      "referenceID" : 39,
+      "context" : "The FC100 dataset [41] is constructed from the CIFAR-100 dataset [27], which contains 100 classes that are grouped into 20 super-classes.",
+      "startOffset" : 18,
+      "endOffset" : 22
+    }, {
+      "referenceID" : 25,
+      "context" : "The FC100 dataset [41] is constructed from the CIFAR-100 dataset [27], which contains 100 classes that are grouped into 20 super-classes.",
+      "startOffset" : 65,
+      "endOffset" : 69
+    }, {
+      "referenceID" : 27,
+      "context" : "We use the SVM classifier head as suggested in MetaOptNet [29].",
+      "startOffset" : 58,
+      "endOffset" : 62
+    }, {
+      "referenceID" : 11,
+      "context" : "[13,5], we perform test time augmentations and fine-tuning.",
+      "startOffset" : 0,
+      "endOffset" : 6
+    }, {
+      "referenceID" : 4,
+      "context" : "[13,5], we perform test time augmentations and fine-tuning.",
+      "startOffset" : 0,
+      "endOffset" : 6
+    }, {
+      "referenceID" : 63,
+      "context" : "A recent approach suggested for architecture search is Stochastic Neural Architecture Search (SNAS [65]).",
+      "startOffset" : 99,
+      "endOffset" : 103
+    } ],
+    "year" : 2020,
+    "abstractText" : "Few-Shot Learning (FSL) is a topic of rapidly growing interest. Typically, in FSL a model is trained on a dataset consisting of many small tasks (meta-tasks) and learns to adapt to novel tasks that it will encounter during test time. This is also referred to as meta-learning. Another topic closely related to meta-learning with a lot of interest in the community is Neural Architecture Search (NAS), automatically finding optimal architecture instead of engineering it manually. In this work we combine these two aspects of meta-learning. So far, meta-learning FSL methods have focused on optimizing parameters of pre-defined network architectures, in order to make them easily adaptable to novel tasks. Moreover, it was observed that, in general, larger architectures perform better than smaller ones up to a certain saturation point (where they start to degrade due to over-fitting). However, little attention has been given to explicitly optimizing the architectures for FSL, nor to an adaptation of the architecture at test time to particular novel tasks. In this work, we propose to employ tools inspired by the Differentiable Neural Architecture Search (D-NAS) literature in order to optimize the architecture for FSL without over-fitting. Additionally, to make the architecture task adaptive, we propose the concept of ‘MetAdapt Controller’ modules. These modules are added to the model and are meta-trained to predict the optimal network connections for a given novel task. Using the proposed approach we observe state-of-the-art results on two popular few-shot benchmarks: miniImageNet and FC100.",
+    "creator" : "LaTeX with hyperref package"
+  }
+}

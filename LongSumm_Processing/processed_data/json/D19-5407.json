@@ -1,0 +1,404 @@
+15:19:32.148 [main] DEBUG com.amazonaws.AmazonWebServiceClient - Internal logging successfully configured to commons logger: true
+15:19:32.201 [main] DEBUG com.amazonaws.metrics.AwsSdkMetrics - Admin mbean registered under com.amazonaws.management:type=AwsSdkMetrics
+15:19:32.259 [main] DEBUG c.a.internal.config.InternalConfig - Configuration override awssdk_config_override.json not found.
+15:19:32.590 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:19:32.590 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loading model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:19:32.591 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:19:32.595 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Creating gazetteer cache at /tmp/gazetteer-v5.json-fa485aef.gazetteerCache.bin
+15:19:43.969 [scala-execution-context-global-12] INFO  o.a.scienceparse.ParserGroundTruth - Read 1609659 papers.
+15:19:58.272 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loaded model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:20:13.762 [scala-execution-context-global-12] INFO  o.a.scienceparse.ExtractReferences - could not load kermit gazetter
+15:20:13.819 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:20:13.819 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:20:13.823 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.RunSP$ - Starting /home/risubaba/LongSumm/pdf/D19-5407.pdf
+{
+  "name" : "/home/risubaba/LongSumm/pdf/D19-5407.pdf",
+  "metadata" : {
+    "source" : "META",
+    "title" : "An Editorial Network for Enhanced Document Summarization",
+    "authors" : [ "Edward Moroshko", "Guy Feigenblat", "Haggai Roitman", "David Konopnicki" ],
+    "emails" : [ "edward.moroshko@gmail.com", "guyf@il.ibm.com", "haggai@il.ibm.com", "davidko@il.ibm.com" ],
+    "sections" : [ {
+      "heading" : null,
+      "text" : "Proceedings of the 2nd Workshop on New Frontiers in Summarization, pages 57–63 Hong Kong, China, November 4, 2019. c©2019 Association for Computational Linguistics\n57"
+    }, {
+      "heading" : "1 Introduction",
+      "text" : "Automatic text summarizers condense a given piece of text into a shorter version (the summary). This is done while trying to preserve the main essence of the original text and keeping the generated summary as readable as possible.\nExisting summarization methods can be classified into two main types, either extractive or abstractive. Extractive methods select and order text fragments (e.g., sentences) from the original text source. Such methods are relatively simpler to develop and keep the extracted fragments untouched, allowing to preserve important parts, e.g., keyphrases, facts, opinions, etc. Yet, extractive summaries tend to be less fluent, coherent and readable and may include superfluous text.\nAbstractive methods apply natural language paraphrasing and/or compression on a given text. A common approach is based on the encoder-decoder (seq-to-seq) paradigm (Sutskever et al., 2014), with the original text sequence being encoded while the summary is the decoded sequence.\n∗Work was done during a summer internship in IBM Research AI\nWhile such methods usually generate summaries with better readability, their quality declines over longer textual inputs, which may lead to a higher redundancy (Paulus et al., 2017). Moreover, such methods are sensitive to vocabulary size, making them more difficult to train and generalize (See et al., 2017).\nA common approach for handling long text sequences in abstractive settings is through attention mechanisms, which aim to imitate the attentive reading behaviour of humans (Chopra et al., 2016). Two main types of attention methods may be utilized, either soft or hard. Soft attention methods first locate salient text regions within the input text and then bias the abstraction process to prefer such regions during decoding (Cohan et al., 2018; Gehrmann et al., 2018; Hsu et al., 2018; Nallapati et al., 2016; Li et al., 2018; Pasunuru and Bansal, 2018; Tan et al., 2017). On the other hand, hard attention methods perform abstraction only on text regions that were initially selected by some extraction process (Chen and Bansal, 2018; Nallapati et al., 2017; Liu et al., 2018).\nCompared to previous works, whose final summary is either entirely extracted or generated using an abstractive process, in this work, we suggest a new idea of “Editorial Network\" (EditNet) – a mixed extractive-abstractive summarization approach. A summary generated by EditNet may include sentences that were either extracted, abstracted or of both types. Moreover, per considered sentence, EditNet may decide not to take either of these decisions and completely reject the sentence.\nUsing the CNN/DailyMail dataset we demonstrate that, EditNet’s summarization quality is highly competitive to that obtained\nby both state-of-the-art abstractive-only and extractive-only baselines."
+    }, {
+      "heading" : "2 Editorial Network",
+      "text" : "Figure 1 depicts the architecture of EditNet. EditNet is applied as a post-processing step over a given input summary whose sentences were initially selected by some extractor. The key idea behind EditNet is to create an automatic editing process to enhance summary quality.\nLet S denote a summary which was extracted from a given text (document) D. The editorial process is implemented by iterating over sentences in S according to the selection order of the extractor. For each sentence in S, the “editor\" may make three possible decisions. The first decision is to keep the extracted sentence untouched (represented by label E in Figure 1). The second alternative is to rephrase the sentence (represented by label A in Figure 1). Such a decision, for example, may represent the editor’s wish to simplify or compress the original source sentence. The last possible decision is to completely reject the sentence (represented by label R in Figure 1). For example, the editor may wish to ignore a superfluous or duplicate information expressed in the current sentence. An example mixed summary generated by our approach is depicted in Figure 2 in the appendix, further emphasizing the various editor’s decisions."
+    }, {
+      "heading" : "2.1 Implementing the editor’s decisions",
+      "text" : "For a given sentence s ∈ D, we now denote by se and sa its original (extracted) and paraphrased (abstracted) versions. To obtain sa we use an abstractor, whose details will be shortly explained (see Section 2.2). Let es ∈ Rn and as ∈ Rn further denote the corresponding sentence representations of se and sa, respectively. Such representations allow to compare both sentence versions on the same grounds.\nRecall that, for each sentence si ∈ S (in order) the editor makes one of the three possible decisions: extract, abstract or reject si. Therefore, the editor may modify summary S by paraphrasing or rejecting some of its sentences, resulting in a mixed extractive-abstractive summary S′.\nLet l be the number of sentences in S. In each step i ∈ {1, 2, . . . , l}, in order to make an educated decision, the editor considers both sentence representations esi and asi as its input, together with two additional auxiliary representations. The first auxiliary representation is that of the whole document D itself, hereinafter denoted d ∈ Rn. Such a representation provides a global context for decision making. Assuming document D has\nN sentences, let ē = 1N N∑ s∈D es. Following (Chen and Bansal, 2018; Wu and Hu, 2018a), d is then calculated as follows: d = tanh (Wdē+ bd) , where Wd ∈ Rn×n and bd ∈ Rn are learnable parameters.\nThe second auxiliary representation is that of\nthe summary that was generated by the editor so far, denoted at step i as gi−1 ∈ Rn, with g0 = ~0. Such a representation provides a local context for decision making. Given the four representations as an input, the editor’s decision for sentence si ∈ S is implemented using two fully-connected layers, as follows:\nsoftmax (V tanh (Wc[esi , asi , gi−1, d] + bc) + b) , (1)\nwhere [·] denotes the vectors concatenation, V ∈ R3×m, Wc ∈ Rm×4n, bc ∈ Rm and b ∈ R3 are learnable parameters.\nIn each step i, therefore, the editor chooses the action πi ∈ {E,A,R} with the highest likelihood (according to Eq. 1), further denoted p(πi). Upon decision, in case it is either E or A, the editor appends the corresponding sentence version (i.e., either sei or s a i ) to S\n′; otherwise, the decision is R and sentence si is discarded. Depending on its decision, the current summary representation is further updated as follows:\ngi = gi−1 + tanh (Wghi) , (2)\nwhere Wg ∈ Rn×n are learnable parameters, gi−1 is the summary representation from the previous decision step; and hi ∈ {esi , asi ,~0}, depending on which decision is made.\nSuch a network architecture allows to capture various complex interactions between the different inputs. For example, the network may learn that given the global context, one of the sentence versions may allow to produce a summary with a better coverage. As another example, based on the interaction between both sentence versions with either of the local or global contexts (and possibly among the last two), the network may learn that both sentence versions may only add superfluous or redundant information to the summary, and therefore, decide to reject both."
+    }, {
+      "heading" : "2.2 Extractor and Abstractor",
+      "text" : "As a proof of concept, in this work, we utilize the extractor and abstractor that were previously used in (Chen and Bansal, 2018), with a slight modification to the latter, motivated by its specific usage within our approach. We now only highlight important aspects of these two sub-components and kindly refer the reader to (Chen and Bansal, 2018) for the full implementation details.\nThe extractor of (Chen and Bansal, 2018) consists of two main sub-components. The first\nis an encoder which encodes each sentence s ∈ D into es using an hierarchical representation1. The second is a sentence selector using a PointerNetwork (Vinyals et al., 2015). For the latter, let P (s) be the selection likelihood of sentence s.\nThe abstractor of (Chen and Bansal, 2018) is basically a standard encoder-aligner-decoder with a copy mechanism (See et al., 2017). Yet, instead of applying it directly only on a single given extracted sentence sei ∈ S, we apply it on a “chunk\" of three consecutive sentences2 (se−, s e i , s e +), where s e − and s e + denote the sentence that precedes and succeeds sei in D, respectively. This in turn, allows to generate an abstractive version of sei (i.e., s a i ) that benefits from a wider local context. Inspired by previous softattention methods, we further utilize the extractor’s sentence selection likelihoods P (·) for enhancing the abstractor’s attention mechanism, as follows. LetC(wj) denote the abstractor’s original attention value of a given word wj occurring in (se−, s e i , s e +); we then recalculate this value to be C ′(wj) = C(wj)·P (s)\nZ , with wj ∈ s and s ∈ {s e −, s e i , s e +}; Z = ∑ s′∈{se−,sei ,se+} ∑ wj∈s′ C(wj)·P (s ′) denotes the normalization term."
+    }, {
+      "heading" : "2.3 Sentence representation",
+      "text" : "Recall that, in order to compare sei with s a i , we need to represent both sentence versions on as similar grounds as possible. To achieve that, we first replace sei with s a i within the original document D. By doing so, we basically treat sentence sai as if it was an ordinary sentence within D, where the rest of the document remains untouched. We then obtain sai ’s representation by encoding it using the extractor’s encoder in a similar way in which sentence sei was originally supposed to be encoded. This results in a representation asi that provides a comparable alternative to esi , whose encoding is expected to be effected by similar contextual grounds."
+    }, {
+      "heading" : "2.4 Network training",
+      "text" : "We conclude this section with the description of how we train the editor using a novel soft labeling approach. Given text S (with l extracted sentences), let π = (π1, . . . , πl) denote its editing decisions\n1Such a representation is basically a combination of a temporal convolutional model followed by a biLSTM encoder.\n2The first and last chunks would only have two consecutive sentences.\n(sequence). We define the following “soft\" crossentropy loss:\nL(π|S) = −1 l ∑ si∈S ∑ πi∈{E,A,R} y(πi) log p(πi), (3) where, for a given sentence si ∈ S, y(πi) denotes its soft-label for decision. We next explain how each soft-label y(πi) is estimated. To this end, we utilize a given summary quality metric r(S′) which can be used to evaluate the quality of any given summary S′ (e.g., ROUGE (Lin, 2004)). Overall, for a given text input S with l sentences, there are 3l possible summaries S′ to consider. Let π∗ = (π∗1, . . . , π ∗ l ) denote the best decision sequence which results in the summary which maximizes r(·). For i ∈ {1, 2, . . . , l}, let r̄(π∗1, . . . , π∗i−1, πi) denote the average r(·) value obtained by decision sequences that start with the prefix (π∗1, . . . , π ∗ i−1, πi). Based on π∗, the soft label y(πi) is then calculated3 as follows:\ny(πi) = r̄(π∗1, . . . , π ∗ i−1, πi)∑\nπj∈{E,A,R} r̄(π ∗ 1, . . . , π ∗ i−1, πj)\n(4)"
+    }, {
+      "heading" : "3 Evaluation",
+      "text" : ""
+    }, {
+      "heading" : "3.1 Dataset and Setup",
+      "text" : "We trained, validated and tested our approach using the non-annonymized version of the CNN/DailyMail dataset (Hermann et al., 2015). Following (Nallapati et al., 2016), we used the story highlights associated with each article as its ground truth summary. We further used the F-measure versions of ROUGE-1, ROUGE-2 and ROUGEL as our evaluation metrics (Lin, 2004).\nThe extractor and abstractor were trained similarly to (Chen and Bansal, 2018) (including the same hyperparameters). The Editorial Network (hereinafter denoted EditNet) was trained according to Section 2.4, using the ADAM optimizer with a learning rate of 10−4 and a batch size of 32. Following (Dong et al., 2018; Wu and Hu, 2018a), we set the reward metric to be r(·) = αR-1(·) + βR-2(·) + γR-L(·); with α = 0.4, β = 1 and γ = 0.5, which were further suggested by (Wu and Hu, 2018a).\nWe further applied the Teacher-Forcing approach (Lamb et al., 2016) during training, where we considered the true-label instead of the\n3For i = 1 we have: r̄(π∗1 , . . . , π∗0 , π1) = r̄(π1).\neditor’s decision (including when updating gi at each step i according to Eq. 2). Following (Chen and Bansal, 2018), we set m = 512 and n = 512. We trained for 20 epochs, which has taken about 72 hours on a single GPU. We chose the best model over the validation set for testing. Finally, all components were implemented in Python 3.6 using the pytorch 0.4.1 package."
+    }, {
+      "heading" : "3.2 Results",
+      "text" : "Table 1 compares the quality of EditNet with that of several state-of-the-art extractive-only or abstractive-only baselines. This includes the extractor (rnn-ext-RL) and abstractor (rnn-ext-absRL) components of (Chen and Bansal, 2018) that we utilized for implementing EditNet 4.\nWe further report the quality of EditNet when it was being enforced to take an extract-only or abstract-only decision, denoted hereinafter as EditNetE and EditNetA, respectively. The comparison of EditNet to both EditNetE and EditNetA variants provides a strong empirical proof that, by utilizing an hybrid decision approach, a\n4The rnn-ext-RL extractor results reported in Table 1 are the ones that were reported by (Chen and Bansal, 2018). Training the public extractor released by these authors, we obtained the following significantly lower results: see EditNetE\nbetter summarization quality is obtained. Overall, EditNet provides a highly competitive summary quality, where it outperforms most baselines. Interestingly, EditNet’s summarization quality is quite similar to that of NeuSum (Zhou et al., 2018). Yet, while NeuSum applies an extraction-only approach, summaries generated by EditNet include a mixture of sentences that have been either extracted or abstracted.\nTwo models outperform EditNet, BERTSUM (Liu, 2019) and DCA (Celikyilmaz et al., 2018). The BERTSUM model gains an impressive accuracy, yet it is an extractive model that utilizes many attention layers running in parallel with millions of parameters (Devlin et al., 2019). DCA gains a comparable quality to EditNet, it outperforms on R-2 and slightly on R-1. The contextual encoder of DCA is comprised of several LSTM layers one on top of the other with varied number of agents (hyper-tuned) that transmit messages to each other. Considering the complexity of these models, and the slow down that can incur during training and inference, we think that EditNet still provides a useful, high quality and relatively simple extension on top of standard encoder aligned decoder architectures.\nOn average, 56% and 18% of EditNet’s decisions were to abstract (A) or reject (R), respectively. Moreover, on average, per summary, EditNet keeps only 33% of the original (extracted) sentences, while the rest (67%) are abstracted ones. This demonstrates that, EditNet has a high capability of utilizing abstraction, while being also able to maintain or reject the original extracted text whenever it is estimated to provide the best benefit for the summary’s quality."
+    }, {
+      "heading" : "4 Conclusions and Future Work",
+      "text" : "We have proposed EditNet – a novel alternative summarization approach that instead of solely applying extraction or abstraction, mixes both together. Moreover, EditNet implements a novel sentence rejection decision, allowing to “correct” initial sentence selection decisions which are predicted to negatively effect summarization quality. As future work, we plan to evaluate other alternative extractor-abstractor configurations and try to train the network end-to-end. We further plan to explore reinforcement learning (RL) as an alternative decision making approach."
+    } ],
+    "references" : [ {
+      "title" : "Deep communicating agents for abstractive summarization",
+      "author" : [ "Asli Celikyilmaz", "Antoine Bosselut", "Xiaodong He", "Yejin Choi." ],
+      "venue" : "Proceedings of the 2018 Conference of the North American Chapter of the Association for Computational Linguistics:",
+      "citeRegEx" : "Celikyilmaz et al\\.,? 2018",
+      "shortCiteRegEx" : "Celikyilmaz et al\\.",
+      "year" : 2018
+    }, {
+      "title" : "Fast abstractive summarization with reinforce-selected sentence rewriting",
+      "author" : [ "Yen-Chun Chen", "Mohit Bansal." ],
+      "venue" : "Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers),",
+      "citeRegEx" : "Chen and Bansal.,? 2018",
+      "shortCiteRegEx" : "Chen and Bansal.",
+      "year" : 2018
+    }, {
+      "title" : "Abstractive sentence summarization with attentive recurrent neural networks",
+      "author" : [ "Sumit Chopra", "Michael Auli", "Alexander M. Rush." ],
+      "venue" : "Proceedings of the 2016 Conference of the North American Chapter of the Association for Computational",
+      "citeRegEx" : "Chopra et al\\.,? 2016",
+      "shortCiteRegEx" : "Chopra et al\\.",
+      "year" : 2016
+    }, {
+      "title" : "A discourse-aware attention model for abstractive summarization of long documents",
+      "author" : [ "Arman Cohan", "Franck Dernoncourt", "Doo Soon Kim", "Trung Bui", "Seokhwan Kim", "Walter Chang", "Nazli Goharian." ],
+      "venue" : "Proceedings of the 2018 Conference",
+      "citeRegEx" : "Cohan et al\\.,? 2018",
+      "shortCiteRegEx" : "Cohan et al\\.",
+      "year" : 2018
+    }, {
+      "title" : "Bert: Pre-training of deep bidirectional transformers for language understanding",
+      "author" : [ "Jacob Devlin", "Ming-Wei Chang", "Kenton Lee", "Kristina Toutanova." ],
+      "venue" : "Proceedings of the 2019 Conference of the North American Chapter of the",
+      "citeRegEx" : "Devlin et al\\.,? 2019",
+      "shortCiteRegEx" : "Devlin et al\\.",
+      "year" : 2019
+    }, {
+      "title" : "Banditsum: Extractive summarization as a contextual bandit",
+      "author" : [ "Yue Dong", "Yikang Shen", "Eric Crawford", "Herke van Hoof", "Jackie Chi Kit Cheung." ],
+      "venue" : "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing, Brussels,",
+      "citeRegEx" : "Dong et al\\.,? 2018",
+      "shortCiteRegEx" : "Dong et al\\.",
+      "year" : 2018
+    }, {
+      "title" : "Bottom-up abstractive summarization",
+      "author" : [ "Sebastian Gehrmann", "Yuntian Deng", "Alexander Rush." ],
+      "venue" : "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing, pages 4098–4109. Association for Computational",
+      "citeRegEx" : "Gehrmann et al\\.,? 2018",
+      "shortCiteRegEx" : "Gehrmann et al\\.",
+      "year" : 2018
+    }, {
+      "title" : "Soft layer-specific multi-task summarization with entailment and question generation",
+      "author" : [ "Han Guo", "Ramakanth Pasunuru", "Mohit Bansal." ],
+      "venue" : "Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics (Volume",
+      "citeRegEx" : "Guo et al\\.,? 2018",
+      "shortCiteRegEx" : "Guo et al\\.",
+      "year" : 2018
+    }, {
+      "title" : "Teaching machines to read and comprehend",
+      "author" : [ "Karl Moritz Hermann", "Tomáš Kočiský", "Edward Grefenstette", "Lasse Espeholt", "Will Kay", "Mustafa Suleyman", "Phil Blunsom." ],
+      "venue" : "Proceedings of the 28th International Conference on Neural",
+      "citeRegEx" : "Hermann et al\\.,? 2015",
+      "shortCiteRegEx" : "Hermann et al\\.",
+      "year" : 2015
+    }, {
+      "title" : "A unified model for extractive and abstractive summarization using inconsistency loss",
+      "author" : [ "Wan-Ting Hsu", "Chieh-Kai Lin", "Ming-Ying Lee", "Kerui Min", "Jing Tang", "Min Sun." ],
+      "venue" : "Proceedings of the 56th Annual Meeting of the Association for",
+      "citeRegEx" : "Hsu et al\\.,? 2018",
+      "shortCiteRegEx" : "Hsu et al\\.",
+      "year" : 2018
+    }, {
+      "title" : "Closedbook training to improve summarization encoder memory",
+      "author" : [ "Yichen Jiang", "Mohit Bansal." ],
+      "venue" : "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing, pages 4067–4077. Association for Computational",
+      "citeRegEx" : "Jiang and Bansal.,? 2018",
+      "shortCiteRegEx" : "Jiang and Bansal.",
+      "year" : 2018
+    }, {
+      "title" : "Professor forcing: A new algorithm for training recurrent networks",
+      "author" : [ "Alex M Lamb", "Anirudh Goyal ALIAS PARTH GOYAL", "Ying Zhang", "Saizheng Zhang", "Aaron C Courville", "Yoshua Bengio." ],
+      "venue" : "Advances In Neural Information",
+      "citeRegEx" : "Lamb et al\\.,? 2016",
+      "shortCiteRegEx" : "Lamb et al\\.",
+      "year" : 2016
+    }, {
+      "title" : "Guiding generation for abstractive text summarization based on key information guide network",
+      "author" : [ "Chenliang Li", "Weiran Xu", "Si Li", "Sheng Gao." ],
+      "venue" : "Proceedings of the 2018 Conference of the North American Chapter of the Association",
+      "citeRegEx" : "Li et al\\.,? 2018",
+      "shortCiteRegEx" : "Li et al\\.",
+      "year" : 2018
+    }, {
+      "title" : "Rouge: A package for automatic evaluation of summaries",
+      "author" : [ "Chin-Yew Lin." ],
+      "venue" : "Text summarization branches out: Proceedings of the ACL-04 workshop, volume 8. Barcelona, Spain.",
+      "citeRegEx" : "Lin.,? 2004",
+      "shortCiteRegEx" : "Lin.",
+      "year" : 2004
+    }, {
+      "title" : "Generating wikipedia by summarizing long sequences",
+      "author" : [ "Peter J Liu", "Mohammad Saleh", "Etienne Pot", "Ben Goodrich", "Ryan Sepassi", "Lukasz Kaiser", "Noam Shazeer." ],
+      "venue" : "arXiv preprint arXiv:1801.10198.",
+      "citeRegEx" : "Liu et al\\.,? 2018",
+      "shortCiteRegEx" : "Liu et al\\.",
+      "year" : 2018
+    }, {
+      "title" : "Fine-tune bert for extractive summarization",
+      "author" : [ "Yang Liu." ],
+      "venue" : "arXiv preprint arXiv:1903.10318.",
+      "citeRegEx" : "Liu.,? 2019",
+      "shortCiteRegEx" : "Liu.",
+      "year" : 2019
+    }, {
+      "title" : "Summarunner: A recurrent neural network based sequence model for extractive summarization of documents",
+      "author" : [ "Ramesh Nallapati", "Feifei Zhai", "Bowen Zhou." ],
+      "venue" : "Proceedings of the Thirty-First AAAI Conference on Artificial Intelligence, February 4-9,",
+      "citeRegEx" : "Nallapati et al\\.,? 2017",
+      "shortCiteRegEx" : "Nallapati et al\\.",
+      "year" : 2017
+    }, {
+      "title" : "Abstractive text summarization using sequence-tosequence rnns and beyond",
+      "author" : [ "Ramesh Nallapati", "Bowen Zhou", "Cícero Nogueira dos Santos", "Çaglar Gülçehre", "Bing Xiang." ],
+      "venue" : "Proceedings of the 20th SIGNLL Conference on Computational Natural",
+      "citeRegEx" : "Nallapati et al\\.,? 2016",
+      "shortCiteRegEx" : "Nallapati et al\\.",
+      "year" : 2016
+    }, {
+      "title" : "Ranking sentences for extractive summarization with reinforcement learning",
+      "author" : [ "Shashi Narayan", "Shay B. Cohen", "Mirella Lapata." ],
+      "venue" : "Proceedings of the 2018 Conference of the North American Chapter of the Association for",
+      "citeRegEx" : "Narayan et al\\.,? 2018",
+      "shortCiteRegEx" : "Narayan et al\\.",
+      "year" : 2018
+    }, {
+      "title" : "Multireward reinforced summarization with saliency and entailment",
+      "author" : [ "Ramakanth Pasunuru", "Mohit Bansal." ],
+      "venue" : "Proceedings of the 2018 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language",
+      "citeRegEx" : "Pasunuru and Bansal.,? 2018",
+      "shortCiteRegEx" : "Pasunuru and Bansal.",
+      "year" : 2018
+    }, {
+      "title" : "A deep reinforced model for abstractive summarization",
+      "author" : [ "Romain Paulus", "Caiming Xiong", "Richard Socher." ],
+      "venue" : "CoRR, abs/1705.04304.",
+      "citeRegEx" : "Paulus et al\\.,? 2017",
+      "shortCiteRegEx" : "Paulus et al\\.",
+      "year" : 2017
+    }, {
+      "title" : "Get to the point: Summarization with pointer-generator networks",
+      "author" : [ "Abigail See", "Peter J. Liu", "Christopher D. Manning." ],
+      "venue" : "Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics, ACL 2017, Vancouver,",
+      "citeRegEx" : "See et al\\.,? 2017",
+      "shortCiteRegEx" : "See et al\\.",
+      "year" : 2017
+    }, {
+      "title" : "Sequence to sequence learning with neural networks",
+      "author" : [ "Ilya Sutskever", "Oriol Vinyals", "Quoc V. Le." ],
+      "venue" : "Proceedings of the 27th International Conference on Neural Information Processing Systems - Volume 2, NIPS’14, pages 3104–3112, Cambridge, MA,",
+      "citeRegEx" : "Sutskever et al\\.,? 2014",
+      "shortCiteRegEx" : "Sutskever et al\\.",
+      "year" : 2014
+    }, {
+      "title" : "Abstractive document summarization with a graphbased attentional neural model",
+      "author" : [ "Jiwei Tan", "Xiaojun Wan", "Jianguo Xiao." ],
+      "venue" : "Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers),",
+      "citeRegEx" : "Tan et al\\.,? 2017",
+      "shortCiteRegEx" : "Tan et al\\.",
+      "year" : 2017
+    }, {
+      "title" : "Pointer networks",
+      "author" : [ "Oriol Vinyals", "Meire Fortunato", "Navdeep Jaitly." ],
+      "venue" : "Advances in Neural Information Processing Systems, pages 2692–2700.",
+      "citeRegEx" : "Vinyals et al\\.,? 2015",
+      "shortCiteRegEx" : "Vinyals et al\\.",
+      "year" : 2015
+    }, {
+      "title" : "Learning to extract coherent summary via deep reinforcement learning",
+      "author" : [ "Yuxiang Wu", "Baotian Hu." ],
+      "venue" : "Proceedings of the Thirty-Second AAAI Conference on Artificial Intelligence, (AAAI18), the 30th innovative Applications of Artificial",
+      "citeRegEx" : "Wu and Hu.,? 2018a",
+      "shortCiteRegEx" : "Wu and Hu.",
+      "year" : 2018
+    }, {
+      "title" : "Learning to extract coherent summary via deep reinforcement learning",
+      "author" : [ "Yuxiang Wu", "Baotian Hu" ],
+      "venue" : "In Proceedings of the Thirty-Second AAAI Conference on Artificial Intelligence,",
+      "citeRegEx" : "Wu and Hu.,? \\Q2018\\E",
+      "shortCiteRegEx" : "Wu and Hu.",
+      "year" : 2018
+    }, {
+      "title" : "Neural latent extractive document summarization",
+      "author" : [ "Xingxing Zhang", "Mirella Lapata", "Furu Wei", "Ming Zhou." ],
+      "venue" : "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing, pages 779–784. Association",
+      "citeRegEx" : "Zhang et al\\.,? 2018",
+      "shortCiteRegEx" : "Zhang et al\\.",
+      "year" : 2018
+    }, {
+      "title" : "Neural document summarization by jointly learning to score and select sentences",
+      "author" : [ "Qingyu Zhou", "Nan Yang", "Furu Wei", "Shaohan Huang", "Ming Zhou", "Tiejun Zhao." ],
+      "venue" : "Proceedings of the 56th Annual Meeting of the Association for",
+      "citeRegEx" : "Zhou et al\\.,? 2018",
+      "shortCiteRegEx" : "Zhou et al\\.",
+      "year" : 2018
+    } ],
+    "referenceMentions" : [ {
+      "referenceID" : 22,
+      "context" : "A common approach is based on the encoder-decoder (seq-to-seq) paradigm (Sutskever et al., 2014), with the original text sequence being encoded while the summary is the decoded sequence.",
+      "startOffset" : 72,
+      "endOffset" : 96
+    }, {
+      "referenceID" : 20,
+      "context" : "∗Work was done during a summer internship in IBM Research AI While such methods usually generate summaries with better readability, their quality declines over longer textual inputs, which may lead to a higher redundancy (Paulus et al., 2017).",
+      "startOffset" : 221,
+      "endOffset" : 242
+    }, {
+      "referenceID" : 21,
+      "context" : "them more difficult to train and generalize (See et al., 2017).",
+      "startOffset" : 44,
+      "endOffset" : 62
+    }, {
+      "referenceID" : 2,
+      "context" : "A common approach for handling long text sequences in abstractive settings is through attention mechanisms, which aim to imitate the attentive reading behaviour of humans (Chopra et al., 2016).",
+      "startOffset" : 171,
+      "endOffset" : 192
+    }, {
+      "referenceID" : 1,
+      "context" : "On the other hand, hard attention methods perform abstraction only on text regions that were initially selected by some extraction process (Chen and Bansal, 2018; Nallapati et al., 2017; Liu et al., 2018).",
+      "startOffset" : 139,
+      "endOffset" : 204
+    }, {
+      "referenceID" : 16,
+      "context" : "On the other hand, hard attention methods perform abstraction only on text regions that were initially selected by some extraction process (Chen and Bansal, 2018; Nallapati et al., 2017; Liu et al., 2018).",
+      "startOffset" : 139,
+      "endOffset" : 204
+    }, {
+      "referenceID" : 14,
+      "context" : "On the other hand, hard attention methods perform abstraction only on text regions that were initially selected by some extraction process (Chen and Bansal, 2018; Nallapati et al., 2017; Liu et al., 2018).",
+      "startOffset" : 139,
+      "endOffset" : 204
+    }, {
+      "referenceID" : 1,
+      "context" : "As a proof of concept, in this work, we utilize the extractor and abstractor that were previously used in (Chen and Bansal, 2018), with a slight modification to the latter, motivated by its specific usage within our approach.",
+      "startOffset" : 106,
+      "endOffset" : 129
+    }, {
+      "referenceID" : 1,
+      "context" : "We now only highlight important aspects of these two sub-components and kindly refer the reader to (Chen and Bansal, 2018) for the full implementation details.",
+      "startOffset" : 99,
+      "endOffset" : 122
+    }, {
+      "referenceID" : 1,
+      "context" : "The extractor of (Chen and Bansal, 2018) consists of two main sub-components.",
+      "startOffset" : 17,
+      "endOffset" : 40
+    }, {
+      "referenceID" : 24,
+      "context" : "The second is a sentence selector using a PointerNetwork (Vinyals et al., 2015).",
+      "startOffset" : 57,
+      "endOffset" : 79
+    }, {
+      "referenceID" : 1,
+      "context" : "The abstractor of (Chen and Bansal, 2018) is basically a standard encoder-aligner-decoder with a copy mechanism (See et al.",
+      "startOffset" : 18,
+      "endOffset" : 41
+    }, {
+      "referenceID" : 21,
+      "context" : "The abstractor of (Chen and Bansal, 2018) is basically a standard encoder-aligner-decoder with a copy mechanism (See et al., 2017).",
+      "startOffset" : 112,
+      "endOffset" : 130
+    }, {
+      "referenceID" : 8,
+      "context" : "We trained, validated and tested our approach using the non-annonymized version of the CNN/DailyMail dataset (Hermann et al., 2015).",
+      "startOffset" : 109,
+      "endOffset" : 131
+    }, {
+      "referenceID" : 17,
+      "context" : "Following (Nallapati et al., 2016), we used the story highlights associated with each article as its ground truth summary.",
+      "startOffset" : 10,
+      "endOffset" : 34
+    }, {
+      "referenceID" : 13,
+      "context" : "We further used the F-measure versions of ROUGE-1, ROUGE-2 and ROUGEL as our evaluation metrics (Lin, 2004).",
+      "startOffset" : 96,
+      "endOffset" : 107
+    }, {
+      "referenceID" : 1,
+      "context" : "The extractor and abstractor were trained similarly to (Chen and Bansal, 2018) (including the same hyperparameters).",
+      "startOffset" : 55,
+      "endOffset" : 78
+    }, {
+      "referenceID" : 5,
+      "context" : "Following (Dong et al., 2018; Wu and Hu, 2018a), we set the reward metric to be r(·) = αR-1(·) + βR-2(·) + γR-L(·); with α = 0.",
+      "startOffset" : 10,
+      "endOffset" : 47
+    }, {
+      "referenceID" : 25,
+      "context" : "Following (Dong et al., 2018; Wu and Hu, 2018a), we set the reward metric to be r(·) = αR-1(·) + βR-2(·) + γR-L(·); with α = 0.",
+      "startOffset" : 10,
+      "endOffset" : 47
+    }, {
+      "referenceID" : 25,
+      "context" : "5, which were further suggested by (Wu and Hu, 2018a).",
+      "startOffset" : 35,
+      "endOffset" : 53
+    }, {
+      "referenceID" : 11,
+      "context" : "We further applied the Teacher-Forcing approach (Lamb et al., 2016) during training, where we considered the true-label instead of the",
+      "startOffset" : 48,
+      "endOffset" : 67
+    }, {
+      "referenceID" : 1,
+      "context" : "Following (Chen and Bansal, 2018), we set m = 512 and n = 512.",
+      "startOffset" : 10,
+      "endOffset" : 33
+    }, {
+      "referenceID" : 1,
+      "context" : "This includes the extractor (rnn-ext-RL) and abstractor (rnn-ext-absRL) components of (Chen and Bansal, 2018) that we utilized for implementing EditNet 4.",
+      "startOffset" : 86,
+      "endOffset" : 109
+    }, {
+      "referenceID" : 1,
+      "context" : "The rnn-ext-RL extractor results reported in Table 1 are the ones that were reported by (Chen and Bansal, 2018).",
+      "startOffset" : 88,
+      "endOffset" : 111
+    }, {
+      "referenceID" : 28,
+      "context" : "Interestingly, EditNet’s summarization quality is quite similar to that of NeuSum (Zhou et al., 2018).",
+      "startOffset" : 82,
+      "endOffset" : 101
+    }, {
+      "referenceID" : 15,
+      "context" : "Two models outperform EditNet, BERTSUM (Liu, 2019) and DCA (Celikyilmaz et al.",
+      "startOffset" : 39,
+      "endOffset" : 50
+    }, {
+      "referenceID" : 0,
+      "context" : "Two models outperform EditNet, BERTSUM (Liu, 2019) and DCA (Celikyilmaz et al., 2018).",
+      "startOffset" : 59,
+      "endOffset" : 85
+    }, {
+      "referenceID" : 4,
+      "context" : "accuracy, yet it is an extractive model that utilizes many attention layers running in parallel with millions of parameters (Devlin et al., 2019).",
+      "startOffset" : 124,
+      "endOffset" : 145
+    } ],
+    "year" : 2019,
+    "abstractText" : "We suggest a new idea of Editorial Network – a mixed extractive-abstractive summarization approach, which is applied as a postprocessing step over a given sequence of extracted sentences. We further suggest an effective way for training the “editor\" based on a novel soft-labeling approach. Using the CNN/DailyMail dataset we demonstrate the effectiveness of our approach compared to state-of-the-art extractive-only or abstractiveonly baselines.",
+    "creator" : "LaTeX with hyperref"
+  }
+}

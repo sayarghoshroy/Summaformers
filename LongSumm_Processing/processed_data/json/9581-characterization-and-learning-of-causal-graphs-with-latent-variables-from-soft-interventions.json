@@ -1,0 +1,445 @@
+15:21:48.674 [main] DEBUG com.amazonaws.AmazonWebServiceClient - Internal logging successfully configured to commons logger: true
+15:21:48.750 [main] DEBUG com.amazonaws.metrics.AwsSdkMetrics - Admin mbean registered under com.amazonaws.management:type=AwsSdkMetrics
+15:21:48.825 [main] DEBUG c.a.internal.config.InternalConfig - Configuration override awssdk_config_override.json not found.
+15:21:49.214 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:21:49.214 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loading model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:21:49.216 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:21:49.220 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Creating gazetteer cache at /tmp/gazetteer-v5.json-fa485aef.gazetteerCache.bin
+15:21:59.397 [scala-execution-context-global-12] INFO  o.a.scienceparse.ParserGroundTruth - Read 1609659 papers.
+15:22:16.601 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loaded model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:22:29.144 [scala-execution-context-global-12] INFO  o.a.scienceparse.ExtractReferences - could not load kermit gazetter
+15:22:29.202 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:22:29.202 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:22:29.207 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.RunSP$ - Starting /home/risubaba/LongSumm/pdf/9581-characterization-and-learning-of-causal-graphs-with-latent-variables-from-soft-interventions.pdf
+{
+  "name" : "/home/risubaba/LongSumm/pdf/9581-characterization-and-learning-of-causal-graphs-with-latent-variables-from-soft-interventions.pdf",
+  "metadata" : {
+    "source" : "META",
+    "title" : "Characterization and Learning of Causal Graphs with Latent Variables from Soft Interventions",
+    "authors" : [ "Murat Kocaoglu", "Amin Jaber", "Karthikeyan Shanmugam" ],
+    "emails" : [ "murat@ibm.com", "jaber0@purdue.edu", "karthikeyan.shanmugam2@ibm.com", "eb@cs.columbia.edu" ],
+    "sections" : [ {
+      "heading" : "1 Introduction",
+      "text" : "Explaining a complex system through their cause and effect relations is one of the fundamental challenges in science. Data is collected and experiments are performed with the intent of understanding how a certain phenomenon comes about, or how the underlying system works, which could be social, biological, artificial, among others. The study of causal relations can be seen through the lens of learning and inference [16, 21]. The learning component is concerned with discovering the causal structure, which is the very subject of interest in many domains, since they can provide insight about\n∗Equal contribution.\n33rd Conference on Neural Information Processing Systems (NeurIPS 2019), Vancouver, Canada.\nhow a complex system works and lead to better understanding about the phenomenon under investigation. The latter, inference, attempts to leverage the causal structure to compute quantitative claims about the effect of interventions and retrospective counterfactuals, which are critical to assign credit, understand blame and responsibility, and perform judgement about fairness in decision-making.\nOne of the most popular languages used to encode the invariances needed to reason about causal relations, for both learning and inference, is based on graphical models, and appears under the rubric of causal graphs [16, 21, 2]. A causal graph is a directed acyclic graph (DAG) with latent variables, where each edge encodes a causal relationship between its endpoints: X is a direct cause of Y , i.e., X → Y , if, when the remaining factors are held constant, forcing X to take a specific value affects the realization of Y , where X,Y are random variables representing some relevant features of the system.\nThe task of learning the causal structure entails a search over the space of causal graphs that are compatible with the observed data; the collection of these graphs forms what is called an equivalence class. The most popular mark imprinted on the data by the underlying causal structure that is used to delineate an equivalence class are conditional independence (CI) relations. These relations are the most basic type of probabilistic invariances used in the field and have been studied at large in the context of graphical models since, at least, [15] (see also [5]). While CIs are powerful and have been the driving force behind some of the most prominent structural learning algorithms in the field [16, 21], including the PC, FCI, these are constraints specific for one distribution.\nIn this paper, we start by noting something very simple, albeit powerful, that happens when a combination of observational and experimental distributions are available: There are constraints over the graphical structure that emerge by comparing these different distributions, and which are not of CI-type2. Remarkably, and unknown until our work, the converse of the causal calculus developed by Pearl [18] offers a systematic way of reading these constraints and tying them back to the underlying graphical structure. In reference to their connection to the do-calculus rules (or a generalization, as discussed later), we call these constraints the do-constraints. For concreteness, consider the graph in Fig. 1(a), where the dashed-bidirected arrow represents hidden variables that generate variations of the two observed variables, X,Y in this case. Suppose the observational (conditional) distribution and an interventional distribution on X are available, which are written as P(y|x), P(y|do(x)), respectively. Suppose we contrast these two distributions and the test evaluating the expression P(y|do(x)) = P(y|x) comes out as false. This is called a do-see test since the experimental (or “do”) and observational (“see”) distributions are contrasted. Based on the second rule of do-calculus, one can infer that there is an open backdoor path from X to Y , where the edge adjacent to X on this path has an arrowhead into X. In our setting, we do not have access to the true graph, but we leverage this and the other do-constraints to reverse engineer the process and try to learn the structure. Broadly speaking, do-constraints will play a critical role for learning, in the same way CI/d-separation plays in learning when only observational data is available. To the best of our knowledge, this type of constraints appeared first at the very definition of causal Bayesian networks (CBNs) in [1] and then were leveraged to design efficient experiments to learn the causal graph in [12].\nWe assume throughout this work that interventions are soft. A soft intervention affects the mechanism that generates the variable, while keeping the causal connections intact. Soft-interventions are widely employed in biology and medicine, where it is hard to change the underlying system, but possibly\n2Recall that a CI represents a constraint readable from one specific distribution saying that the value of Z is irrelevant for computing the likelihood of Y once we know the value of X, i.e., P(Y |X,Z) = P(Y |X),∀X,Y,Z.\neasier to perturb it. For our characterization, we utilize an extension of the causal calculus to soft interventions introduced in [4]. Under soft-interventions, the do-see test can be written as checking if Px(y|x) = P(y|x), where Px is the distribution obtained after a soft intervention on X. The second observation leveraged here follows from another realization by Pearl that interventions can be represented explicitly in the graphical model [17]. He then introduced what we call F-nodes, which graphically encode the changes due to an intervention and the corresponding parametrization (see also [16, Sec. 3.2.2]). This is important in our context since the do-calculus tests will be visible more explicitly in the graph. The graph obtained by adding F-nodes to the causal graph is called the augmented graph. The same construct was used more prominently in [6] in the context of inference and identification. Going back to Fig. 1b, the existence of the backdoor path from X to Y , as detected by rule 2 of the calculus, can be captured by the statement FX is not d-separated from Y given X. In the context of structure learning, similar constructions have been leveraged in the literature [13, 24].\nWe further make a specific assumption throughout the paper about the soft-interventions. We call it the controlled experiment setting, where each variable is intervened with the same mechanism change across different interventions. For example, in Fig. 1c, suppose we are given distributions from two controlled experiments Px, Px,z along with observational data. We can then use Fz to capture the invariances between Px,z and Px. For example, if Px,z(y) , Px(y), for some y, we can read that FZ 6⊥ Y\n∣∣∣FX , FX,Z . Accordingly, given a set of interventional distributions, we construct an augmented graph by introducing an F-node for every unique set difference between pairs of controlled intervention sets (more on that later on). Without the controlled experiment assumption, our machinery can still be used if one knows which mechanism changes are identical and by constructing F-nodes to reflect and capture the mechanism difference across two interventions. For simplicity of presentation, however, we restrict ourselves to the controlled experiment setting and do not pursue this route explicitly.\nTo encapsulate the distributional invariants directly induced by the causal calculus rules3, we call a set of interventional distributions I-Markov to a graph, if these distributions respect the causal calculus rules relative to that graph. Note that the notion of I-Markov is first introduced in [9, 10] for causally sufficient systems without the use of do-constraints4. For our characterization, we first extend the causal calculus rules to operate between arbitrary sets of interventions. We call two causal graphs D1,D2 I-Markov equivalent if the set of distributions that are I-Markov toD1 andD2 are the same. Using the augmented graph, we identify a graphical condition that is necessary and sufficient for two CBNs with latents to be I-Markov equivalent. Finally, we propose a sound algorithm for learning the augmented graph from interventional data. Our contributions can be summarized as follows:\n• We propose a characterization of I-Markov equivalence between two causal graphs with latent variables for a given intervention set I that is based on a generalization of do-calculus rules to arbitrary subsets of interventions.\n• We show a graphical characterization of I-Markov equivalence of causal graphs with latents. • We introduce a learning algorithm for inferring the graphical structure using a combination\nof observational and interventional data and utilizing the corresponding new constraints. This procedure comes with a new set of orientation rules. We formally show its soundness."
+    }, {
+      "heading" : "2 Background and Related Work",
+      "text" : "In this section, we introduce necessary concepts that we use throughout the paper. Upper case letters denote variables and lower case letters denote an assignment. Also, bold letters denote sets.\nCausal Bayesian Network (CBN): Let P(v) be a probability distribution over a set of variables V, and let Px(v) denote the distribution resulting from the hard intervention do(X = x), which sets X ⊆ V to constants x. Let P∗ denote the set of all interventional distributions Px(v), for all X ⊆ V, including P(V). A directed acyclic graph (DAG) over V is said to be a causal Bayesian network compatible with P∗ if and only if, for all X ⊆ V, Px(v) = ∏ {i|Vi<X} P(vi|pai), for all v consistent with x, and where Pai is the set of parents of Vi [16, 1, pp. 24]. If so, we refer to the DAG as causal.\n3There may be constraints that can be obtained by applying the rules multiple times we do not consider here. 4In the causally sufficient case, name is in reference to both global and local Markov conditions. However, in our work, the name stems from our observation that the do-constraints correspond to the global Markov conditions in the augmented graph.\nGiven that a subset of the variables are unmeasured or latent,D(V∪L,E) represents the causal graph where V and L denote the measured and latent variables, respectively, and E denotes the edges. A dashed bi-directed edge is used instead of← L →, where L ∈ L, whenever L is a root node with exactly two children. The observed distribution P(v) is obtained by marginalizing L out.\nP(v) = ∑\nL ∏ {i|Ti∈V∪L} P(ti|pai)\nClearly, the joint distribution over V does not factorize relative to D in a typical fashion, since Markovianity is no longer valid, but it does relative to both V and L. Still, CI relations can be read from the graph using a graphical criterion known as d-separation. Also, two causal graphs are called Markov equivalent whenever they share the same set of conditional independences over V.\nSoft Interventions: Another common type of intervention is soft, where the original conditional distributions of the intervened variables X are replaced with new ones, without completely eliminating the causal effect of the parents. Accordingly, the interventional distribution Px(v) becomes as follows, where P′(Xi|Pai) , P(Xi|Pai) is the new conditional distribution set by the intervention:\nPx(v) = ∑\nL ∏ {i|Xi∈X} P′(xi|pai) ∏ { j|T j<X} P(t j|pa j)\nIn this work, we assume that all the soft interventions are controlled. This means that for any two interventions I, J ⊆ V where Xi ∈ I ∩ J, we have PI(Xi|Pai) = PJ(Xi|Pai). Ancestral graphs: We now introduce a graphical representation of equivalence classes of causal graphs with latent nodes. A mixed graph can contain directed and bi-directed edges. A is an ancestor of B if there is a directed path from A to B. A is a spouse of B if A ↔ B is present. If A is both a spouse and an ancestor of B, this creates an almost directed cycle. An inducing path relative to L is a path on which every non-endpoint node X < L is a collider on the path (i.e., both edges incident to the node are into it) and every collider is an ancestor of an endpoint of the path. A mixed graph is ancestral if it does not contain a directed or almost directed cycle. It is maximal if there is no inducing path (relative to the empty set) between any two non-adjacent nodes. A Maximal Ancestral Graph (MAG) is a graph that is both ancestral and maximal [19]. Given a causal graphD(V,L), a MAGMD over V can be constructed such that both the independence and the ancestral relations among variables in V are retained, see, for example, [27, p. 6].\nA triple 〈X,Y,Z〉 is an unshielded triple if X and Y are adjacent, Y and Z are adjacent, and X and Z are not adjancent. If both edges are into Y , then the triple is referred to as unshielded collider. A path between X and Y , p = 〈X, . . . ,W,Z,Y〉, is a discriminating path for Z if (1) p includes at least three edges; (2) Z is a non-endpoint node on p, and is adjacent to Y on p; and (3) X is not adjacent to Y , and every node between X and Z is a collider on p and is a parent of Y . Two MAGs are Markov equivalent if and only if (1) they have the same adjacencies; (2) they have the same unshielded colliders; and (3) if a path p is a discriminating path for a vertex Z in both graphs, then Z is a collider on the path in one graph if and only if it is a collider on the path in the other. A PAG, which represents a Markov equivalence class of a MAG, is learnable from the independence model over the observed variables, and the FCI algorithm is a standard sound and complete method to learn such an object [28].\nRelated Work: Learning causal graphs from a combination of observational and interventional data has been studied in the literature [3, 11, 7, 20, 8, 12, 23]. For causally sufficient systems, the notion and characterization of interventional Markov equivalence has been introduced in [9, 10]. More recently, [24] showed that the same characterization can be used for both hard and soft interventions. For causally insufficient systems, [22] uses SAT solvers to learn a summary graph over the observed variables given data from different experimental conditions. [13] introduces an algorithm to pool experimental datasets together and runs a modification of FCI to learn an augmented graph; however, they do not consider characterizing an equivalence class.\nNotations: For random variables X,Y,Z, the CI relation X is independent of Y conditioned on Z is shown by X ⊥ Y |Z . The d-separation statement node X is d-separated from Y given Z in graphD is shown by (X ⊥ Y |Z )D. I ⊆ 2V is reserved for a set of interventions, where 2V is the power set of V. We show the symmetric difference by I4J B (I \\ J) ∪ (J \\ I). DX denotes the graph obtained fromD where all the incoming edges to the set of nodes in X are removed. Similarly,DX denotes the removal of outgoing edges. We assume that there is no selection bias. A star on an endpoint of an edge ∗−∗ is used as a wildcard to denote circle, arrowhead, or tail."
+    }, {
+      "heading" : "3 Do-Constraints – Combining Observational and Experimental Distributions",
+      "text" : "One of the most celebrated results in causal inference comes under the rubric of do-calculus (or causal calculus) [18, 16]. The calculus consists of a set of inference rules that allows one to create a map between distributions generated by a causal graph when certain graphical conditions hold in the graph. The calculus was developed in the context of hard interventions, and recent work presented a generalization of this result for soft interventions [4], which we state next:\nTheorem 1 (Special case of Thm. 1 in [4]). Let D = (V ∪ L,E) be a causal graph. Then, the following holds for any strictly positive distribution consistent withD. Rule 1 (see-see): For any X ⊆ V and disjoint Y,Z,W ⊆ V\nPx(y|w, z) = Px(y|w) if Y ⊥ Z |W inD. Rule 2 (do-see): For any disjoint X,Y,Z ⊆ V and W ⊂ V \\ (Z ∪ Y)\nPx,z(y|z,w) = Px(y|z,w) if Y ⊥ Z |W inDZ . Rule 3 (do-do): For any disjoint X,Y,Z ⊆ V and W ⊂ V \\ (Z ∪ Y)\nPx,z(y|w) = Px(y|w) if Y ⊥ Z |W inDZ(W), where Z(W) ⊆ Z are non-ancestors of W inD.\nThe first rule of the calculus is a d-separation type of statement relative to a specific interventional distribution Px, which says that Y ⊥ Z |W inD implies the corresponding conditional independence Px(y|w, z) = Px(y|w). Note that the converse of this rule is the work horse underlying most of the structure learning algorithms found in practice, which says that if some independence hold in P, this would imply a corresponding graphical separation (under faithfulness). In the case just mentioned, this would imply that Y and Z should be separated inD, meaning, they have neither a directed nor a bidirected arrow connecting them.\nFrom this understanding, we make a very simple, albeit powerful observation – i.e., the converse of the other two rules should offer insights about the underlying graphical structure as well. To witness, consider the causal graph D = {X → Y, X cd Y}, and suppose we have the observational and interventional distributions P(Y, X) and PX(Y, X), respectively. Using the CI tests P(Y, X) , P(Y)·P(X) and PX(Y, X) , PX(Y) · PX(X), we infer that the two variables are dependent (or not independent) and consequently d-connected in the graph, while no claim can be made about the causal relation between them. Given the inequality PX(Y) , P(Y), we infer that the condition for rule 3 does not hold and Y 6⊥ X inDX . Hence, X must be a cause of Y – changing the value of X has a downstream effect on Y . Similarly, given the inequality PX(Y |X) , P(Y |X), the condition related to rule 2 does not hold, and Y 6⊥ X inDX . The implication in this case is that there is an unblockable backdoor path between X and Y that is into X, i.e., a latent variable. Alternatively, ifD = {X → Y}, then PX(Y |X) = P(Y |X), under faithfulness, implies the absence of a latent variable by the converse of rule 2.\nBroadly speaking, rule 3 allows one to infer causal relations between variables, and consequently directed edges in the causal graph. Since the compared interventional distributions differ by a subset of interventions (Z), we call this the do-do test. On the other hand, rule 2 allows one to infer spurious relations between variables, and consequently latent variables in the causal graph5. The do-see naming of the test stems from the fact that we compare a distribution with an intervention on a subset Z (do) versus another which only conditions on Z (see). Naturally, rule 1 is the usual conditional independence test that allows one to detect that neither directed nor bidirected arrow exists.\nPutting together these rules, we show in Corollary 1 a generalization of rules 2 and 3 . Note that rule 2 appears when J ⊂ I and I \\ J ⊆W; similarly, rule 3 can be seen when J ⊂ I and (I \\ J) ∩W = ∅. Corollary 1 (mixed do-do/do-see). Let D = (V ∪ L,E) be a causal graph. Under the controlled intervention assumption, for any I, J ⊆ V and disjoint Y,W ⊆ V, we have the following:\nPI(y|w) = PJ(y|w) if Y ⊥ K |W \\Wk inDWk,R(W),\nwhere K B I4J, Wk CW ∩K, R B K\\Wk, and R(W) ⊆ R are non-ancestors of W inD. 5More precisely, rule 2 allows us to detect inducing paths that are into both variables.\nIn general, the proposed rule is a mixture of rules 2 and 3 as we could be conditioning in W on a subset of the symmetrical difference set I4J. For instance, consider the causal graph D = {C cd A → B,C cd B} and suppose we have the interventional distributions PA,B and PC,B. Since B ⊥ {A,C} in DA,C , then PA,B(B|A) = PB,C(B|A). This generalization will soon play a significant role in the characterization and learning of the interventional equivalence class."
+    }, {
+      "heading" : "4 Interventional Markov Equivalence under Do-constraints",
+      "text" : "In this section, the new do-constraints will be used to define the notion of interventional Markov equivalence. Then, we will characterize when two causal graphs are equivalent in accordance to the proposed definition. We start by defining the notion of interventional Markov as shown below. Definition 1. Consider the tuples of absolutely continuous probability distributions (PI)I∈I over a set of variables V. A tuple (PI)I∈I satisfies the I-Markov property with respect to a graphD = (V∪L,E) if the following holds for disjoint Y,Z,W ⊆ V:\n(1) For I ∈ I: PI(y|w, z) = PI(y|w) if Y ⊥ Z |W inD.\n(2) For I, J ∈ I: PI(y|w) = PJ(y|w) if Y ⊥ K |W \\Wk inDWk,R(W),\nwhere K B I4J, Wk CW ∩K, R B K\\Wk, and R(W) ⊆ R are non-ancestors of W inD. The set of all tuples that satisfy the I-Markov property with respect toD are denoted by PI (D,V).\nThe two conditions used in the definition correspond to rule 1 of Theorem 1 and that of Corollary 1. Notice that the traditional Markov definition only considers the first condition over the observational distribution P(V); a case included in the I-Markov whenever ∅ ∈ I . Accordingly, two causal graphs are said to be I-Markov equivalent if they license the same set of distribution tuples. This notion is formalized in the following definition. Definition 2. Given two causal graphsD1 = (V∪L1,E1) andD2 = (V∪L2,E2), and an intervention set I ⊆ 2V,D1 andD2 are called I-Markov equivalent if PI (D1,V) = PI (D2,V).\nOne challenge with Definition 1 is that testing for the d-separation statement in condition (2) requires a mutilated graph where we cut some of the edges in D. This makes it harder to represent all the constraints imposed by a causal graph compactly. Accordingly, we use the notion of an augmented graph that is introduced below (Definition 3). In words, the construction of the augmented graph goes as follows. First, initialize the augmented graph to the input causal graph. Then, for every distinct symmetric set difference between I, J ∈ I , denoted by Si, introduce a new node Fi and make it a parent to each node in Si, i.e., Fi → S ∈ Si. Note that this type of construction has been used in the literature to model interventions [17, 6]. For example, for I = {∅, {X}}, Figure 2a presents the augmented graph corresponding to the causal graph, which is the induced subgraph over {X,W,Z,Y}. Node Fx is added in accordance with the symmetrical difference set (∅ \\ {X}) ∪ ({X} \\ ∅) = {X}. Definition 3 (Augmented graph). Consider a causal graphD = (V ∪ L,E) and an intervention set I ⊆ 2V. Let S = {S1,S2, . . . ,Sk} = {S : ∃I, J ∈ I s.t. I4J = S }. The augmented graph of D with respect to I , denoted as AugI (D), is the graph constructed as follows: AugI (D) = (V ∪ F ,E ∪ E) where F B {Fi}i∈[k] and E = {(Fi, j)}i∈[k], j∈Si .\nThe significance of the augmented graph construction is illustrated by Proposition 1, which provides criteria to test the d-separation statements in Definition 1 equivalently from the corresponding augmented graph of a causal graph. Back to the example in Figure 2a, the statement Y ⊥ X |Z in\nDX can be equivalently tested by the statement Y ⊥ Fx |Z in the corresponding augmented graph. Similarly, Y ⊥ X inDX can be equivalently tested by Y ⊥ Fx |X in AugI (D). Proposition 1. Consider a causal graphD = (V ∪ L,E) and the corresponding augmented graph AugI (D) = (V ∪ L ∪ F ,E ∪ E) with respect to an intervention set I , where F = {Fi}i∈[k]. Let Si be the set of nodes adjacent to Fi,∀i ∈ [k]. We have the following equivalence relations. For disjoint Y,Z,W ⊆ V:\n(Y ⊥ Z |W )D ⇐⇒ (Y ⊥ Z ∣∣∣W, F[k] )Aug(D) (1)\nFor disjoint Y,W ⊆ V, where Wi BW ∩ Si,R B Si \\Wi: (Y ⊥ Si |W \\Wi )DWi ,R(W) ⇐⇒ (Y ⊥ Fi ∣∣∣W, F[k]\\{i} )Aug(D) (2) In order to characterize causal graphs that are I-Markov equivalent, we draw some insight from the Markov equivalence of causal graphs with latents. Ancestral graphs, and more specifically MAGs, were proposed as a representation to encode the d-separation statements of a causal graph among the measured variables while not explicitly encoding the latent nodes. The definition below (Def. 4) introduces the augmented MAG that is constructed over an augmented graph. Since all the constraints in the I-Markov definition can be tested by d-separation statements in the augmented graph, then an augmented MAG preserves all those constraints. For example, Figs. 2c and 2d present the augmented MAGs corresponding to the augmented graphs in Figs. 2a and 2b, respectively. Notice that Fx and Y are adjacent in both MAGs since they are not separable by any set in the augmented graphs. Definition 4 (Augmented MAG). Given a causal graphD = (V ∪ L,E) and an intervention set I , the augmented MAG is the MAG constructed over V from AugI (D), i.e., MAG(AugI (D)).\nBelow, we derive a characterization for two causal graphs to be I-Markov equivalent – two causal graphs are I-Markov equivalent if their corresponding augmented MAGs satisfy the three conditions given in Theorem 2. For example, the two augmented MAGs in Figures 2c and 2d satisfy the three conditions, hence the original causal graphs are in the same I-Markov equivalence class. Theorem 2. Two causal graphs D1 = (V ∪ L1,E1) and D2 = (V ∪ L2,E2) are I-Markov equivalent for a set of controlled experiments I if and only if for M1 = MAG(AugI(D1)) and M2 = MAG(AugI (D2)):\n1. M1 andM2 have the same skeleton;\n2. M1 andM2 have the same unshielded colliders;\n3. If a path p is a discriminating path for a node Y in bothM1 andM2, then Y is a collider on the path in one graph if and only if it is a collider on the path in the other."
+    }, {
+      "heading" : "5 Learning by Combining Observations and Experiments",
+      "text" : "In this section, we develop an algorithm to learn the augmented graph from a combination of observational and interventional data, which consequently recovers the causal graph. However, similar to the observational case, it is typically impossible to completely determine the causal graph from the available measured data, especially when latents are present. Then, the objective is to learn a class of augmented MAGs consistent with data. For this, we define an augmented PAG as follows. Definition 5. Given a causal graph D and an intervention set I , letM = MAG(AugI(D)) and let [M] be the set of augmented MAGs corresponding to all the causal graphs that are I-Markov equivalent toD. An Augmented PAG forD, denoted G = PAG(AugI (D)), is a graph such that:\n1. G has the same adjacencies asM, and any member of [M] does; and\n2. every non-circle mark in G is an invariant mark in [M].\nAs with any learning algorithm, some faithfulness assumption is needed to infer graphical properties from the corresponding distributional constraints. Hence, we assume that the given interventional distributions are c-faithful to the causal graphD as defined below.\nAlgorithm 1 Algorithm for Learning Augmented PAG 1: function LearnAugPAG(I , (PI)I∈I ,V) 2: (F ,S, σ)← CreateAugmentedNodes(I ,V) 3: V← V ∪ F 4: Phase I: Learn Adjacencies and Seperating Sets 5: Form the complete graph G on V where between every pair of nodes there is an edge ◦−◦. 6: for Every pair X,Y ∈ V do 7: if X ∈ F ∧ Y ∈ F then 8: S epS et(X,Y)← ∅, S epFlag(X,Y) = True 9: else 10: (S epS et(X,Y), S epFlag)← Do-Constraints((PI)I∈I , X,Y,V,F , σ) 11: if S epFlag = True then 12: Remove the edge between X,Y in G. 13: Phase II: Learn Unshielded Colliders 14: For every unshielded triple 〈X,Z,Y〉 in G, orient it as X∗→ Z ←∗Y iff Z < S epS et(X,Y) 15: Phase III: Apply Orientation Rules 16: Apply 7 FCI rules in [28] together with the following 2 additional rules until none applies. 17: Rule 8: For any Fk ∈ F , orient adjacent edges out of Fk. 18: Rule 9: For any Fk ∈ F that is adjacent to a node Y < Sk 19: If |Sk | = 1, orient X ∗−∗ Y as X → Y for X ∈ Sk.\nAlgorithm 2 Creating F-nodes. 1: function CreateAugmentedNodes(I ,V) 2: F = ∅,S = ∅, k = 0, σ : N→ 2V × 2V 3: for all pairs I, J ∈ I , if I4J < S do 4: Set k ← k + 1, set Sk = I4J, add Fk to F , add Sk to S, set σ(k) = (I, J).\nreturn F ,S, σ\nDefinition 6. Consider a causal graphD = (V ∪ L,E). A tuple of distributions (PI)I∈I ∈ P(D,V) is called c-faithful to graphD if the converse for each of the conditions given in Definition 1 holds.\nAlgorithm 1 presents a modification of the FCI algorithm to learn augmented PAGs. To explain the algorithm, we first describe FCI which, given an independence model over the measured variables, proceeds in three phases [25]: In phase I, the algorithm initializes a complete graph with circle edges (◦−◦), then it removes the edge between any pair of nodes if a separating set between the pair exists and records the set. In phase II, the algorithm identifies unshielded triples 〈A, B,C〉 and orients the edges into B if B is not in the separating set of A and C. Finally, in phase III, FCI applies the orientation rules. Only one of the rules uses separating sets while the rest use MAG properties, and soundness and completeness of the previous phases – the skeleton is correct and all the unshielded colliders are discovered. We note that FCI looks for any separating sets, and not necessarily the minimal ones. We also observe that if two nodes X,Y are separated given Z in AugI (D), they are also separated given Z ∪ F since F are root nodes by construction, i.e., all the edges incident on F-nodes are out of them. Algorithm 1 follows a similar flow to that of the FCI. In phase I, it learns the skeleton of the augmented PAG. Function CreateAugmentedNodes(·) in Alg. 2 creates the F-nodes by computing the set S of unique symmetric difference sets from all pairs of interventions in I . Sigma (σ) maps every F-node to a source pair of interventions, which is used later on to perform the do-tests. The algorithm starts by creating a complete graph of circle edges between V ∪ F . Then, it removes the edge between any two nodes X and Y if a separating set exists. If the two nodes are F-nodes, then they are separated by the empty set by construction. Otherwise, it calls the function Do-Constraints(·) in Alg. 3 to search for a separating set using the corresponding do-constraints. The function routine works as follows: If the two nodes are random variables (and not F-nodes), then an arbitrary distribution is chosen and we find a subset W that establishes conditional independence between X and Y (rule 1 of Thm. 1). Else, one of the two nodes is an F-node; without loss of generality, we choose it to be X. The algorithm then looks for a subset W that satisfies the invariance of Corollary 1, i.e., PI(y|w) = PJ(y|w). Phase II of Alg. 1 is similar to the FCI counterpart. For the edge orientation phase, note that the augmented MAG is a MAG indeed, hence all the FCI orientation rules still apply. Therefore, phase III\nAlgorithm 3 Find m-separation sets via Calculus Tests. 1: function Do-Constraints(I , (PI)I∈I , X,Y,V,F , σ) 2: S epS et = ∅, S epFlag = False 3: if X < F ∧ Y < F then 4: Pick I ∈ I arbitrarily. 5: for W ⊆ V \\ F do 6: if PI(y|w, x) = PI(y|w) then S epS et = W ∪ F , S epFlag = True 7: else 8: Suppose X ∈ F ,Y < F and X = Fi without loss of generality. 9: (I, J) = σ(i) 10: for W ⊆ V \\ (F ∪ Y) do 11: if PI(y|w) = PJ(y|w) then S epS et = W,F \\ {Fi}, S epFlag = True\nuses the FCI orientation rules along with the following two new ones. The algorithm keeps applying the rules until none applies anymore.\nRule 8 (F-node Edges): For any edge adjacent to an F node, orient the edge out of the F node.\nRule 9 (Inducing Paths): If Fk ∈ F is adjacent to a node Y < Sk and |Sk | = 1, e.g., Sk = {X}, then orient X ∗−∗ Y out of X, i.e., X → Y . The intuition for this rule is as follows: If Fk is adjacent to a node Y < Sk in G, then there is an inducing path p between Fk and Y in AugI(D), where D is any causal graph in the equivalence class. Since Fk is a root node and by the properties of inducing paths, the subpath of p from X to Y is an inducing path as well and X is an ancestor of Y in AugI (D). Hence, the edge between X and Y is out of X and into Y in MAG(AugI (D)) and consequently in G. We give an example to illustrate the steps of the algorithm in Figure 3, where I = {∅, {X}}. Figure 3a shows the augmented causal graph, i.e., AugI (D), and Figure 3b shows the corresponding augmented MAG, i.e., MAG(AugI (D)). Nodes Fx and Z are separable in AugI (D) given the empty set and this can be tested by the do-constraint P(Z) = PX(Z). Similarly, we can infer the separation of Fx and W by the test P(W |X) = PX(W |X). Figure 3c shows the graph obtained after applying the seven rules of the FCI together with Rule 8. Finally, by applying Rule 9, we infer that the edge between X and Y has a tail at X and we obtain the graph in Figure 3d. The soudness of the algorithm is shown next. Theorem 3. Consider a set of interventional distributions (PI)I∈I c-faithful to a causal graph D = (V ∪ L), where I is a set of controlled experiments. Algorithm 1 is sound, i.e., every adjacency and orientation is common for all MAG(Aug(D′)) whereD′ is I-Markov equivalent toD."
+    }, {
+      "heading" : "6 Conclusions",
+      "text" : "We investigate the problem of learning the causal structure underlying a phenomenon of interest from a combination of observational and experimental data. We pursue this endeavor by noting that a generalization of the converse of Pearl’s do-calculus (Thm. 1) leads to new tests that can be evaluated against data. These tests, in turn, translate into constraints over the structure itself. We then define an interventional equivalence class based on such criteria (Def. 1), and then derive a graphical characterization for the equivalence of two causal graphs (Thm. 2). Finally, we develop an algorithm to learn an interventional equivalence class from data, which includes new orientation rules."
+    }, {
+      "heading" : "Acknowledgements",
+      "text" : "Bareinboim and Jaber are supported in parts by grants from NSF IIS-1704352, IIS-1750807 (CAREER), IBM Research, and Adobe Research. Kocaoglu and Shanmugam are supported by the MIT-IBM Watson AI Lab."
+    } ],
+    "references" : [ {
+      "title" : "Local characterizations of causal bayesian networks. In Graph Structures for Knowledge Representation and Reasoning (IJCAI), pages 1–17",
+      "author" : [ "Elias Bareinboim", "Carlos Brito", "Judea Pearl" ],
+      "venue" : null,
+      "citeRegEx" : "1",
+      "shortCiteRegEx" : "1",
+      "year" : 2012
+    }, {
+      "title" : "Causal inference and the data-fusion problem",
+      "author" : [ "Elias Bareinboim", "Judea Pearl" ],
+      "venue" : "Proceedings of the National Academy of Sciences,",
+      "citeRegEx" : "2",
+      "shortCiteRegEx" : "2",
+      "year" : 2016
+    }, {
+      "title" : "Optimal structure identification with greedy search",
+      "author" : [ "David Maxwell Chickering" ],
+      "venue" : "Journal of Machine Learning Research,",
+      "citeRegEx" : "3",
+      "shortCiteRegEx" : "3",
+      "year" : 2002
+    }, {
+      "title" : "A calculus for stochastic interventions: Causal effect identification and surrogate experiments",
+      "author" : [ "Juan Correa", "Elias Bareinboim" ],
+      "venue" : "Technical report, R-51,",
+      "citeRegEx" : "4",
+      "shortCiteRegEx" : "4",
+      "year" : 2019
+    }, {
+      "title" : "Conditional independence in statistical theory",
+      "author" : [ "A Philip Dawid" ],
+      "venue" : "Journal of the Royal Statistical Society, Series B,",
+      "citeRegEx" : "5",
+      "shortCiteRegEx" : "5",
+      "year" : 1979
+    }, {
+      "title" : "Influence diagrams for causal modelling and inference",
+      "author" : [ "A Philip Dawid" ],
+      "venue" : "International Statistical Review,",
+      "citeRegEx" : "6",
+      "shortCiteRegEx" : "6",
+      "year" : 2002
+    }, {
+      "title" : "Causation and Intervention",
+      "author" : [ "Frederick Eberhardt" ],
+      "venue" : "PhD thesis,",
+      "citeRegEx" : "7",
+      "shortCiteRegEx" : "7",
+      "year" : 2007
+    }, {
+      "title" : "Budgeted experiment design for causal structure learning",
+      "author" : [ "AmirEmad Ghassami", "Saber Salehkaleybar", "Negar Kiyavash", "Elias Bareinboim" ],
+      "venue" : "In International Conference on Machine Learning (ICML),",
+      "citeRegEx" : "8",
+      "shortCiteRegEx" : "8",
+      "year" : 2018
+    }, {
+      "title" : "Characterization and greedy learning of interventional markov equivalence classes of directed acyclic graphs",
+      "author" : [ "Alain Hauser", "Peter Bühlmann" ],
+      "venue" : "Journal of Machine Learning Research,",
+      "citeRegEx" : "9",
+      "shortCiteRegEx" : "9",
+      "year" : 2012
+    }, {
+      "title" : "Two optimal strategies for active learning of causal networks from interventional data",
+      "author" : [ "Alain Hauser", "Peter Bühlmann" ],
+      "venue" : "In Proceedings of Sixth European Workshop on Probabilistic Graphical Models,",
+      "citeRegEx" : "10",
+      "shortCiteRegEx" : "10",
+      "year" : 2012
+    }, {
+      "title" : "Experiment selection for causal discovery",
+      "author" : [ "Antti Hyttinen", "Frederick Eberhardt", "Patrik Hoyer" ],
+      "venue" : "Journal of Machine Learning Research,",
+      "citeRegEx" : "11",
+      "shortCiteRegEx" : "11",
+      "year" : 2013
+    }, {
+      "title" : "Experimental design for learning causal graphs with latent variables",
+      "author" : [ "Murat Kocaoglu", "Karthikeyan Shanmugam", "Elias Bareinboim" ],
+      "venue" : "In Advances in Neural Information Processing Systems,",
+      "citeRegEx" : "12",
+      "shortCiteRegEx" : "12",
+      "year" : 2017
+    }, {
+      "title" : "Joint causal inference on observational and experimental datasets",
+      "author" : [ "Sara Magliacane", "Tom Claassen", "Joris M Mooij" ],
+      "venue" : "arXiv preprint arXiv:1611.10351,",
+      "citeRegEx" : "13",
+      "shortCiteRegEx" : "13",
+      "year" : 2016
+    }, {
+      "title" : "Strong completeness and faithfulness in bayesian networks",
+      "author" : [ "Christopher Meek" ],
+      "venue" : "In Proceedings of the Eleventh conference on Uncertainty in artificial intelligence,",
+      "citeRegEx" : "14",
+      "shortCiteRegEx" : "14",
+      "year" : 1995
+    }, {
+      "title" : "Probabilistic Reasoning in Intelligent Systems",
+      "author" : [ "J. Pearl" ],
+      "venue" : null,
+      "citeRegEx" : "15",
+      "shortCiteRegEx" : "15",
+      "year" : 1988
+    }, {
+      "title" : "Causality: Models, Reasoning, and Inference",
+      "author" : [ "J. Pearl" ],
+      "venue" : null,
+      "citeRegEx" : "16",
+      "shortCiteRegEx" : "16",
+      "year" : 2000
+    }, {
+      "title" : "Aspects of graphical models connected with causality",
+      "author" : [ "Judea Pearl" ],
+      "venue" : "Proceedings of the 49th Session of the International Statistical Institute,",
+      "citeRegEx" : "17",
+      "shortCiteRegEx" : "17",
+      "year" : 1993
+    }, {
+      "title" : "Causal diagrams for empirical research",
+      "author" : [ "Judea Pearl" ],
+      "venue" : "Biometrika, 82(4):669–688,",
+      "citeRegEx" : "18",
+      "shortCiteRegEx" : "18",
+      "year" : 1995
+    }, {
+      "title" : "Ancestral graph markov models",
+      "author" : [ "Thomas Richardson", "Peter Spirtes" ],
+      "venue" : "The Annals of Statistics,",
+      "citeRegEx" : "19",
+      "shortCiteRegEx" : "19",
+      "year" : 2002
+    }, {
+      "title" : "Learning causal graphs with small interventions",
+      "author" : [ "Karthikeyan Shanmugam", "Murat Kocaoglu", "Alexandros G Dimakis", "Sriram Vishwanath" ],
+      "venue" : "In Advances in Neural Information Processing Systems,",
+      "citeRegEx" : "20",
+      "shortCiteRegEx" : "20",
+      "year" : 2015
+    }, {
+      "title" : "Causation, Prediction, and Search",
+      "author" : [ "Peter Spirtes", "Clark Glymour", "Richard Scheines" ],
+      "venue" : "A Bradford Book,",
+      "citeRegEx" : "21",
+      "shortCiteRegEx" : "21",
+      "year" : 2001
+    }, {
+      "title" : "Constraint-based causal discovery from multiple interventions over overlapping variable sets",
+      "author" : [ "Sofia Triantafillou", "Ioannis Tsamardinos" ],
+      "venue" : "J. Mach. Learn. Res.,",
+      "citeRegEx" : "22",
+      "shortCiteRegEx" : "22",
+      "year" : 2015
+    }, {
+      "title" : "Permutation-based causal inference algorithms with interventions",
+      "author" : [ "Yuhao Wang", "Liam Solus", "Karren Yang", "Caroline Uhler" ],
+      "venue" : "In Advances in Neural Information Processing Systems,",
+      "citeRegEx" : "23",
+      "shortCiteRegEx" : "23",
+      "year" : 2017
+    }, {
+      "title" : "Characterizing and learning equivalence classes of causal dags under interventions",
+      "author" : [ "Karren Yang", "Abigail Katoff", "Caroline Uhler" ],
+      "venue" : "In ICML,",
+      "citeRegEx" : "24",
+      "shortCiteRegEx" : "24",
+      "year" : 2018
+    }, {
+      "title" : "Causal inference and reasoning in causally insufficient systems",
+      "author" : [ "Jiji Zhang" ],
+      "venue" : "PhD thesis,",
+      "citeRegEx" : "25",
+      "shortCiteRegEx" : "25",
+      "year" : 2006
+    }, {
+      "title" : "A characterization of markov equivalence classes for directed acyclic graphs with latent variables",
+      "author" : [ "Jiji Zhang" ],
+      "venue" : "In Proceedings of the Twenty-Third Conference on Uncertainty in Artificial Intelligence,",
+      "citeRegEx" : "26",
+      "shortCiteRegEx" : "26",
+      "year" : 2007
+    }, {
+      "title" : "Causal reasoning with ancestral graphs",
+      "author" : [ "Jiji Zhang" ],
+      "venue" : "Journal of Machine Learning Research,",
+      "citeRegEx" : "27",
+      "shortCiteRegEx" : "27",
+      "year" : 2008
+    }, {
+      "title" : "On the completeness of orientation rules for causal discovery in the presence of latent confounders and selection bias",
+      "author" : [ "Jiji Zhang" ],
+      "venue" : "Artificial Intelligence,",
+      "citeRegEx" : "28",
+      "shortCiteRegEx" : "28",
+      "year" : 2008
+    } ],
+    "referenceMentions" : [ {
+      "referenceID" : 15,
+      "context" : "The study of causal relations can be seen through the lens of learning and inference [16, 21].",
+      "startOffset" : 85,
+      "endOffset" : 93
+    }, {
+      "referenceID" : 20,
+      "context" : "The study of causal relations can be seen through the lens of learning and inference [16, 21].",
+      "startOffset" : 85,
+      "endOffset" : 93
+    }, {
+      "referenceID" : 15,
+      "context" : "One of the most popular languages used to encode the invariances needed to reason about causal relations, for both learning and inference, is based on graphical models, and appears under the rubric of causal graphs [16, 21, 2].",
+      "startOffset" : 215,
+      "endOffset" : 226
+    }, {
+      "referenceID" : 20,
+      "context" : "One of the most popular languages used to encode the invariances needed to reason about causal relations, for both learning and inference, is based on graphical models, and appears under the rubric of causal graphs [16, 21, 2].",
+      "startOffset" : 215,
+      "endOffset" : 226
+    }, {
+      "referenceID" : 1,
+      "context" : "One of the most popular languages used to encode the invariances needed to reason about causal relations, for both learning and inference, is based on graphical models, and appears under the rubric of causal graphs [16, 21, 2].",
+      "startOffset" : 215,
+      "endOffset" : 226
+    }, {
+      "referenceID" : 14,
+      "context" : "These relations are the most basic type of probabilistic invariances used in the field and have been studied at large in the context of graphical models since, at least, [15] (see also [5]).",
+      "startOffset" : 170,
+      "endOffset" : 174
+    }, {
+      "referenceID" : 4,
+      "context" : "These relations are the most basic type of probabilistic invariances used in the field and have been studied at large in the context of graphical models since, at least, [15] (see also [5]).",
+      "startOffset" : 185,
+      "endOffset" : 188
+    }, {
+      "referenceID" : 15,
+      "context" : "While CIs are powerful and have been the driving force behind some of the most prominent structural learning algorithms in the field [16, 21], including the PC, FCI, these are constraints specific for one distribution.",
+      "startOffset" : 133,
+      "endOffset" : 141
+    }, {
+      "referenceID" : 20,
+      "context" : "While CIs are powerful and have been the driving force behind some of the most prominent structural learning algorithms in the field [16, 21], including the PC, FCI, these are constraints specific for one distribution.",
+      "startOffset" : 133,
+      "endOffset" : 141
+    }, {
+      "referenceID" : 17,
+      "context" : "Remarkably, and unknown until our work, the converse of the causal calculus developed by Pearl [18] offers a systematic way of reading these constraints and tying them back to the underlying graphical structure.",
+      "startOffset" : 95,
+      "endOffset" : 99
+    }, {
+      "referenceID" : 0,
+      "context" : "To the best of our knowledge, this type of constraints appeared first at the very definition of causal Bayesian networks (CBNs) in [1] and then were leveraged to design efficient experiments to learn the causal graph in [12].",
+      "startOffset" : 131,
+      "endOffset" : 134
+    }, {
+      "referenceID" : 11,
+      "context" : "To the best of our knowledge, this type of constraints appeared first at the very definition of causal Bayesian networks (CBNs) in [1] and then were leveraged to design efficient experiments to learn the causal graph in [12].",
+      "startOffset" : 220,
+      "endOffset" : 224
+    }, {
+      "referenceID" : 3,
+      "context" : "For our characterization, we utilize an extension of the causal calculus to soft interventions introduced in [4].",
+      "startOffset" : 109,
+      "endOffset" : 112
+    }, {
+      "referenceID" : 16,
+      "context" : "The second observation leveraged here follows from another realization by Pearl that interventions can be represented explicitly in the graphical model [17].",
+      "startOffset" : 152,
+      "endOffset" : 156
+    }, {
+      "referenceID" : 5,
+      "context" : "The same construct was used more prominently in [6] in the context of inference and identification.",
+      "startOffset" : 48,
+      "endOffset" : 51
+    }, {
+      "referenceID" : 12,
+      "context" : "In the context of structure learning, similar constructions have been leveraged in the literature [13, 24].",
+      "startOffset" : 98,
+      "endOffset" : 106
+    }, {
+      "referenceID" : 23,
+      "context" : "In the context of structure learning, similar constructions have been leveraged in the literature [13, 24].",
+      "startOffset" : 98,
+      "endOffset" : 106
+    }, {
+      "referenceID" : 8,
+      "context" : "Note that the notion of I-Markov is first introduced in [9, 10] for causally sufficient systems without the use of do-constraints4.",
+      "startOffset" : 56,
+      "endOffset" : 63
+    }, {
+      "referenceID" : 9,
+      "context" : "Note that the notion of I-Markov is first introduced in [9, 10] for causally sufficient systems without the use of do-constraints4.",
+      "startOffset" : 56,
+      "endOffset" : 63
+    }, {
+      "referenceID" : 18,
+      "context" : "A Maximal Ancestral Graph (MAG) is a graph that is both ancestral and maximal [19].",
+      "startOffset" : 78,
+      "endOffset" : 82
+    }, {
+      "referenceID" : 27,
+      "context" : "A PAG, which represents a Markov equivalence class of a MAG, is learnable from the independence model over the observed variables, and the FCI algorithm is a standard sound and complete method to learn such an object [28].",
+      "startOffset" : 217,
+      "endOffset" : 221
+    }, {
+      "referenceID" : 2,
+      "context" : "Related Work: Learning causal graphs from a combination of observational and interventional data has been studied in the literature [3, 11, 7, 20, 8, 12, 23].",
+      "startOffset" : 132,
+      "endOffset" : 157
+    }, {
+      "referenceID" : 10,
+      "context" : "Related Work: Learning causal graphs from a combination of observational and interventional data has been studied in the literature [3, 11, 7, 20, 8, 12, 23].",
+      "startOffset" : 132,
+      "endOffset" : 157
+    }, {
+      "referenceID" : 6,
+      "context" : "Related Work: Learning causal graphs from a combination of observational and interventional data has been studied in the literature [3, 11, 7, 20, 8, 12, 23].",
+      "startOffset" : 132,
+      "endOffset" : 157
+    }, {
+      "referenceID" : 19,
+      "context" : "Related Work: Learning causal graphs from a combination of observational and interventional data has been studied in the literature [3, 11, 7, 20, 8, 12, 23].",
+      "startOffset" : 132,
+      "endOffset" : 157
+    }, {
+      "referenceID" : 7,
+      "context" : "Related Work: Learning causal graphs from a combination of observational and interventional data has been studied in the literature [3, 11, 7, 20, 8, 12, 23].",
+      "startOffset" : 132,
+      "endOffset" : 157
+    }, {
+      "referenceID" : 11,
+      "context" : "Related Work: Learning causal graphs from a combination of observational and interventional data has been studied in the literature [3, 11, 7, 20, 8, 12, 23].",
+      "startOffset" : 132,
+      "endOffset" : 157
+    }, {
+      "referenceID" : 22,
+      "context" : "Related Work: Learning causal graphs from a combination of observational and interventional data has been studied in the literature [3, 11, 7, 20, 8, 12, 23].",
+      "startOffset" : 132,
+      "endOffset" : 157
+    }, {
+      "referenceID" : 8,
+      "context" : "For causally sufficient systems, the notion and characterization of interventional Markov equivalence has been introduced in [9, 10].",
+      "startOffset" : 125,
+      "endOffset" : 132
+    }, {
+      "referenceID" : 9,
+      "context" : "For causally sufficient systems, the notion and characterization of interventional Markov equivalence has been introduced in [9, 10].",
+      "startOffset" : 125,
+      "endOffset" : 132
+    }, {
+      "referenceID" : 23,
+      "context" : "More recently, [24] showed that the same characterization can be used for both hard and soft interventions.",
+      "startOffset" : 15,
+      "endOffset" : 19
+    }, {
+      "referenceID" : 21,
+      "context" : "For causally insufficient systems, [22] uses SAT solvers to learn a summary graph over the observed variables given data from different experimental conditions.",
+      "startOffset" : 35,
+      "endOffset" : 39
+    }, {
+      "referenceID" : 12,
+      "context" : "[13] introduces an algorithm to pool experimental datasets together and runs a modification of FCI to learn an augmented graph; however, they do not consider characterizing an equivalence class.",
+      "startOffset" : 0,
+      "endOffset" : 4
+    }, {
+      "referenceID" : 17,
+      "context" : "One of the most celebrated results in causal inference comes under the rubric of do-calculus (or causal calculus) [18, 16].",
+      "startOffset" : 114,
+      "endOffset" : 122
+    }, {
+      "referenceID" : 15,
+      "context" : "One of the most celebrated results in causal inference comes under the rubric of do-calculus (or causal calculus) [18, 16].",
+      "startOffset" : 114,
+      "endOffset" : 122
+    }, {
+      "referenceID" : 3,
+      "context" : "The calculus was developed in the context of hard interventions, and recent work presented a generalization of this result for soft interventions [4], which we state next: Theorem 1 (Special case of Thm.",
+      "startOffset" : 146,
+      "endOffset" : 149
+    }, {
+      "referenceID" : 16,
+      "context" : "Note that this type of construction has been used in the literature to model interventions [17, 6].",
+      "startOffset" : 91,
+      "endOffset" : 98
+    }, {
+      "referenceID" : 5,
+      "context" : "Note that this type of construction has been used in the literature to model interventions [17, 6].",
+      "startOffset" : 91,
+      "endOffset" : 98
+    }, {
+      "referenceID" : 27,
+      "context" : "13: Phase II: Learn Unshielded Colliders 14: For every unshielded triple 〈X,Z,Y〉 in G, orient it as X∗→ Z ←∗Y iff Z < S epS et(X,Y) 15: Phase III: Apply Orientation Rules 16: Apply 7 FCI rules in [28] together with the following 2 additional rules until none applies.",
+      "startOffset" : 196,
+      "endOffset" : 200
+    }, {
+      "referenceID" : 24,
+      "context" : "To explain the algorithm, we first describe FCI which, given an independence model over the measured variables, proceeds in three phases [25]: In phase I, the algorithm initializes a complete graph with circle edges (◦−◦), then it removes the edge between any pair of nodes if a separating set between the pair exists and records the set.",
+      "startOffset" : 137,
+      "endOffset" : 141
+    } ],
+    "year" : 2019,
+    "abstractText" : "The challenge of learning the causal structure underlying a certain phenomenon is undertaken by connecting the set of conditional independences (CIs) readable from the observational data, on the one side, with the set of corresponding constraints implied over the graphical structure, on the other, which are tied through a graphical criterion known as d-separation (Pearl, 1988). In this paper, we investigate the more general setting where multiple observational and experimental distributions are available. We start with the simple observation that the invariances given by CIs/dseparation are just one special type of a broader set of constraints, which follow from the careful comparison of the different distributions available. Remarkably, these new constraints are intrinsically connected with do-calculus (Pearl, 1995) in the context of soft-interventions. We then introduce a novel notion of interventional equivalence class of causal graphs with latent variables based on these invariances, which associates each graphical structure with a set of interventional distributions that respect the do-calculus rules. Given a collection of distributions, two causal graphs are called interventionally equivalent if they are associated with the same family of interventional distributions, where the elements of the family are indistinguishable using the invariances obtained from a direct application of the calculus rules. We introduce a graphical representation that can be used to determine if two causal graphs are interventionally equivalent. We provide a formal graphical characterization of this equivalence. Finally, we extend the FCI algorithm, which was originally designed to operate based on CIs, to combine observational and interventional datasets, including new orientation rules particular to this setting.",
+    "creator" : null
+  }
+}

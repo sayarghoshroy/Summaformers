@@ -1,0 +1,413 @@
+15:25:35.007 [main] DEBUG com.amazonaws.AmazonWebServiceClient - Internal logging successfully configured to commons logger: true
+15:25:35.054 [main] DEBUG com.amazonaws.metrics.AwsSdkMetrics - Admin mbean registered under com.amazonaws.management:type=AwsSdkMetrics
+15:25:35.103 [main] DEBUG c.a.internal.config.InternalConfig - Configuration override awssdk_config_override.json not found.
+15:25:35.370 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loading model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:25:35.370 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:25:35.372 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:25:35.375 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Creating gazetteer cache at /tmp/gazetteer-v5.json-fa485aef.gazetteerCache.bin
+15:25:47.870 [scala-execution-context-global-12] INFO  o.a.scienceparse.ParserGroundTruth - Read 1609659 papers.
+15:26:03.747 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loaded model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:26:18.893 [scala-execution-context-global-12] INFO  o.a.scienceparse.ExtractReferences - could not load kermit gazetter
+15:26:18.955 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:26:18.955 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:26:18.959 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.RunSP$ - Starting /home/risubaba/LongSumm/pdf/W16-3609.pdf
+{
+  "name" : "/home/risubaba/LongSumm/pdf/W16-3609.pdf",
+  "metadata" : {
+    "source" : "META",
+    "title" : "Classifying Emotions in Customer Support Dialogues in Social Media",
+    "authors" : [ "Jonathan Herzig", "Guy Feigenblat", "Michal Shmueli-Scheuer", "David Konopnicki", "Anat Rafaeli", "Daniel Altman", "David Spivak" ],
+    "emails" : [ "}@il.ibm.com", "Anatr@ie.technion.ac.il,", "altmand@campus.technion.ac.il,", "dspivak@campus.technion.ac.il" ],
+    "sections" : [ {
+      "heading" : null,
+      "text" : "Proceedings of the SIGDIAL 2016 Conference, pages 64–73, Los Angeles, USA, 13-15 September 2016. c©2016 Association for Computational Linguistics\nProviding customer support through social media channels is gaining increasing popularity. In such a context, automatic detection and analysis of the emotions expressed by customers is important, as is identification of the emotional techniques (e.g., apology, empathy, etc.) in the responses of customer service agents. Result of such an analysis can help assess the quality of such a service, help and inform agents about desirable responses, and help develop automated service agents for social media interactions. In this paper, we show that, in addition to text based turn features, dialogue features can significantly improve detection of emotions in social media customer service dialogues and help predict emotional techniques used by customer service agents."
+    }, {
+      "heading" : "1 Introduction",
+      "text" : "An interesting use case for social media is customer support that can now take place over public social media channels. Using this medium has its advantages as described, for example, in (DeMers, 2014): Customers appreciate the simplicity and immediacy of social media conversations, the ability to reach real human beings, the transparency, and the feeling that someone listens to them. Businesses also benefit from the publicity of giving good services almost in real-time, online, building an online community of customers and encouraging more brand mentions in social media. A recent study shows that one in five (23%) customers in the U.S. say they have used social media for customer service in2014, up from17% in 20121. Obviously, companies hope that such\n1http://about.americanexpress.com/ news/docs/2014x/2014-Global-Customer-\nuses are associated with a positive experience. Yet there are limited tools for assessing this. In this paper, we analyze customer support dialogues using the Twitter platform and show the utility of such analyses.\nThe particular aspect of such dialogues that we concentrate on isemotions. Emotions are a cardinal aspect of inter-personal communication: they are an implicit or explicit part of essentially any communication, and of particular importance in the setting of customer service, as they relate directly to customer satisfaction and experience (Oliver, 2014). Typical emotions expressed by customers in the context of social media service dialogues include anger and frustration, as well as gratitude and more (Gelbrich, 2010). On the other hand, customer service agents also express emotions in service conversations, for example apology or empathy. However, it is important to note that emotions expressed by service agents are typically governed by company policies that specify which emotions should be expressed in which situation (Rafaeli and Sutton, 1987). This is why we talk in this paper about agent emotionaltechniques rather than agent emotions.\nConsider, for example, the real (anonymized) Twitter dialogue depicted in Figure 1. In this dialogue, customer disappointment is expressed in the first turn (’Bummer. =/’), followed by customer support empathy (’Uh oh!’). Then in the last two turns both customer and support express gratitude.\nThe analysis of emotions being expressed in customer support conversations can take two applications: (1) to discern and compute quality of service indicators and (2) to provide real-time clues to customer service agents regarding the cus-\nService-Barometer-US.pdf\n64\nGot excited to pick up the latest bundle since it was on sale today, but now I can’t download it at all. Bummer. =/\nYeah, no problems there. The error is coming when I actually try to download the games. Error code: 412344\nUh oh! To check, were you able to purchase that title? Let’s confirm by signing in at http://t.co/53fsdfd real quick.\nAppreciate that! Let’s power cycle and unplug modem/router for 2 mins then try again.\nSeems to be working now. Weird. I tried that 3 different times earlier. Thanks.\nOdd, but glad to hear that’s sorted! Happy gaming, and we’ll be here to help if any other questions or concerns arise.\nFigure 1: Example of customer service dialogue that was initiated by a customer (left side), and the agent responses (right side).\ntomer emotion expressed in a conversation. A possible application here is recommending to customer service agents what should be their emotional response (for example, in each situation, should they apologize, should they thank the customer, etc.)\nAnother interesting trend in customer service, in addition to the use of social media described above, is the automation of various functions of customer interaction. Several companies are developing text-based chat agents, typically accessible through corporate web sites, and partially automatized: In these platforms, a computer program handles simple conversations with customers, and more complicated dialogues are transferred to a human agent. Such partially automated systems are also in use for social media dialogues. The automation in such systems helps save human resources and, with further development based on Artificial Intelligence, more automation in customer service chats is likely to appear. Given the importance of emotions in service dialogues, such systems will benefit from the ability to detect (customer) emotions and will need to guide employees (and machines) regarding the right emotional technique in various situations (e.g., apologizing at the right point).\nThus, our goal, in this paper, is to show that the\nfunctionality of guiding employees regarding appropriate responses can be developed based on the analysis of textual dialogue data. We show first that it is possible to automatically detect emotions being expressed and, second that it is possible to predict the emotional technique that is likely to be used by a human agent in a given situation. This analysis reflects our ultimate goal: To enable a computer system to discern the emotions expressed by human customers, and to develop computerized tools that mimic the emotional technique used by a human customer service agent in a particular situation.\nWe see the main contributions of this paper as follows: (1) To our knowledge, this is the first research focusing on automatic analysis of emotions expressed in customer service provided through social media. (2) This is the first research us-\ning unique dialogue features (e.g., emotions ex-\npressed in previous dialogue turns by the agent\nand customer, time between dialogue turns) to im-\nprove emotion detection. (3) This is the first research studying the prediction of the agent emotional techniques to be used in the response to customer turns.\nThe rest of this paper is organized as follows. We start by reviewing the related work and a description of the data that we collected. Then we formally define the methodology for detection and prediction of emotion expression in dialogues. Finally, we describe our experiments, evaluate the various models, conclude and suggest future directions."
+    }, {
+      "heading" : "2 Related Work",
+      "text" : ""
+    }, {
+      "heading" : "2.1 Emotion Detection",
+      "text" : "Approaches to categorical emotion classification often employ machine learning classifiers, and SVM has typically outperformed other classifiers. In (Mohammad, 2012; Roberts et al., 2012; Qadir and Riloff, 2014) a series of binary SVM classifiers (one for each emotion) were trained over datasets from different domains (news headlines, social media). These works utilize unigrams and bigrams among other lexical based features (e.g., utilizing the NRC emotion lexicon (Mohammad and Turney, 2013)) and punctuation based features. In our work, we also used an SVM classifier, however, while these works aim at classifying single posts (i.e., sentence, tweet, etc.) without context, our work utilizes the context while con-\nsidering dialogues. The work in (Hasegawa et al., 2013) showed how to predict and elicit emotions in online dialogues. Their approach for emotion classification is different from ours, for example they only considered the last turn as informative (we consider the full context of the dialogue), and focused on eliciting emotions, while we focus on predicting the agent emotional technique."
+    }, {
+      "heading" : "2.2 Emotion Expression Prediction",
+      "text" : "The works in (Skowron, 2010) and (D’Mello et al., 2009) presented dialogue systems that sense the user emotions, such that the system further optimizes its affect response. Both systems use rulebased approaches to generate responses, however, the authors do not discuss how they developed the rules.\nIt is worth mentioning the works in (Ritter et al., 2011; Sordoni et al., 2015) that are focused on data-driven response generation in the context of dialogues in social media. These works generated general responses, while we focused on predicting the appropriate emotional response."
+    }, {
+      "heading" : "2.3 Emotions in Written Customer Service Interactions",
+      "text" : "In the domain of customer support, several papers studied emotions as part of written interactions. The work in (Gupta et al., 2013), analyzed emotions in textual email communications and the authors focused on prioritizing customer support emails based on detected emotions. In the setting of online customer service (chats), in (Zhang et al., 2011) the authors studied the impact of emotional text on the customer’s perception of the service agent. To extract the emotions, the authors used relatively basic features such as emoticons, exclamation marks, all caps, and some internet acronyms (such as ’lol’ or ’imho’).\nEmotion detection is also applied to the domain of call centers (Vidrascu and Devillers, 2005; Morrison et al., 2007) and this differs from our focus since call center data are voice, and, thus, emotion detection is mainly based on paralinguistic aspects rather than on the text. In addition, if the textual part is considered, then the texts are transcripts of calls that are very different from written text (Wallace Chafe, 1987), and even more different from the social media setting where the dialogue is fully public."
+    }, {
+      "heading" : "3 Data",
+      "text" : "In this section we describe the data collection process and provide some statistics about the Twitter dialogue dataset we have collected."
+    }, {
+      "heading" : "3.1 Data Collection",
+      "text" : "Companies that utilize the Twitter platform as a channel for customer service use a dedicated Twitter account which provides real-time support by monitoring tweets that customers address to it. At the same time corporate support agents reply to these tweets also through the Twitter platform. A customer and an agent, can use the Twitter reply mechanism to discuss until the issue is solved ( .g., a solution is provided, or the customer is directed to another channel), or until the customer is no longer active.\nIn the present work, we define a dialogue to be a sequence of turns between a specific customer and an agent, where the customer initiates the first turn. Consecutive posts of the same party (customer or agent) uninterrupted by the other party, are considered as a single turn (even if there are several tweets). Given the nature of customer support services, we assume the last turn in the dialogue is an agent turn (e.g., “You’re very welcome. :) Hit us back any time you need support”). Thus, we expect an even number of turns in the dialogue. We filtered out dialogues in which more than one customer or one agent are involved. Formally, we define a dialogue to be an ordered list of turns[t1, t2, · · · , tn] where odd turns are customer turns, and even turns are agent turns, andn is even.\nEach turnti is a tuple consisting of{turn number, timestamp, content} whereturn numberrepresents the sequential position of the turn in the dialogue,timestampcaptures the time the message was published on Twitter, andcontentis the textual message."
+    }, {
+      "heading" : "3.2 Data Statistics",
+      "text" : "We gathered data for two North America based customer support services Twitter accounts that provide support for customers from North America (so tweets are in English). One service is for general customer care (denoted asGen), and the other is for technical customer support (denoted asTech). We extracted this data from December 2014 until June2015. Specifically, for each customer that posted a tweet to the customer support accounts, we searched for the previous, if any, turn\n# Dialogues Mean # turns AVG word count Gen 4243 4.83 16.69 Tech 4016 6.81 14.28\nTable 1: Descriptive statistics of customer service dialogues extracted from Twitter.\nto which it replied. Given this method we traced back previous turns and reconstructed entire dialogues.\nTable 1 summarizes some statistics about the collected data, and Figure 2 depicts the frequencies of dialogue lengths which follow a power-law relationship. Table 1 shows differences between the two services; the dialogues inTechtend to be longer (i.e., typically include more turns), with an average of6.81 turns vs. average of4.83 turns for Gen.\nAs most of the dialogues include at most8 turns (88% and76% for GenandTech, respectively), we removed dialogues longer than8 turns. In addition, we removed dialogues that contained only2 turns as these are too short to be meaningful as the customer never replied or provided more details about the issue. After applying these preprocessing steps, we had1189 dialogues ofGensupport, and1224 dialogues ofTechsupport."
+    }, {
+      "heading" : "4 Methodology",
+      "text" : "The first objective of our work is to detect emotions expressed in customer turns and the second is to predict the emotional technique in agent turns. We treated these two objectives as two classification tasks. We generated a classifier for each task, where the classification output of one classifier can be part of the input to the other classifier. While both classifiers work at the level of turns, i.e., classify the current turn to emotions ex-\npressed in it, they are inherently different. When detecting emotions in a customer turn, the turn’s content is available at classification time (as well as the history of the dialogue) - meaning, the customer has already provided her input and the system must now understand what is the emotion being expressed. Whereas, when predicting the emotional technique for an agent turn, the turn’s content is not available during classification time, but only the agent action and the history of the dialogue since the agent did not respond yet. This difference stems from the fact that in order to train an automated service agent to respond based on customer input, the agent’s emotional technique needs to be computed before the agent generates its response sentence.\nWe defined a different set of relevant emotion\nclasses for each party in the dialogue (customer or\nagent), based on our above survey of research on customer service (e.g., (Gelbrich, 2010)). Relevant customer emotions to be detected are:Confusion, Frustration, Anger, Sadness, Happiness, Hopefulness, Disappointment, Gratitude,andPoliteness. Relevant agent emotional techniques to be predicted are:Empathy, Gratitude, Apology, andCheerfulness.\nWe utilized the context of the dialogue to extract informative features that we refer to asdialogue features. Using these features for emotion classification in written dialogues is novel, and as our experimental results show, it improves performance compared to a model based only on features extracted from the turn’s text."
+    }, {
+      "heading" : "4.1 Features",
+      "text" : "We used the following features in our models."
+    }, {
+      "heading" : "4.1.1 Dialogue Features",
+      "text" : "Comprises three contextual feature families:integral, emotional, and temporal. A feature can be global, namely its value is constant across an entire dialogue or it can be alocal, meaning that its value may change at each turn. In addition, a feature can behistorical (as will be discussed below).\nThe integral family of features includes three sets of features:\n1. Dialogue topic: a set ofglobal binary features representing the intent of the customer who initiated the support inquiry. Multiple intents can be assigned to a dialogue from a taxonomy of popular topics, which are adapted to the specific service. Examples of topics includeac-\ncount issues, payments, technical problemand more2. This feature set captures the notion that customer emotions are influenced by the event that led the customer to contact the customer service (Steunebrink et al., 2009).\n2. Agent essence: a set of local binary features that represent the action used by the agent to address the last customer turn, independently\nof any emotional technique expressed. We refer\nto these actions as theessenceof the agent turn.\nMultiple essences can be assigned to an agent\nturn from a predefined taxonomy. For instance,\n“asking for more information”and“offering a solution” are possible essences3. This feature\nset captures the notion that customer emotions\nare influenced by actions of agents (Little et al.,\n2013).\n3. Turn number: a local categorical feature representing the number of the turn.\nTheemotionalfamily of features includesAgent emotionandCustomer emotion: these two sets of\nlocal binary features represent emotions predicted for previous turns. Our model generates predictions of emotions for each customer and agent turn, and uses these predictions as features to classify a later customer or agent turn with emotion expression.\nThe temporal family of features includes the following features extracted from the timeline of the dialogue:\n1. Customer/agent response time: two local features that indicate the time elapsed between the timestamp of the last customer/agent turn and the timestamp of the subsequent turn. This is a categorical feature with valueslow, medium or high (using categorical values yielded better results than using a continuous value).\n2. Median customer/agent response time: two local categorical features defined as the median of thecustomer/agent response timespreceding the current turn. The categories are the same as the previous temporal features. 2Currently this feature is not supported in social media. In other channels, for example, customer support on the phone, the customer is requested to provide a topic before she is connected to a support agent (usually using an IVR system). As this feature is inherent in other customer support channels, we assume that in the future it will also be supported in social media.\n3We assume that if the agent is human, then this input is known to her e.g., based on company policies. For the automated service agent case, we assume that the dialogue system will manage and provide this input.\nt i−3\nagent\nt i−2\ncustomer\nt i\ncustomer\nt i−1\nagent\n{Agent essence} {Agent Emotion}\n{Customer Emotion}\n{Agent Emotion}\n{Customer Emotion}\n{Agent essence}\nFigure 3: Example forHistorical features propagation for customer turn,ti, with history = 3. Whenhistory = 1, thehistorical features are the agent essenceof turn ti−1 and theagent emotion predicted for turnti−1 (purple solid line). When history = 2, we also add thecustomer emotion detected in turnti−2 (red dashed line). Finally, if we sethistory = 3, then we also add theagent essenceof turn ti−3 and theagent emotionpredicted for turnti−3 (blue dotted line), so in total we have5 historical features. Notice that the customer emotionandagent essencef atures have different values based on their turn number.\n3. Day of week: a local categorical feature indicating the day of the week when the turn was published [Monday - Sunday]. This feature captures the effects of weekend versus weekday influences on emotions (Ryan et al., 2010).\nWhen representing a turn,ti as a feature vector, we added some features originating in previous turnsj < i to ti. These features, that arehistorical, include theemotionalfeatures family andlocal integralfeatures (namelyagent emotions, customer emotionsandagent essence). We do not include theturn numberof previous turns, as this is dependent on the turn number ofti. We denote these features ashistorical features. The value of history, that is a parameter of our models, defines the number of sequential turns that precede ti which propagatehistorical features toti.\nFigure 3 shows an example of theistorical features in relation to the classification of customer turn ti, for historysize between1 and3."
+    }, {
+      "heading" : "4.1.2 Textual Features",
+      "text" : "These features are extracted from the text of a customer turn, without considering the context of the dialogue. We use various state-of-the-art text based features that have been shown to be effective for the social media domain (Mohammad, 2012;\nRoberts et al., 2012). These features include various n-grams, punctuation and social media features. Namely,unigrams, bigrams, NRC lexicon features(number of terms in a post associated with each affect label in NRC lexicon), and presence of exclamation marks, question marks, usernames, links, happy emoticons, andsad emoticons. We note that these are the features we used in our baseline model detailed below, in the description of our experiments."
+    }, {
+      "heading" : "4.2 Turn Classification System",
+      "text" : "For both of the agent and customer turn classification tasks, we implemented two different models which incorporate all of the feature sets we have detailed above. We considered these tasks as multi-label classification tasks. This captures the notion that a party can express multiple emotions (e.g., confusion and anger) in a turn. We chose to use a problem transformation approach which maps the multi-label classification task into several binary classification tasks, one for each emotion class which participates in the multi-label problem (Tsoumakas and Katakis, 2006). For each emotione, a binary classifier is created using the one-vs.-all approach which classifies a turn as expressinge or not. A test sample is fully classified by aggregating the classification results from all independent binary classifiers. We next define our two modeling approaches."
+    }, {
+      "heading" : "4.2.1 SVM Dialogue Model",
+      "text" : "In our first approach we trained an SVM classifier for each emotion class as explained above. The feature vector we used to represent a turn incorporatesdialogueandtextual features. Thehistory size is also a parameter of this model. Feature extraction for a training/testing feature vector representing a turnti, works as follows. Textual featuresare extracted forti if it is a customer turn, or for ti−1 if it is an agent turn (recall that the system does not have the content of agent turn ti at classification time). Thetemporal features are also extracted using time lapse values between previous turns as explained above. As discussed above,agent essenceis assumed to be an input to our module, whileagent emotionandcustomer emotionfeatures are propagated from classification results of previous turns during testing (or from ground truth labels during training), where the number of previous turns is determined according to the value ofhistory. Thesehistorical\nfeatures are also appended to the feature vector of ti, similarly to (Kim et al., 2010) where this method was used for classifying dialogue acts."
+    }, {
+      "heading" : "4.2.2 SVM-HMM Dialogue Model",
+      "text" : "Our second approach to classifying dialogue turns is to use a sequence classification method (SVMHMM), which classifies a sample sequence into its most probable tag sequence. For instance (Kim et al., 2010; Tavafi et al., 2013) used SVM-HMM and Conditional Random Fields for dialogue act classification. Since emotions expressed in customer and agent turns are different, we treated them as different classification tasks (like in our previous approach) and trained a separate classifier for each emotion. We made the following changes when using SVM-HMM:\n(1) We treated the emotion classification problem of turnti as a sequence classification problem of the sequencet1, t3, ..., ti (i.e., only customer turns) if ti is a customer turn andt2, t4, ..., ti (i.e., only agent turns) if it is an agent turn. (2) The SVM-HMM classifier generates models that are isomorphic to akth-order hidden Markov model. Under this model, dependency in past classification results is captured internally by modeling transition probabilities between emotion states. Thus, we removed historicalcustomer emotion (resp.agent emotion) feature sets when representing a feature vector for a customer (resp. agent) turn. (3) We note that in our setting we provide classifications in real-time during the progress of the dialogue, so at classification time we have access only to previous turns and global information, and we cannot change classification decisions for past turns. Thus, we tagged a test turn,ti, by classifying the sequence which ends inti. Then, ti was tagged with its sequence classification result."
+    }, {
+      "heading" : "5 Experiments",
+      "text" : ""
+    }, {
+      "heading" : "5.1 Experimental Setup",
+      "text" : "A first step in building a classification model is to obtain ground truth data. For this, we sampled dialogues from our dataset, as detailed in Table 2, based on each data source’s dialogue length distribution. This sample included1056 customer turns and1056 agent turns in total. The sampled dialogues were tagged using Amazon Mechanical Turk4. Each dialogue was tagged by five different Mechanical Turk’s master level judges. Each\n4https://www.mturk.com/\njudge performed the following tagging tasks given the full dialogue:\n1. Emotion tagging: indicate the intensity of emotion expressed in each turn (customer or agent) for each emotion, on a scale of ([0...5]), such that0 defines no emotion,1 a low emotion intensity and5 a high emotion intensity. The intraclass correlation (ICC) among the judges was0.53 which indicates a moderate agreement which is common in this setting (LeBreton and Senter, 2007).\n2. Dialogue topic tagging: select one or several topic(s), to represent the customer’s intent. The topics are based on a taxonomy of popular customer support topics (Zeithaml et al., 2006): Account issues, Pricing, Payments, Customer service, Customer experience, Technical problem, Technical question, Order and delivery issues, Behavior of a staff member, Company policy issuesandGeneral statement.\n3. Agent essence tagging: select one or several of the following for each agent’s turn, to describe the agent’s action in the specific turn:Recognizing the issue raised, Asking for more information, Providing an explanation, Offering a solution, General statementandAssurance of efforts. The taxonomy is based on (Zomerdijk and Voss, 2010).\nWe generated true binary labels from the emotion tagging. For turnti, we considered it to express emotione if tag(e, ti) ≥ 2 wheretag(e, t) is the average judges’ tag value ofe in t. This process generated the class sizes detailed in Table 3. Dialogue topic tagging was converted to binary features representing the top-2 selected topics. Agent essencefeature set representation for each turn was defined analogously. The temporal response time values were translated to low/medium/high categorical values according to their relation to the33-th and66-th percentiles.\nWe evaluated our methods by using leave-onedialogue-out cross-validation (as in (Kim et al., 2010)), over the whole dataset (for the two cus-\ntomer service data sources together). Each test dialogue was classified by its order of turns, where each turn type (customer or agent) is classified by its corresponding classifier.\nOur baseline in all experiments is an SVM classifier that uses only thetextual featuresdescribed above, which do not utilize the dialogue context. This was used as a state-of-the-art single sentence emotion detection approach in many cases, e.g., (Mohammad, 2012; Roberts et al., 2012; Qadir and Riloff, 2014) and more. As described above, agent turn emotion prediction is performed before its content is known. Thus, the baseline representation of an agent turn consisted oftextual featuresextracted from its preceding customer turn. We evaluated each emotion’s classification performance by using precision (P ), recall (R) and F1score (F ). We evaluated the total performance for all emotion classes usingmicro and macro averages. We used Liblinear5 as an SVM implementation and SVM-HMM6 for sequence classification. Additionally, we used ClearNLP7 for textual features extraction."
+    }, {
+      "heading" : "5.2 History Size Impact",
+      "text" : "Sincehistory size is a parameter of our models, we first tested the classification results for all possible history sizes (given that that maximum dialogue size in our dataset is8). For each task and for each possiblehistorysize, we generatedSVM Dialogue and SVM-HMM Dialoguemodels and evaluated them as detailed above. We compared themacroandmicroaverageF1-scoreof our classifiers against the baseline classifier performance. As depicted in Figure 4 both theSVM Dialogue and SVM-HMM Dialoguemodels were superior\n5http://liblinear.bwaldvogel.de/ 6https://www.cs.cornell.edu/people/tj/\nsvm_light/svm_hmm.html 7https://github.com/clir/clearnlp\n0.25\n0.3\n0.35\n0.4\n0.45\n1 2 3 4 5 6 7\nF 1\n-s co\nre\nHistory size\n(a) Customer\n(b) Agent\n0.42\n0.47\n0.52\n0.57\n0.62\n0 1 2 3 4 5 6\nF 1\n-s co\nre\nHistory size\nBaseline Micro SVM Micro SVM-HMM Micro Baseline Macro SVM Macro SVM-HMM Macro\nfor all history ranges and for both tasks. Examining the customer turns emotion detection performance, we can see in Figure 4(a) that it increases until history = 3, and then remains relatively stable for largerhistory sizes. This means that information about the behavior of the customer and agent in past turns is beneficial for detecting customer emotions in a current turn. For assessing the performance of our predictions of agent turns emotion techniques, we first note that we tested with history > 0 range, since we assume that the minimal information needed for agent turn classification is the information extracted from the last customer turn. Figure 4(b) shows that overall, performance is highest whenhistory = 1, and does not decline much for higherhistory values. This indicates that for agent emotion technique prediction the last customer turn is the most informative one.\nIn all of our experiments, we used theWilcoxon signed-rank testo validate the statistical significance of our models’micro and macro average F1-scorecomparing to baseline performance. Additionally, we usedMcNemar’s teston the contingency tables aggregated over all emotions. These tests showed that both of our models were significantly different from the baseline model, under a value of0.001, for both classification tasks and all historysizes."
+    }, {
+      "heading" : "5.3 Detailed Classification Results",
+      "text" : "Table 4 depicts the detailed classification results for optimal history values that obtained maximal macro F1-score, namely for customer emotion detectionhistory = 4 and for agent emotion technique predictionhistory = 1. The table presents performance for each emotion, formacro andmicro average results over all dialogues, and for each data source (Genor Tech) separately. For both classification tasks, both of our models outperformed baseline results for almost all emotions, where averagemacroandmicro results are statistically significant compared to the baseline, as described above.\nFor customer turn emotion detection, theSVMHMM Dialoguemodel performed better than the SVM Dialoguemodel, and reached amacro and\nmicro averageF1-scoreimprovements over all di-\nalogues of17.8% and11.7%, respectively. Fur-\nthermore, themacroandmicro averageF1-score\nresults of theSVM-HMM Dialoguemodel (0.519 and 0.6, respectively) are satisfying given the moderate ICC score between the judges (0.53). For predicting the agent emotional technique, the SVM Dialoguemodel obtained slightly better results thanSVM-HMM Dialoguemodel, and reached amacro and micro averageF1-score improvements over all dialogues of53.9% and 43.5%, respectively. These results emphasize the differences between theSVM Dialogueand SVM-HMM Dialoguemodels. Specifically, when history size is large, as in customer emotion prediction, SVM-HMM Dialoguemodel, which internally captures dependencies in past classifications, outperforms the simplisticSVM Dialogue model. We note that an improvement is also obtained when calculatingmacroandmicro average performance for each data source separately. This highlights our models’ superiority as well as their general applicability and robustness for different data sources."
+    }, {
+      "heading" : "5.4 Feature Set Contribution Analysis",
+      "text" : "We examined the contribution of different feature sets in an incremental fashion, using the optimal history value detailed above. Based on the families of feature sets that we defined in the Methodology section, we tested the performance of different feature set combinations in our models, added in the following order:baseline(textual features), emotional, temporalandintegral. Figure 5 depicts\nthe results for both classification tasks. Thex-axis represents specific combination of features sets, and they-axis represents themacroor microaverageF1-scorevalue obtained. Figure 5 shows that adding each feature set improved performance for all models, for both tasks, which indicates the informative value of each feature set. Additionally, the figure suggests that the most informative dialogue feature sets are theintegralandemotional."
+    }, {
+      "heading" : "6 Conclusions",
+      "text" : "In this work we studied emotions being expressed in customer service dialogues in the social me-\ndia. Specifically, we described two classification\ntasks, one for detecting customer emotions and\nthe other for predicting the emotional technique\nused by support service agent. We have pro-\nposed two different models (SVM Dialogueand SVM-HMM Dialoguemodels) for these tasks. We studied the impact ofdialogue featuresand dialogue history on the quality of the classification and showed improvement in performance for both models and both classification tasks. We also showed the robustness of our models across different data sources. As for future work we plan to work on several aspects: (1) In this work, we showed that it is possible to predict the emotional\n0.40\n0.45\n0.50\n0.55\n0.60\nMacro SVM Micro SVM Macro SVM-HMM Micro SVM-HMM\nF 1\n-s co\nre\nBL BL+emotional BL+emotional+temporal all feautres\n0.24\n0.29\n0.34\n0.39\n0.44\nMacro SVM Micro SVM Macro SVM-HMM Micro SVM-HMM\nF 1\n-s co\nre\n(a) Customer\n(b) Agent\ntechnique. In the future, we plan to run experiments in which the predicted emotional technique is actually applied in the context of new dialogues to measure the effect of such predictions on real support dialogues. (2) Distinguish between dialogues that have positive outcomes (e.g., high customer satisfaction) and others."
+    } ],
+    "references" : [ {
+      "title" : "7 reasons you need to be using social media as your customer service portal",
+      "author" : [ "Jayson DeMers." ],
+      "venue" : "Forbes.",
+      "citeRegEx" : "DeMers.,? 2014",
+      "shortCiteRegEx" : "DeMers.",
+      "year" : 2014
+    }, {
+      "title" : "Responding to learners’ cognitiveaffective states with supportive and shakeup dialogues",
+      "author" : [ "Sidney D’Mello", "Scotty Craig", "Karl Fike", "Arthur Graesser" ],
+      "venue" : "InProceedings of HCI",
+      "citeRegEx" : "D.Mello et al\\.,? \\Q2009\\E",
+      "shortCiteRegEx" : "D.Mello et al\\.",
+      "year" : 2009
+    }, {
+      "title" : "Anger, frustration, and helplessness after service failure: coping strategies and effective informational support",
+      "author" : [ "Katja Gelbrich" ],
+      "venue" : "Journal of the Academy of Marketing Science",
+      "citeRegEx" : "Gelbrich.,? \\Q2010\\E",
+      "shortCiteRegEx" : "Gelbrich.",
+      "year" : 2010
+    }, {
+      "title" : "Emotion detection in email customer care.Computational Intelligence",
+      "author" : [ "Narendra K. Gupta", "Mazin Gilbert", "Giuseppe Di Fabbrizio" ],
+      "venue" : null,
+      "citeRegEx" : "Gupta et al\\.,? \\Q2013\\E",
+      "shortCiteRegEx" : "Gupta et al\\.",
+      "year" : 2013
+    }, {
+      "title" : "Predicting and eliciting addressee’s emotion in online dialogue",
+      "author" : [ "Takayuki Hasegawa", "Naoki Yoshinaga Kaji", "Nobuhiro", "Masashi Toyoda." ],
+      "venue" : "InACL (1), pages 964–972.",
+      "citeRegEx" : "Hasegawa et al\\.,? 2013",
+      "shortCiteRegEx" : "Hasegawa et al\\.",
+      "year" : 2013
+    }, {
+      "title" : "Classifying dialogue acts in one-on-one live chats",
+      "author" : [ "Su Nam Kim", "Lawrence Cavedon", "Timothy Baldwin." ],
+      "venue" : "InProceedings of EMNLP",
+      "citeRegEx" : "Kim et al\\.,? 2010",
+      "shortCiteRegEx" : "Kim et al\\.",
+      "year" : 2010
+    }, {
+      "title" : "Answers to 20 questions about interrater reliability and interrater agreement",
+      "author" : [ "James M LeBreton", "Jenell L Senter" ],
+      "venue" : null,
+      "citeRegEx" : "LeBreton and Senter.,? \\Q2007\\E",
+      "shortCiteRegEx" : "LeBreton and Senter.",
+      "year" : 2007
+    }, {
+      "title" : "More than happy to help? customer-focused emotion management strategies",
+      "author" : [ "Laura M Little", "Don Kluemper", "Debra L Nelson", "Andrew Ward." ],
+      "venue" : "Personnel Psychology",
+      "citeRegEx" : "Little et al\\.,? 2013",
+      "shortCiteRegEx" : "Little et al\\.",
+      "year" : 2013
+    }, {
+      "title" : "Crowdsourcing a word–emotion association lexicon",
+      "author" : [ "Saif M Mohammad", "Peter D Turney" ],
+      "venue" : null,
+      "citeRegEx" : "Mohammad and Turney.,? \\Q2013\\E",
+      "shortCiteRegEx" : "Mohammad and Turney.",
+      "year" : 2013
+    }, {
+      "title" : "Portable features for classifying emotional text",
+      "author" : [ "Saif Mohammad" ],
+      "venue" : "InProceedings of NAACL HLT",
+      "citeRegEx" : "Mohammad.,? \\Q2012\\E",
+      "shortCiteRegEx" : "Mohammad.",
+      "year" : 2012
+    }, {
+      "title" : "Ensemble methods for spoken emotion recognition in call-centres",
+      "author" : [ "”Donn Morrison", "Ruili Wang", "Liyanage C. De Silva" ],
+      "venue" : null,
+      "citeRegEx" : "Morrison et al\\.,? \\Q2007\\E",
+      "shortCiteRegEx" : "Morrison et al\\.",
+      "year" : 2007
+    }, {
+      "title" : "Satisfaction: A behavioral perspective on the consumer",
+      "author" : [ "Richard L Oliver" ],
+      "venue" : null,
+      "citeRegEx" : "Oliver.,? \\Q2014\\E",
+      "shortCiteRegEx" : "Oliver.",
+      "year" : 2014
+    }, {
+      "title" : "Learning emotion indicators from tweets: Hashtags, hashtag patterns, and phrases",
+      "author" : [ "Routledge. Ashequl Qadir", "Ellen Riloff" ],
+      "venue" : null,
+      "citeRegEx" : "Qadir and Riloff.,? \\Q2014\\E",
+      "shortCiteRegEx" : "Qadir and Riloff.",
+      "year" : 2014
+    }, {
+      "title" : "Expression of emotion as part of the work role.Academy of management review",
+      "author" : [ "Anat Rafaeli", "Robert I Sutton" ],
+      "venue" : null,
+      "citeRegEx" : "Rafaeli and Sutton.,? \\Q1987\\E",
+      "shortCiteRegEx" : "Rafaeli and Sutton.",
+      "year" : 1987
+    }, {
+      "title" : "Data-driven response generation in social media",
+      "author" : [ "Alan Ritter", "Colin Cherry", "William B. Dolan." ],
+      "venue" : "Proceedings of EMNLP",
+      "citeRegEx" : "Ritter et al\\.,? 2011",
+      "shortCiteRegEx" : "Ritter et al\\.",
+      "year" : 2011
+    }, {
+      "title" : "Empatweet: Annotating and detecting emotions on twitter",
+      "author" : [ "Kirk Roberts", "Michael A Roach", "Joseph Johnson", "Josh Guthrie", "Sanda M Harabagiu" ],
+      "venue" : null,
+      "citeRegEx" : "Roberts et al\\.,? \\Q2012\\E",
+      "shortCiteRegEx" : "Roberts et al\\.",
+      "year" : 2012
+    }, {
+      "title" : "Weekends, work, and wellbeing: Psychological need satisfactions and day of the week effects on mood, vitality, and physical symptoms",
+      "author" : [ "Richard M Ryan", "Jessey H Bernstein", "Kirk Warren Brown." ],
+      "venue" : "Journal of social and clinical psychol-",
+      "citeRegEx" : "Ryan et al\\.,? 2010",
+      "shortCiteRegEx" : "Ryan et al\\.",
+      "year" : 2010
+    }, {
+      "title" : "Affect listeners: Acquisition of affective states by means of conversational systems",
+      "author" : [ "Marcin Skowron." ],
+      "venue" : "InDevelopment of Multimodal Interfaces: Active Listening and Synchrony",
+      "citeRegEx" : "Skowron.,? 2010",
+      "shortCiteRegEx" : "Skowron.",
+      "year" : 2010
+    }, {
+      "title" : "A neural network approach to context-sensitive generation of conversational responses",
+      "author" : [ "Alessandro Sordoni", "Michel Galley", "Michael Auli", "Chris Brockett", "Yangfeng Ji", "Meg Mitchell", "Jian-Yun Nie", "Jianfeng Gao", "Bill Dolan." ],
+      "venue" : "In",
+      "citeRegEx" : "Sordoni et al\\.,? 2015",
+      "shortCiteRegEx" : "Sordoni et al\\.",
+      "year" : 2015
+    }, {
+      "title" : "The occ model revisited",
+      "author" : [ "In NAACL-HLT.B.R. Steunebrink", "M.M. Dastani", "J.-J.Ch. Meyer." ],
+      "venue" : "In",
+      "citeRegEx" : "Steunebrink et al\\.,? 2009",
+      "shortCiteRegEx" : "Steunebrink et al\\.",
+      "year" : 2009
+    }, {
+      "title" : "Dialogue act recognition in synchronous and asynchronous",
+      "author" : [ "Maryam Tavafi", "Yashar Mehdad", "Shafiq Joty", "Giuseppe Carenini", "Raymond Ng" ],
+      "venue" : null,
+      "citeRegEx" : "Tavafi et al\\.,? \\Q2013\\E",
+      "shortCiteRegEx" : "Tavafi et al\\.",
+      "year" : 2013
+    }, {
+      "title" : "Multi-label classification: An overview.Dept. of Informatics, Aristotle University of Thessaloniki, Greece",
+      "author" : [ "Grigorios Tsoumakas", "Ioannis Katakis" ],
+      "venue" : null,
+      "citeRegEx" : "Tsoumakas and Katakis.,? \\Q2006\\E",
+      "shortCiteRegEx" : "Tsoumakas and Katakis.",
+      "year" : 2006
+    }, {
+      "title" : "Detection of real-life emotions in call centers",
+      "author" : [ "Laurence Vidrascu", "Laurence Devillers." ],
+      "venue" : "In",
+      "citeRegEx" : "Vidrascu and Devillers.,? 2005",
+      "shortCiteRegEx" : "Vidrascu and Devillers.",
+      "year" : 2005
+    }, {
+      "title" : "The relation between written and spoken language",
+      "author" : [ "Deborah Tannen Wallace Chafe" ],
+      "venue" : null,
+      "citeRegEx" : "Chafe.,? \\Q1987\\E",
+      "shortCiteRegEx" : "Chafe.",
+      "year" : 1987
+    }, {
+      "title" : "Services marketing: Integrating customer focus across the firm",
+      "author" : [ "Valarie A Zeithaml", "Mary Jo Bitner", "Dwayne D Gremler" ],
+      "venue" : null,
+      "citeRegEx" : "Zeithaml et al\\.,? \\Q2006\\E",
+      "shortCiteRegEx" : "Zeithaml et al\\.",
+      "year" : 2006
+    }, {
+      "title" : "Effects of emotional text on online customer service chat",
+      "author" : [ "L. Zhang", "L.B. Erickson", "H.C. Webb." ],
+      "venue" : "InGraduate Student Research Conference in Hospitality and Tourism.",
+      "citeRegEx" : "Zhang et al\\.,? 2011",
+      "shortCiteRegEx" : "Zhang et al\\.",
+      "year" : 2011
+    }, {
+      "title" : "Service design for experience-centric services.Journal of Service Research",
+      "author" : [ "Leonieke G Zomerdijk", "Christopher A Voss" ],
+      "venue" : null,
+      "citeRegEx" : "Zomerdijk and Voss.,? \\Q2010\\E",
+      "shortCiteRegEx" : "Zomerdijk and Voss.",
+      "year" : 2010
+    } ],
+    "referenceMentions" : [ {
+      "referenceID" : 0,
+      "context" : "Using this medium has its advantages as described, for example, in (DeMers, 2014): Customers appreciate the simplicity and immediacy of social media conversations, the ability to reach real human beings, the transparency, and the feeling that someone listens to them.",
+      "startOffset" : 67,
+      "endOffset" : 81
+    }, {
+      "referenceID" : 11,
+      "context" : "Emotions are a cardinal aspect of inter-personal communication: they are an implicit or explicit part of essentially any communication, and of particular importance in the setting of customer service, as they relate directly to customer satisfaction and experience (Oliver, 2014).",
+      "startOffset" : 265,
+      "endOffset" : 279
+    }, {
+      "referenceID" : 2,
+      "context" : "Typical emotions expressed by customers in the context of social media service dialogues include anger and frustration, as well as gratitude and more (Gelbrich, 2010).",
+      "startOffset" : 150,
+      "endOffset" : 166
+    }, {
+      "referenceID" : 13,
+      "context" : "However, it is important to note that emotions expressed by service agents are typically governed by company policies that specify which emotions should be expressed in which situation (Rafaeli and Sutton, 1987).",
+      "startOffset" : 185,
+      "endOffset" : 211
+    }, {
+      "referenceID" : 9,
+      "context" : "In (Mohammad, 2012; Roberts et al., 2012; Qadir and Riloff, 2014) a series of binary SVM classifiers (one for each emotion) were trained over datasets from different domains (news headlines, social media).",
+      "startOffset" : 3,
+      "endOffset" : 65
+    }, {
+      "referenceID" : 15,
+      "context" : "In (Mohammad, 2012; Roberts et al., 2012; Qadir and Riloff, 2014) a series of binary SVM classifiers (one for each emotion) were trained over datasets from different domains (news headlines, social media).",
+      "startOffset" : 3,
+      "endOffset" : 65
+    }, {
+      "referenceID" : 12,
+      "context" : "In (Mohammad, 2012; Roberts et al., 2012; Qadir and Riloff, 2014) a series of binary SVM classifiers (one for each emotion) were trained over datasets from different domains (news headlines, social media).",
+      "startOffset" : 3,
+      "endOffset" : 65
+    }, {
+      "referenceID" : 8,
+      "context" : ", utilizing the NRC emotion lexicon (Mohammad and Turney, 2013)) and punctuation based features.",
+      "startOffset" : 36,
+      "endOffset" : 63
+    }, {
+      "referenceID" : 4,
+      "context" : "The work in (Hasegawa et al., 2013) showed how to predict and elicit emotions in online dialogues.",
+      "startOffset" : 12,
+      "endOffset" : 35
+    }, {
+      "referenceID" : 1,
+      "context" : "The works in (Skowron, 2010) and (D’Mello et al., 2009) presented dialogue systems that sense the user emotions, such that the system further optimizes its affect response.",
+      "startOffset" : 33,
+      "endOffset" : 55
+    }, {
+      "referenceID" : 14,
+      "context" : "It is worth mentioning the works in (Ritter et al., 2011; Sordoni et al., 2015) that are focused on data-driven response generation in the context of dialogues in social media.",
+      "startOffset" : 36,
+      "endOffset" : 79
+    }, {
+      "referenceID" : 18,
+      "context" : "It is worth mentioning the works in (Ritter et al., 2011; Sordoni et al., 2015) that are focused on data-driven response generation in the context of dialogues in social media.",
+      "startOffset" : 36,
+      "endOffset" : 79
+    }, {
+      "referenceID" : 3,
+      "context" : "The work in (Gupta et al., 2013), analyzed emotions in textual email communications and the authors focused on prioritizing customer support emails based on detected emotions.",
+      "startOffset" : 12,
+      "endOffset" : 32
+    }, {
+      "referenceID" : 25,
+      "context" : "In the setting of online customer service (chats), in (Zhang et al., 2011) the authors studied the impact of emotional text on the customer’s perception of the service agent.",
+      "startOffset" : 54,
+      "endOffset" : 74
+    }, {
+      "referenceID" : 22,
+      "context" : "Emotion detection is also applied to the domain of call centers (Vidrascu and Devillers, 2005; Morrison et al., 2007) and this differs from our focus since call center data are voice, and, thus, emotion detection is mainly based on paralinguistic aspects rather than on the text.",
+      "startOffset" : 64,
+      "endOffset" : 117
+    }, {
+      "referenceID" : 10,
+      "context" : "Emotion detection is also applied to the domain of call centers (Vidrascu and Devillers, 2005; Morrison et al., 2007) and this differs from our focus since call center data are voice, and, thus, emotion detection is mainly based on paralinguistic aspects rather than on the text.",
+      "startOffset" : 64,
+      "endOffset" : 117
+    }, {
+      "referenceID" : 19,
+      "context" : "This feature set captures the notion that customer emotions are influenced by the event that led the customer to contact the customer service (Steunebrink et al., 2009).",
+      "startOffset" : 142,
+      "endOffset" : 168
+    }, {
+      "referenceID" : 7,
+      "context" : "This feature set captures the notion that customer emotions are influenced by actions of agents (Little et al., 2013).",
+      "startOffset" : 96,
+      "endOffset" : 117
+    }, {
+      "referenceID" : 16,
+      "context" : "This feature captures the effects of weekend versus weekday influences on emotions (Ryan et al., 2010).",
+      "startOffset" : 83,
+      "endOffset" : 102
+    }, {
+      "referenceID" : 21,
+      "context" : "We chose to use a problem transformation approach which maps the multi-label classification task into several binary classification tasks, one for each emotion class which participates in the multi-label problem (Tsoumakas and Katakis, 2006).",
+      "startOffset" : 212,
+      "endOffset" : 241
+    }, {
+      "referenceID" : 5,
+      "context" : "Thesehistorical features are also appended to the feature vector of ti, similarly to (Kim et al., 2010) where this method was used for classifying dialogue acts.",
+      "startOffset" : 85,
+      "endOffset" : 103
+    }, {
+      "referenceID" : 5,
+      "context" : "For instance (Kim et al., 2010; Tavafi et al., 2013) used SVM-HMM and Conditional Random Fields for dialogue act classification.",
+      "startOffset" : 13,
+      "endOffset" : 52
+    }, {
+      "referenceID" : 20,
+      "context" : "For instance (Kim et al., 2010; Tavafi et al., 2013) used SVM-HMM and Conditional Random Fields for dialogue act classification.",
+      "startOffset" : 13,
+      "endOffset" : 52
+    }, {
+      "referenceID" : 6,
+      "context" : "53 which indicates a moderate agreement which is common in this setting (LeBreton and Senter, 2007).",
+      "startOffset" : 72,
+      "endOffset" : 99
+    }, {
+      "referenceID" : 24,
+      "context" : "The topics are based on a taxonomy of popular customer support topics (Zeithaml et al., 2006):",
+      "startOffset" : 70,
+      "endOffset" : 93
+    }, {
+      "referenceID" : 5,
+      "context" : "We evaluated our methods by using leave-onedialogue-out cross-validation (as in (Kim et al., 2010)), over the whole dataset (for the two cusCustomer Agent Emotion # of instances Emotion # of instances",
+      "startOffset" : 80,
+      "endOffset" : 98
+    } ],
+    "year" : 2016,
+    "abstractText" : "Providing customer support through social media channels is gaining increasing popularity. In such a context, automatic detection and analysis of the emotions expressed by customers is important, as is identification of the emotional techniques (e.g., apology, empathy, etc.) in the responses of customer service agents. Result of such an analysis can help assess the quality of such a service, help and inform agents about desirable responses, and help develop automated service agents for social media interactions. In this paper, we show that, in addition to text based turn features, dialogue features can significantly improve detection of emotions in social media customer service dialogues and help predict emotional techniques used by customer service agents.",
+    "creator" : "LaTeX with hyperref package"
+  }
+}

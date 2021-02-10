@@ -1,0 +1,653 @@
+15:11:38.635 [main] DEBUG com.amazonaws.AmazonWebServiceClient - Internal logging successfully configured to commons logger: true
+15:11:38.691 [main] DEBUG com.amazonaws.metrics.AwsSdkMetrics - Admin mbean registered under com.amazonaws.management:type=AwsSdkMetrics
+15:11:38.749 [main] DEBUG c.a.internal.config.InternalConfig - Configuration override awssdk_config_override.json not found.
+15:11:39.076 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loading model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:11:39.076 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:11:39.078 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:11:39.080 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Creating gazetteer cache at /tmp/gazetteer-v5.json-fa485aef.gazetteerCache.bin
+15:11:53.850 [scala-execution-context-global-12] INFO  o.a.scienceparse.ParserGroundTruth - Read 1609659 papers.
+15:12:32.505 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loaded model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:14:11.847 [scala-execution-context-global-12] INFO  o.a.scienceparse.ExtractReferences - could not load kermit gazetter
+15:14:11.915 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:14:11.915 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:14:11.920 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.RunSP$ - Starting /home/risubaba/LongSumm/pdf/6787-interpretable-and-globally-optimal-prediction-for-textual-grounding-using-image-concepts.pdf
+{
+  "name" : "/home/risubaba/LongSumm/pdf/6787-interpretable-and-globally-optimal-prediction-for-textual-grounding-using-image-concepts.pdf",
+  "metadata" : {
+    "source" : "META",
+    "title" : "Interpretable and Globally Optimal Prediction for Textual Grounding using Image Concepts",
+    "authors" : [ "Raymond A. Yeh", "Jinjun Xiong", "Wen-mei W. Hwu", "Minh N. Do", "Alexander G. Schwing" ],
+    "emails" : [ "yeh17@illinois.edu,", "jinjun@us.ibm.com,", "w-hwu@illinois.edu,", "minhdo@illinois.edu,", "aschwing@illinois.edu" ],
+    "sections" : [ {
+      "heading" : "1 Introduction",
+      "text" : "Grounding of textual phrases, i.e., finding bounding boxes in images which relate to textual phrases, is an important problem for human-computer interaction, robotics and mining of knowledge bases, three applications that are of increasing importance when considering autonomous systems, augmented and virtual reality environments. For example, we may want to guide an autonomous system by using phrases such as ‘the bottle on your left,’ or ‘the plate in the top shelf.’ While those phrases are easy to interpret for a human, they pose significant challenges for present day textual grounding algorithms, as interpretation of those phrases requires an understanding of objects and their relations.\nExisting approaches for textual grounding, such as [38, 15] take advantage of the cognitive performance improvements obtained from deep net features. More specifically, deep net models are designed to extract features from given bounding boxes and textual data, which are then compared to measure their fitness. To obtain suitable bounding boxes, many of the textual grounding frameworks, such as [38, 15], make use of region proposals. While being easy to obtain, automatic extraction of region proposals is limiting, because the performance of the visual grounding is inherently constrained by the quality of the proposal generation procedure.\nIn this work we describe an interpretable mechanism which additionally alleviates any issues arising due to a limited number of region proposals. Our approach is based on a number of ‘image concepts’ such as semantic segmentations, detections and priors for any number of objects of interest. Based on those ‘image concepts’ which are represented as score maps, we formulate textual grounding as a search over all possible bounding boxes. We find the bounding box with highest accumulated score contained in its interior. The search for this box can be solved via an efficient branch and bound\n31st Conference on Neural Information Processing Systems (NIPS 2017), Long Beach, CA, USA.\nA woman in a green shirt is getting ready to throw her bowling ball down the lane... Two women wearing hats covered in flowers are posing. Young man wearing a hooded jacket sitting on snow in front of mountain area.\nsecond bike from right in front painting next to the two on theleft person all the way to the right\nFigure 1: Results on the test set for grounding of textual phrases using our branch and bound based algorithm. Top Row: Flickr 30k Entities Dataset. Bottom Row: ReferItGame Dataset (Groundtruth box in green and predicted box in red).\nscheme akin to the seminal efficient subwindow search of Lampert et al. [25]. The learned weights can additionally be used as word embeddings. We are not aware of any method that solves textual grounding in a manner similar to our approach and hope to inspire future research into the direction of deep nets combined with powerful inference algorithms.\nWe evaluate our proposed approach on the challenging ReferItGame [20] and the Flickr 30k Entities dataset [35], obtaining results like the ones visualized in Fig. 1. At the time of submission, our approach outperformed state-of-the-art techniques on the ReferItGame and Flickr 30k Entities dataset by 7.77% and 3.08% respectively using the IoU metric. We also demonstrate that the trained parameters of our model can be used as a word-embedding which captures spatial-image relationships and provides interpretability."
+    }, {
+      "heading" : "2 Related Work",
+      "text" : "Textual grounding: Related to textual grounding is work on image retrieval. Classical approaches learn a ranking function using recurrent neural nets [30, 6], or metric learning [13], correlation analysis [22], and neural net embeddings [9, 21]. Beyond work in image retrieval, a variety of techniques have been considered to explicitly ground natural language in images and video. One of the first models in this area was presented in [31, 24]. The authors describe an approach that jointly learns visual classifiers and semantic parsers.\nGong et al. [10] propose a canonical correlation analysis technique to associate images with descriptive sentences using a latent embedding space. In spirit similar is work by Wang et al. [42], which learns a structure-preserving embedding for image-sentence retrieval. It can be applied to phrase localization using a ranking framework. In [11], text is generated for a set of candidate object regions which is subsequently compared to a query. The reverse operation, i.e., generating visual features from query text which is subsequently matched to image regions is discussed in [1].\nIn [23], 3D cuboids are aligned to a set of 21 nouns relevant to indoor scenes using a Markov random field based technique. A method for grounding of scene graph queries in images is presented in [17]. Grounding of dependency tree relations is discussed in [19] and reformulated using recurrent nets in [18]. Subject-Verb-Object phrases are considered in [39] to develop a visual knowledge extraction system. Their algorithm reasons about the spatial consistency of the configurations of the involved entities. In [15, 29] caption generation techniques are used to score a set of proposal boxes and returning the highest ranking one. To avoid application of a text generation pipeline on bounding box proposals, [38] improve the phrase encoding using a long short-term memory (LSTM) [12] based deep net. Additional modeling of object context relationship were explored in [32, 14]. Video\n9/5/2017 bbest_redraw\n1/1\ndatasets, although not directly related to our work in this paper, were used for spatiotemporal language grounding in [27, 45].\nCommon datasets for visual grounding are the ReferItGame dataset [20] and a newly introduced Flickr 30k Entities dataset [35], which provides bounding box annotations for noun phrases of the original Flickr 30k dataset [44].\nIn contrast to all of the aforementioned methods, which are largely based on region proposals, we suggest usage of efficient subwindow search as a suitable inference engine.\nEfficient subwindow search: Efficient subwindow search was proposed by Lampert et al. [25] for object localization. It is based on an extremely effective branch and bound scheme that can be applied to a large class of energy functions. The approach has been applied to very efficient deformable part models [43], for object class detection [26], for weakly supervised localization [5], indoor scene understanding [40], diverse object proposals [41] and also for spatio-temporal object detection proposals [33]."
+    }, {
+      "heading" : "3 Exact Inference for Grounding",
+      "text" : "We outline our approach for textual grounding in Fig. 2. In contrast to the aforementioned techniques for textual grounding, which typically use a small set of bounding box proposals, we formulate our language grounding approach as an energy minimization over a large number of bounding boxes. The search over a large number of bounding boxes allows us to retrieve an accurate bounding-box prediction for a given phrase and an image. Importantly, by leveraging efficient branch-and-bound techniques, we are able to find the global minimizer for a given energy function very effectively.\nOur energy is based on a set of ‘image concepts’ like semantic segmentations, detections or image priors. All those concepts come in the form of score maps which we combine linearly before searching for the bounding box containing the highest accumulated score over the combined score map. It is trivial to add additional information to our approach by adding additional score maps. Moreover, linear combination of score maps reveals importance of score maps for specific queries as well as similarity between queries such as ‘skier’ and ‘snowboarder.’ Hence the framework that we discuss in the following is easy to interpret and extend to other settings.\nGeneral problem formulation: For simplicity we use x to refer to both given input data modalities, i.e., x = (Q, I), with query text, Q, and image, I . We will differentiate them in the narrative. In addition, we define a bounding box y via its top left corner (y1, y2) and its bottom right corner (y3, y4) and subsume the four variables of interest in the tuple y = (y1, . . . , y4) ∈ Y = ∏4 i=1{0, . . . , yi,max}. Every integral coordinate yi, i ∈ {1, . . . , 4} lies within the set {0, . . . , yi,max}, and Y denotes the\nproduct space of all four coordinates. For notational simplicity only, we assume all images to be scaled to identical dimensions, i.e., yi,max is not dependent on the input data x. We obtain a bounding box prediction ŷ given our data x, by solving the energy minimization\nŷ = arg min y∈Y E(x, y, w), (1)\nto global optimality. Note that w refers to the parameters of our model. Despite the fact that we are ‘only’ interested in a single bounding box, the product space Y is generally too large for exhaustive minimization of the energy specified in Eq. (1). Therefore, we pursue a branch-and-bound technique in the following.\nTo apply branch and bound, we assume that the energy function E(x, y, w) depends on two sets of parameters w = [wTt , w T r ] T , i.e., the top layer parameters wt of a neural net, and the remaining parameters wr. In light of this decomposition, our approach requires the energy function to be of the following form:\nE(x, y, w) = wTt φ(x, y, wr).\nNote that the features φ(x, y, wr) may still depend non-linearly on all but the top-layer parameters. This assumption does not pose a severe restriction since almost all of the present-day deep net models typically obtain the logits E(x, y, w) using a fully-connected layer or a convolutional layer with kernel size 1× 1 as the last computation. Energy Function Details: Our energy function E(x, y, w) is based on a set of ‘image concepts,’ such as semantic segmentation of object categories, detections, or word priors, all of which we subsume in the set C. Importantly, all image concepts c ∈ C are attached a parametric score map φ̂c(x,wr) ∈ RW×H following the image width W and height H . Note that those parametric score maps may depend nonlinearly on some parameters wr. Given a bounding box y, we use the scalar φc(x, y, wr) ∈ R to refer to the score accumulated within the bounding box y of score map φ̂c(x,wr). To define the energy function we also introduce a set of words of interest, i.e., S. Note that this set contains a special symbol denoting all other words not of interest for the considered task. We use the given query Q, which is part of the data x, to construct indicators, ιs = δ(s ∈ Q) ∈ {0, 1}, denoting for every token s ∈ S its existence in the query Q, where δ denotes the indicator function. Based on this definition, we formulate the energy function as follows:\nE(x, y, w) = ∑\ns∈S:ιs=1 ∑ c∈C ws,cφc(x, y, wr), (2)\nwhere ws,c is a parameter connecting a word s ∈ S to an image concept c ∈ C. In other words, wt = (ws,c : ∀s ∈ S, c ∈ C). This energy function results in a sparse wt, which increases the speed of inference.\nScore maps: The energy is given by a linear combination of accumulated score maps φc(x, y, wr). In our case, we use |C| = k1 + k2 + k3 of those maps, which capture three kinds of information: (i) k1 word-priors; (ii) k2 geometric information cues; and (iii) k3 image based segmentations and detections. We discuss each of those maps in the following.\nApproach Accuracy (%) SCRC (2016) [15] 27.80 DSPE (2016) [42] 43.89\nGroundeR (2016) [38] 47.81 CCA (2017) [36] 50.89 Ours (Prior + Geo + Seg + Det) 51.63 Ours (Prior + Geo + Seg + bDet) 53.97\nTable 1: Phrase localization performance on Flickr 30k Entities.\nApproach Accuracy (%) SCRC (2016) [15] 17.93\nGroundeR (2016) [38] 23.44 GroundeR (2016) [38] +SPAT 26.93\nOurs (Prior + Geo) 25.56 Ours (Prior + Geo + Seg) 33.36 Ours (Prior + Geo + Seg + Det) 34.70\nTable 2: Phrase localization performance on ReferItGame.\nFor the top k1 words in the training set we construct word prior maps like the ones shown in Fig. 3 (a). To obtain the prior for a particular word, we search a given training set for each occurrence of the word. With the corresponding subset of image-text pairs and respective bounding box annotations at hand, we compute the average number of times a pixel is covered by a bounding box. To facilitate this operation, we scale each image to a predetermined size. Investigating the obtained word priors given in Fig. 3 (a) more carefully, it is immediately apparent that they provide accurate location information for many of the words.\nThe k2 = 2 geometric cues provide the aspect ratio and the area of the hypothesized bounding box y. Note that the word priors and geometry features contain no information about the image specifics.\nTo encode measurements dedicated to the image at hand, we take advantage of semantic segmentation and object detection techniques. The k3 image based features are computed using deep neural nets as proposed by [4, 37, 2]. We obtain probability maps for a set of class categories, i.e., a subset of the nouns of interest. The feature φ accumulates the scores within the hypothesized bounding box y.\nInference: The algorithm to find the bounding box ŷ with lowest energy as specified in Eq. (1) is based on an iterative decomposition of the output space Y [25], summarized in Fig. 3 (b). To this end we search across subsets of the product space Y and we define for every coordinate yi, i ∈ {1, . . . , 4} a corresponding lower and upper bound, yi,low and yi,high respectively. More specifically, considering the initial set of all possible bounding boxes Y , we divide it into two disjoint subsets Ŷ1 and Ŷ2. For example, by constraining y1 to {0, . . . , y1,max/2} and {y1,max/2 + 1, . . . , y1,max} for Ŷ1 and Ŷ2 respectively, while keeping all the other intervals unchanged. It is easy to see that we can repeat this decomposition by choosing the largest among the four intervals and recursively dividing it into two parts.\nGiven such a repetitive decomposition strategy for the output space, and since the energy E(x, y, w) for a bounding box y is obtained using a linear combination of word priors and accumulated segmentation masks, we can design an efficient branch and bound based search algorithm to exactly solve the inference problem specified in Eq. (1). The algorithm proceeds by iteratively decomposing a product space Ŷ into two subspaces Ŷ1 and Ŷ2. For each subspace, the algorithm computes a lower bound Ē(x,Yj , w) for the energy of all possible bounding boxes within the respective subspace. Intuitively, we then know, that any bounding box within the subspace Ŷj has a larger energy than the lower bound. The algorithm proceeds by choosing the subspace with lowest lower-bound until this subspace consists of a single element, i.e., until |Ŷ| = 1. We summarize this algorithm in Alg. 1 (Fig. 3 (b)).\nTo this end, it remains to show how to compute a lower bound Ē(x,Yj , w) on the energy for an output space, and to illustrate the conditions which guarantee convergence to the global minimum of the energy function.\nFor the latter, we note that two conditions are required to ensure convergence to the optimum: (i) the bound of the considered product space has to lower-bound the true energy for each of its bounding\nbox hypothesis ŷ ∈ Ŷ , i.e., ∀ŷ ∈ Ŷ , Ē(x, Ŷ, w) ≤ E(x, ŷ, w); (ii) the bound has to be exact for all possible bounding boxes y ∈ Y , i.e., Ē(x, y, w) = E(x, y, w). Given those two conditions, global convergence of the algorithm summarized in Alg. 1 is apparent: upon termination we obtain an ‘interval’ containing a single bounding box, and its energy is at least as low as the one for any other interval.\nFor the former, we note that bounds on score maps for bounding box intervals can be computed by considering either the largest or the smallest possible bounding box in the bounding box hypothesis, Ŷ , depending on whether the corresponding weight in wt is positive or negative and whether the feature maps contain only positive or negative values. Intuitively, if the weight is positive and the feature mask contains only positive values, we obtain the smallest lower bound Ē(x, Ŷ, w) by considering the content within the smallest possible bounding box. Note that the score maps do not necessarily contain only positive or negative numbers. However we can split the given score maps into two separate score maps (i.e., one with only positive values, and another with only negative values) while applying the same weight.\nIt is important to note that computation of the bound Ē(x, Ŷ, w) has to be extremely effective for the algorithm to run at a reasonable speed. However, computing the feature mask content for a bounding box is trivially possible using integral images. This results in a constant time evaluation of the bound, which is a necessity for the success of the branch and bound procedure.\nLearning the Parameters: With the branch and bound based inference procedure at hand, we now describe how to formulate the learning task. Support-vector machine intuition can be applied. Formally, we are given a training set D = {(x, y)} containing pairs of input data x and groundtruth bounding boxes y. We want to find the parameters w of the energy function E(x, y, w) such that the energy of the groundtruth is smaller than the energy of any other configuration. Negating this statement results in the following desiderata when including an additional margin term L(y, ŷ), also known as task-loss, which measures the loss between the groundtruth y and another configuration ŷ:\n−E(x, y, w) ≥ −E(x, ŷ, w) + L(ŷ, y) ∀ŷ ∈ Y. Since we want to enforce this inequality for all configurations ŷ ∈ Y , we can reduce the number of constraints by enforcing it for the highest scoring right hand side. We then design a cost function which penalizes violation of this requirement linearly. We obtain the following structured support vector machine based surrogate loss minimization:\nmin w\nC 2 ‖w‖22 + ∑ (x,y)∈D max ŷ∈Y (−E(x, ŷ, w) + L(ŷ, y)) + E(x, y, w) (3)\nwhere C is a hyperparameter adjusting the squared norm regularization to the data term. For the task loss L(ŷ, y) we use intersection over union (IoU).\nBy fixing the parameters wr and only learning the top layer parameters wt, Eq. (3) is equivalent to the problem of training a structured SVM. We found the cutting-plane algorithm [16] to work well in our context. The cutting-plane algorithm involves solving the maximization task. This maximization over the output space Y is commonly referred to as loss-augmented inference. Loss augmented inference is structurally similar to the inference task given in Eq. (1). Since maximization is identical to negated minimization, the computation of the bounds for the energy E(x, ŷ, w) remains identical. To bound the IoU loss, we note that a quotient can be bounded by bounding nominator and denominator independently. To lower bound the intersection of the groundtruth box with the hypothesis space we use the smallest hypothesized bounding box. To upper bound the union of the groundtruth box with the hypothesis space we use the largest bounding box.\nFurther, even though not employed to obtain the results in this paper, we mention that it is possible to backpropagate through the neural net parameters wr that influence the energy non-linearly. This underlines that our initial assumption is merely a construct to design an effective inference procedure."
+    }, {
+      "heading" : "4 Experimental Evaluation",
+      "text" : "In the following we first provide additional details of our implementation before discussing the results of our approach.\nLanguage processing: In order to process free-form textual phrases efficiently, we restricted the vocabulary size to the top 200 most frequent words in the training set for the ReferItGame, and to the top 1000 most frequent training set words for Flickr 30k Entities; both choices cover about 90% of all phrases in the training set. We map all the remaining words into an additional token. We don’t differentiate between uppercase and lower case characters and we also ignore punctuation.\nSegmentation and detection maps: We employ semantic segmentation, object detection, and poseestimation. For segmentation, we use the DeepLab system [4], trained on PASCAL VOC-2012 [8] semantic image segmentation task, to extract the probability maps for 21 categories. For detection, we use the YOLO object detection system [37], to extract 101 categories, 21 trained on PASCAL VOC-2012, and 80 trained on MSCOCO [28]. For pose estimation, we use the system from [2] to extract the body part location, then post-process to get the head, upper body, lower body, and hand regions.\nFor the ReferItGame, we further fine-tuned the last layer of the DeepLab system to include the categories of ‘sky,’ ‘ground,’ ‘building,’ ‘water,’ ‘tree,’ and ‘grass.’ For the Flickr 30k Entities, we also fine-tuned the last layer of the DeepLab system using the eight coarse-grained types and eleven colors from [36].\nPreprocessing and post-processing: For word prior feature maps and the semantic segmentation maps, we take an element-wise logarithm to convert the normalized feature counts into logprobabilities. The summation over a bounding box region then retains the notion of a joint logprobability. We also centered the feature maps to be zero-mean, which corresponds to choosing an initial decision threshold. The feature maps are resized to dimension of 64 × 64 for efficient computation, and the predicted box is scaled back to the original image dimension during evaluation. We re-center the prediction box by a constant amount determined using the validation set, as resizing truncate box coordinates to an integer.\nEfficient sub-window search implementation: In order for the efficient subwindow search to run at a reasonable speed, the lower bound on E needs to be computed as fast as possible. Observe that, E(x, y, w), is a weighted sum of the feature maps over the region specified by a hypothesized bounding box. To make this computation efficient, we pre-compute integral images. Given an integral\nimage, the computation for each of the bounding box is simply a look-up operation. This trick can similarly be applied for the geometric features. Since we know the range of the ratio and areas of the bounding boxes ahead of time, we cache the results in a look up table as well.\nThe ReferItGame dataset consists of more than 99,000 regions from 20,000 images. Bounding boxes are assigned to natural language expressions. We use the same bounding boxes as [38] and the same training test set split, i.e., 10,000 images for testing, 9,000 images for training and 1,000 images for validation.\nThe Flickr 30k Entities dataset consists of more than 275k bounding boxes from 31k image, where each bounding box is annotated with the corresponding natural language phrase. We us the same training, validation and testing split as in [35].\nQuantitative evaluation: In Tab. 1 and Tab. 2 we quantitatively compare the results of our approach to recent state-of-the-art baselines, where Prior = word priors, Geo = geometric information, Seg = Segmentation maps, Det = Detection maps, bDet = Detection maps + body parts detection. An example is considered as correct, if the predicted box overlaps with the ground-truth box by more than 0.5 IoU. We observe our approach to outperform competing methods by around 3% on the Flickr 30k Entities dataset and by around 7% on the ReferItGame dataset.\nWe also provide an ablation study of the word and image information as shown in Tab. 1 and Tab. 2.\nIn Tab. 3 we analyze the results for each “phrase type” provided by Flicker30k Entities dataset. As can be seen, our system outperforms the state-of-the-art in all phrase types except for clothing.\nWe note that our results have been surpassed by [3, 7, 34], where they fine-tuned the entire network including the feature extractions or trained more feature detectors; CCA, GroundeR and our approach uses a fixed pre-trained network for extracting image features.\nQualitative evaluation: Next we evaluate our approach qualitatively. In Fig. 1 and Fig. 4 we show success cases. We observe that our method successfully captures a variety of objects and scenes. In Fig. 5 we illustrate failure cases. We observe that for a few cases word prior may hurt the prediction (e.g., shoes are typically on the bottom half of the image.) Also our system may fail when the energy is not a linear combination of the feature scores. For example, the score of “dirt bike” should not be the score of “dirt” + the score of “bike.” We provide additional results in the supplementary material.\nLearned parameters + word embedding: Recall, in Eq. (2), our model learns a parameter per phrase word and concept pair, ws,c. We visualize its magnitude in Fig. 6 (a) for a subset of words and concepts. As can be seen, ws,c is large, when the phrase word and the concept are related, (e.g. s = ship and c = boat). This demonstrates that our model successfully learns the relationship between phrase words and image concepts. This also means that the “word vector,” ws = [ws,1, ws,2, ...ws,|C|], can be interpreted as a word embedding. Therefore, in Fig. 6 (b), we visualize the cosine similarity between pairs of word vectors. Expected groups of words form, for example (bicycle, bike), (camera, cellphone), (coffee, cup, drink), (man woman), (snowboarder, skier). The word vectors capture\nimage-spatial relationship of the words, meaning items that can be “replaced” in an image are similar; (e.g., a “snowboarder” can be replaced with a “skier” and the overall image would still be reasonable).\nComputational Efficiency: Overall, our method’s inference speed is comparable to CCA and much faster than GroundeR. The inference speed can be divided into three main parts, (1) extracting image features, (2) extracting language features, and (3) computing scores. For extracting image features, GroundeR requires a forward pass on VGG16 for each image region, where CCA and our approach requires a single forward pass which can be done in 142.85 ms. For extracting language features, our method requires index lookups, which takes negligible amount of time (less than 1e-6 ms). CCA, uses Word2vec for processing the text, which takes 0.070 ms. GroundeR uses a Long-Short-Term Memory net, which takes 0.7457 ms. Computing the scores with our C++ implementation takes 1.05ms on a CPU. CCA needs to compare projections of the text and image features, which takes 13.41ms on a GPU and 609ms on a CPU. GroundeR uses a single fully connected layer, which takes 0.31 ms on a GPU."
+    }, {
+      "heading" : "5 Conclusion",
+      "text" : "We demonstrated a mechanism for grounding of textual phrases which provides interpretability, is easy to extend, and permits globally optimal inference. In contrast to existing approaches which are generally based on a small set of bounding box proposals, we efficiently search over all possible bounding boxes. We think interpretability, i.e., linking of word and image concepts, is an important concept, particularly for textual grounding, which deserves more attention.\nAcknowledgments: This material is based upon work supported in part by the National Science Foundation under Grant No. 1718221. This work is supported by NVIDIA Corporation with the donation of a GPU. This work is supported in part by IBM-ILLINOIS Center for Cognitive Computing Systems Research (C3SR) - a research collaboration as part of the IBM Cognitive Horizons Network."
+    } ],
+    "references" : [ {
+      "title" : "Multiple queries for large scale specific object retrieval",
+      "author" : [ "R. Arandjelovic", "A. Zisserman" ],
+      "venue" : "In Proc. BMVC,",
+      "citeRegEx" : "1",
+      "shortCiteRegEx" : "1",
+      "year" : 2012
+    }, {
+      "title" : "Realtime multi-person 2d pose estimation using part affinity fields",
+      "author" : [ "Z. Cao", "T. Simon", "S.-E. Wei", "Y. Sheikh" ],
+      "venue" : "In Proc. CVPR,",
+      "citeRegEx" : "2",
+      "shortCiteRegEx" : "2",
+      "year" : 2017
+    }, {
+      "title" : "Query-guided regression network with context policy for phrase grounding",
+      "author" : [ "K. Chen", "R. Kovvuri", "R. Nevatia" ],
+      "venue" : "In Proc. ICCV,",
+      "citeRegEx" : "3",
+      "shortCiteRegEx" : "3",
+      "year" : 2017
+    }, {
+      "title" : "Semantic Image Segmentation with Deep Convolutional Nets and Fully Connected CRFs",
+      "author" : [ "L.-C. Chen", "G. Papandreou", "I. Kokkinos", "K. Murphy", "A.L. Yuille" ],
+      "venue" : "In Proc. ICLR,",
+      "citeRegEx" : "4",
+      "shortCiteRegEx" : "4",
+      "year" : 2015
+    }, {
+      "title" : "Weakly supervised localization and learning with generic knowledge",
+      "author" : [ "T. Deselaers", "B. Alexe", "V. Ferrari" ],
+      "venue" : null,
+      "citeRegEx" : "5",
+      "shortCiteRegEx" : "5",
+      "year" : 2012
+    }, {
+      "title" : "Long-term recurrent convolutional networks for visual recognition and description",
+      "author" : [ "J. Donahue", "L.A. Hendricks", "S. Guadarrama", "M. Rohrbach", "S. Venugopalan", "K. Saenko", "T. Darrell" ],
+      "venue" : "In Proc. CVPR,",
+      "citeRegEx" : "6",
+      "shortCiteRegEx" : "6",
+      "year" : 2015
+    }, {
+      "title" : "An attention-based regression model for grounding textual phrases in images",
+      "author" : [ "K. Endo", "M. Aono", "E. Nichols", "K. Funakoshi" ],
+      "venue" : "In Proc. IJCAI,",
+      "citeRegEx" : "7",
+      "shortCiteRegEx" : "7",
+      "year" : 2017
+    }, {
+      "title" : "The pascal visual object classes (voc) challenge",
+      "author" : [ "M. Everingham", "L. Van Gool", "C.K. Williams", "J. Winn", "A. Zisserman" ],
+      "venue" : null,
+      "citeRegEx" : "8",
+      "shortCiteRegEx" : "8",
+      "year" : 2010
+    }, {
+      "title" : "Devise: A deep visual-semantic embed- ding model",
+      "author" : [ "A. Frome", "G.S. Corrado", "J. Shlens", "S. Bengio", "J. Dean", "T. Mikolov" ],
+      "venue" : "In Proc. NIPS,",
+      "citeRegEx" : "9",
+      "shortCiteRegEx" : "9",
+      "year" : 2013
+    }, {
+      "title" : "Improving image-sentence embeddings using large weakly annotated photo collections",
+      "author" : [ "Y. Gong", "L. Wang", "M. Hodosh", "J. Hockenmaier", "S. Lazebnik" ],
+      "venue" : "In Proc. ECCV,",
+      "citeRegEx" : "10",
+      "shortCiteRegEx" : "10",
+      "year" : 2014
+    }, {
+      "title" : "Open-vocabulary object retrieval",
+      "author" : [ "S. Guadarrama", "E. Rodner", "K. Saenko", "N. Zhang", "R. Farrell", "J. Donahue", "T. Darrell" ],
+      "venue" : "In Proc. RSS,",
+      "citeRegEx" : "11",
+      "shortCiteRegEx" : "11",
+      "year" : 2014
+    }, {
+      "title" : "Long short-term memory",
+      "author" : [ "S. Hochreiter", "J. Schmidhuber" ],
+      "venue" : "Neural Computation,",
+      "citeRegEx" : "12",
+      "shortCiteRegEx" : "12",
+      "year" : 1997
+    }, {
+      "title" : "Learning distance metrics with contextual constraints for image retrieval",
+      "author" : [ "S.C. Hoi", "W. Liu", "M.R. Lyu", "W.-Y. Ma" ],
+      "venue" : "In Proc. CVPR,",
+      "citeRegEx" : "13",
+      "shortCiteRegEx" : "13",
+      "year" : 2006
+    }, {
+      "title" : "Modeling relationships in referential expressions with compositional modular networks",
+      "author" : [ "R. Hu", "M. Rohrbach", "J. Andreas", "T. Darrell", "K. Saenko" ],
+      "venue" : "In Proc. CVPR,",
+      "citeRegEx" : "14",
+      "shortCiteRegEx" : "14",
+      "year" : 2017
+    }, {
+      "title" : "Natural language object retrieval",
+      "author" : [ "R. Hu", "H. Xu", "M. Rohrbach", "J. Feng", "K. Saenko", "T. Darrell" ],
+      "venue" : "In Proc. CVPR,",
+      "citeRegEx" : "15",
+      "shortCiteRegEx" : "15",
+      "year" : 2016
+    }, {
+      "title" : "Cutting-plane training of structural svms",
+      "author" : [ "T. Joachims", "T. Finley", "C.-N.J. Yu" ],
+      "venue" : "Machine Learning,",
+      "citeRegEx" : "16",
+      "shortCiteRegEx" : "16",
+      "year" : 2009
+    }, {
+      "title" : "Image retrieval using scene graphs",
+      "author" : [ "J. Johnson", "R. Krishna", "M. Stark", "L.J. Li", "D. Shamma", "M. Bernstein", "L. Fei-Fei" ],
+      "venue" : "In Proc. CVPR,",
+      "citeRegEx" : "17",
+      "shortCiteRegEx" : "17",
+      "year" : 2015
+    }, {
+      "title" : "Deep visual-semantic alignments for generating image descriptions",
+      "author" : [ "A. Karpathy", "L. Fei-Fei" ],
+      "venue" : "In Proc. CVPR,",
+      "citeRegEx" : "18",
+      "shortCiteRegEx" : "18",
+      "year" : 2015
+    }, {
+      "title" : "Deep fragment embeddings for bidirectional image sentence mapping",
+      "author" : [ "A. Karpathy", "A. Joulin", "L. Fei-Fei" ],
+      "venue" : "In Proc. NIPS,",
+      "citeRegEx" : "19",
+      "shortCiteRegEx" : "19",
+      "year" : 2014
+    }, {
+      "title" : "ReferItGame: Referring to objects in photographs of natural scenes",
+      "author" : [ "S. Kazemzadeh", "V. Ordonez", "M. Matten", "T.L. Berg" ],
+      "venue" : "In Proc. EMNLP,",
+      "citeRegEx" : "20",
+      "shortCiteRegEx" : "20",
+      "year" : 2014
+    }, {
+      "title" : "Unifying visual-semantic embeddings with multimodal neural language models",
+      "author" : [ "R. Kiros", "R. Salakhutdinov", "R.S. Zemel" ],
+      "venue" : "In TACL,",
+      "citeRegEx" : "21",
+      "shortCiteRegEx" : "21",
+      "year" : 2015
+    }, {
+      "title" : "Fisher vectors derived from hybrid gaussian-laplacian mixture models for image annotation",
+      "author" : [ "B. Klein", "G. Lev", "G. Sadeh", "L. Wolf" ],
+      "venue" : "In arXiv preprint arXiv:1411.7399,",
+      "citeRegEx" : "22",
+      "shortCiteRegEx" : "22",
+      "year" : 2014
+    }, {
+      "title" : "What are you talking about? text-to-image coreference",
+      "author" : [ "C. Kong", "D. Lin", "M. Bansal", "R. Urtasun", "S. Fidler" ],
+      "venue" : "In Proc. CVPR,",
+      "citeRegEx" : "23",
+      "shortCiteRegEx" : "23",
+      "year" : 2014
+    }, {
+      "title" : "Jointly learning to parse and perceive: connecting natural language to the physical world",
+      "author" : [ "J. Krishnamurthy", "T. Kollar" ],
+      "venue" : "In Proc. TACL,",
+      "citeRegEx" : "24",
+      "shortCiteRegEx" : "24",
+      "year" : 2013
+    }, {
+      "title" : "Efficient Subwindow Search: A Branch and Bound Framework for Object Localization",
+      "author" : [ "C.H. Lampert", "M.B. Blaschko", "T. Hofmann" ],
+      "venue" : null,
+      "citeRegEx" : "25",
+      "shortCiteRegEx" : "25",
+      "year" : 2009
+    }, {
+      "title" : "Fast PRISM: Branch and Bound Hough Transform for Object Class Detection",
+      "author" : [ "A. Lehmann", "B. Leibe", "L.V. Gool" ],
+      "venue" : null,
+      "citeRegEx" : "26",
+      "shortCiteRegEx" : "26",
+      "year" : 2011
+    }, {
+      "title" : "Visual semantic search: Retrieving videos via complex textual queries",
+      "author" : [ "D. Lin", "S. Fidler", "C. Kong", "R. Urtasun" ],
+      "venue" : "In Proc. CVPR,",
+      "citeRegEx" : "27",
+      "shortCiteRegEx" : "27",
+      "year" : 2014
+    }, {
+      "title" : "Microsoft coco: Common objects in context",
+      "author" : [ "T.-Y. Lin", "M. Maire", "S. Belongie", "J. Hays", "P. Perona", "D. Ramanan", "P. Dollár", "C.L. Zitnick" ],
+      "venue" : "In Proc. ECCV,",
+      "citeRegEx" : "28",
+      "shortCiteRegEx" : "28",
+      "year" : 2014
+    }, {
+      "title" : "Generation and comprehension of unambiguous object descriptions",
+      "author" : [ "J. Mao", "J. Huang", "A. Toshev", "O. Camburu", "A. Yuille", "K. Murphy" ],
+      "venue" : "In Proc. CVPR,",
+      "citeRegEx" : "29",
+      "shortCiteRegEx" : "29",
+      "year" : 2016
+    }, {
+      "title" : "Deep captioning with multimodal recurrent neural networks (m-rnn)",
+      "author" : [ "J. Mao", "W. Xu", "Y. Yang", "J. Wang", "Z. Huang", "A. Yuille" ],
+      "venue" : "In Proc. ICLR,",
+      "citeRegEx" : "30",
+      "shortCiteRegEx" : "30",
+      "year" : 2015
+    }, {
+      "title" : "A joint model of language and perception for grounded attribute learning",
+      "author" : [ "C. Matuszek", "N. Fitzgerald", "L. Zettlemoyer", "L. Bo", "D. Fox" ],
+      "venue" : "In Proc. ICML,",
+      "citeRegEx" : "31",
+      "shortCiteRegEx" : "31",
+      "year" : 2012
+    }, {
+      "title" : "Modeling context between objects for referring expression understanding",
+      "author" : [ "V.K. Nagaraja", "V.I. Morariu", "L.S. Davis" ],
+      "venue" : "In Proc. ECCV,",
+      "citeRegEx" : "32",
+      "shortCiteRegEx" : "32",
+      "year" : 2016
+    }, {
+      "title" : "Spatio-temporal object detection proposals",
+      "author" : [ "D. Oneata", "J. Revaud", "J. Verbeek", "C. Schmid" ],
+      "venue" : "In Proc. ECCV,",
+      "citeRegEx" : "33",
+      "shortCiteRegEx" : "33",
+      "year" : 2014
+    }, {
+      "title" : "Phrase localization and visual relationship detection with comprehensive image-language cues",
+      "author" : [ "B.A. Plummer", "A. Mallya", "C.M. Cervantes", "J. Hockenmaier", "S. Lazebnik" ],
+      "venue" : "In Proc. ICCV,",
+      "citeRegEx" : "34",
+      "shortCiteRegEx" : "34",
+      "year" : 2017
+    }, {
+      "title" : "Collecting region-to-phrase correspondences for richer image-to- sentence models",
+      "author" : [ "B.A. Plummer", "L. Wang", "C.M. Cervantes", "J.C. Caicedo", "J. Hockenmaier", "S. Lazebnik" ],
+      "venue" : "In Proc. ICCV,",
+      "citeRegEx" : "35",
+      "shortCiteRegEx" : "35",
+      "year" : 2015
+    }, {
+      "title" : "Flickr30k entities: Collecting region-to-phrase correspondences for richer image-to-sentence models",
+      "author" : [ "B.A. Plummer", "L. Wang", "C.M. Cervantes", "J.C. Caicedo", "J. Hockenmaier", "S. Lazebnik" ],
+      "venue" : null,
+      "citeRegEx" : "36",
+      "shortCiteRegEx" : "36",
+      "year" : 2017
+    }, {
+      "title" : "Yolo9000: Better, faster, stronger",
+      "author" : [ "J. Redmon", "A. Farhadi" ],
+      "venue" : "In CVPR,",
+      "citeRegEx" : "37",
+      "shortCiteRegEx" : "37",
+      "year" : 2017
+    }, {
+      "title" : "Grounding of Textual Phrases in Images by Reconstruction",
+      "author" : [ "A. Rohrbach", "M. Rohrbach", "R. Hu", "T. Darrell", "B. Schiele" ],
+      "venue" : "In Proc. ECCV,",
+      "citeRegEx" : "38",
+      "shortCiteRegEx" : "38",
+      "year" : 2016
+    }, {
+      "title" : "Viske: Visual knowledge extraction and question answering by visual verification of relation phrases",
+      "author" : [ "F. Sadeghi", "S.K. Divvala", "A. Farhadi" ],
+      "venue" : "In Proc. CVPR,",
+      "citeRegEx" : "39",
+      "shortCiteRegEx" : "39",
+      "year" : 2015
+    }, {
+      "title" : "Efficient Exact Inference for 3D Indoor Scene Understanding",
+      "author" : [ "A.G. Schwing", "R. Urtasun" ],
+      "venue" : "In Proc. ECCV,",
+      "citeRegEx" : "40",
+      "shortCiteRegEx" : "40",
+      "year" : 2012
+    }, {
+      "title" : "Submodboxes: Near-optimal search for a set of diverse object proposals",
+      "author" : [ "Q. Sun", "D. Batra" ],
+      "venue" : "In Proc. NIPS,",
+      "citeRegEx" : "41",
+      "shortCiteRegEx" : "41",
+      "year" : 2015
+    }, {
+      "title" : "Learning deep structure-preserving image-text em- beddings",
+      "author" : [ "L. Wang", "Y. Li", "S. Lazebnik" ],
+      "venue" : "In Proc. CVPR,",
+      "citeRegEx" : "42",
+      "shortCiteRegEx" : "42",
+      "year" : 2016
+    }, {
+      "title" : "The Fastest Deformable Part Model for Object Detection",
+      "author" : [ "J. Yan", "Z. Lei", "L. Wen", "S.Z. Li" ],
+      "venue" : "In Proc. CVPR,",
+      "citeRegEx" : "43",
+      "shortCiteRegEx" : "43",
+      "year" : 2014
+    }, {
+      "title" : "From image descriptions to visual denotations: New similarity metrics for semantic inference over event descriptions",
+      "author" : [ "P. Young", "A. Lai", "M. Hodosh", "J. Hockenmaier" ],
+      "venue" : "In Proc. TACL,",
+      "citeRegEx" : "44",
+      "shortCiteRegEx" : "44",
+      "year" : 2014
+    }, {
+      "title" : "Grounded language learning from video described with sen- tences",
+      "author" : [ "H. Yu", "J.M. Siskind" ],
+      "venue" : "In Proc. ACL,",
+      "citeRegEx" : "45",
+      "shortCiteRegEx" : "45",
+      "year" : 2013
+    } ],
+    "referenceMentions" : [ {
+      "referenceID" : 37,
+      "context" : "Existing approaches for textual grounding, such as [38, 15] take advantage of the cognitive performance improvements obtained from deep net features.",
+      "startOffset" : 51,
+      "endOffset" : 59
+    }, {
+      "referenceID" : 14,
+      "context" : "Existing approaches for textual grounding, such as [38, 15] take advantage of the cognitive performance improvements obtained from deep net features.",
+      "startOffset" : 51,
+      "endOffset" : 59
+    }, {
+      "referenceID" : 37,
+      "context" : "To obtain suitable bounding boxes, many of the textual grounding frameworks, such as [38, 15], make use of region proposals.",
+      "startOffset" : 85,
+      "endOffset" : 93
+    }, {
+      "referenceID" : 14,
+      "context" : "To obtain suitable bounding boxes, many of the textual grounding frameworks, such as [38, 15], make use of region proposals.",
+      "startOffset" : 85,
+      "endOffset" : 93
+    }, {
+      "referenceID" : 19,
+      "context" : "We evaluate our proposed approach on the challenging ReferItGame [20] and the Flickr 30k Entities dataset [35], obtaining results like the ones visualized in Fig.",
+      "startOffset" : 65,
+      "endOffset" : 69
+    }, {
+      "referenceID" : 34,
+      "context" : "We evaluate our proposed approach on the challenging ReferItGame [20] and the Flickr 30k Entities dataset [35], obtaining results like the ones visualized in Fig.",
+      "startOffset" : 106,
+      "endOffset" : 110
+    }, {
+      "referenceID" : 29,
+      "context" : "Classical approaches learn a ranking function using recurrent neural nets [30, 6], or metric learning [13], correlation analysis [22], and neural net embeddings [9, 21].",
+      "startOffset" : 74,
+      "endOffset" : 81
+    }, {
+      "referenceID" : 5,
+      "context" : "Classical approaches learn a ranking function using recurrent neural nets [30, 6], or metric learning [13], correlation analysis [22], and neural net embeddings [9, 21].",
+      "startOffset" : 74,
+      "endOffset" : 81
+    }, {
+      "referenceID" : 12,
+      "context" : "Classical approaches learn a ranking function using recurrent neural nets [30, 6], or metric learning [13], correlation analysis [22], and neural net embeddings [9, 21].",
+      "startOffset" : 102,
+      "endOffset" : 106
+    }, {
+      "referenceID" : 21,
+      "context" : "Classical approaches learn a ranking function using recurrent neural nets [30, 6], or metric learning [13], correlation analysis [22], and neural net embeddings [9, 21].",
+      "startOffset" : 129,
+      "endOffset" : 133
+    }, {
+      "referenceID" : 8,
+      "context" : "Classical approaches learn a ranking function using recurrent neural nets [30, 6], or metric learning [13], correlation analysis [22], and neural net embeddings [9, 21].",
+      "startOffset" : 161,
+      "endOffset" : 168
+    }, {
+      "referenceID" : 20,
+      "context" : "Classical approaches learn a ranking function using recurrent neural nets [30, 6], or metric learning [13], correlation analysis [22], and neural net embeddings [9, 21].",
+      "startOffset" : 161,
+      "endOffset" : 168
+    }, {
+      "referenceID" : 30,
+      "context" : "One of the first models in this area was presented in [31, 24].",
+      "startOffset" : 54,
+      "endOffset" : 62
+    }, {
+      "referenceID" : 23,
+      "context" : "One of the first models in this area was presented in [31, 24].",
+      "startOffset" : 54,
+      "endOffset" : 62
+    }, {
+      "referenceID" : 9,
+      "context" : "[10] propose a canonical correlation analysis technique to associate images with descriptive sentences using a latent embedding space.",
+      "startOffset" : 0,
+      "endOffset" : 4
+    }, {
+      "referenceID" : 41,
+      "context" : "[42], which learns a structure-preserving embedding for image-sentence retrieval.",
+      "startOffset" : 0,
+      "endOffset" : 4
+    }, {
+      "referenceID" : 10,
+      "context" : "In [11], text is generated for a set of candidate object regions which is subsequently compared to a query.",
+      "startOffset" : 3,
+      "endOffset" : 7
+    }, {
+      "referenceID" : 0,
+      "context" : ", generating visual features from query text which is subsequently matched to image regions is discussed in [1].",
+      "startOffset" : 108,
+      "endOffset" : 111
+    }, {
+      "referenceID" : 22,
+      "context" : "In [23], 3D cuboids are aligned to a set of 21 nouns relevant to indoor scenes using a Markov random field based technique.",
+      "startOffset" : 3,
+      "endOffset" : 7
+    }, {
+      "referenceID" : 16,
+      "context" : "A method for grounding of scene graph queries in images is presented in [17].",
+      "startOffset" : 72,
+      "endOffset" : 76
+    }, {
+      "referenceID" : 18,
+      "context" : "Grounding of dependency tree relations is discussed in [19] and reformulated using recurrent nets in [18].",
+      "startOffset" : 55,
+      "endOffset" : 59
+    }, {
+      "referenceID" : 17,
+      "context" : "Grounding of dependency tree relations is discussed in [19] and reformulated using recurrent nets in [18].",
+      "startOffset" : 101,
+      "endOffset" : 105
+    }, {
+      "referenceID" : 38,
+      "context" : "Subject-Verb-Object phrases are considered in [39] to develop a visual knowledge extraction system.",
+      "startOffset" : 46,
+      "endOffset" : 50
+    }, {
+      "referenceID" : 14,
+      "context" : "In [15, 29] caption generation techniques are used to score a set of proposal boxes and returning the highest ranking one.",
+      "startOffset" : 3,
+      "endOffset" : 11
+    }, {
+      "referenceID" : 28,
+      "context" : "In [15, 29] caption generation techniques are used to score a set of proposal boxes and returning the highest ranking one.",
+      "startOffset" : 3,
+      "endOffset" : 11
+    }, {
+      "referenceID" : 37,
+      "context" : "To avoid application of a text generation pipeline on bounding box proposals, [38] improve the phrase encoding using a long short-term memory (LSTM) [12] based deep net.",
+      "startOffset" : 78,
+      "endOffset" : 82
+    }, {
+      "referenceID" : 11,
+      "context" : "To avoid application of a text generation pipeline on bounding box proposals, [38] improve the phrase encoding using a long short-term memory (LSTM) [12] based deep net.",
+      "startOffset" : 149,
+      "endOffset" : 153
+    }, {
+      "referenceID" : 31,
+      "context" : "Additional modeling of object context relationship were explored in [32, 14].",
+      "startOffset" : 68,
+      "endOffset" : 76
+    }, {
+      "referenceID" : 13,
+      "context" : "Additional modeling of object context relationship were explored in [32, 14].",
+      "startOffset" : 68,
+      "endOffset" : 76
+    }, {
+      "referenceID" : 26,
+      "context" : "datasets, although not directly related to our work in this paper, were used for spatiotemporal language grounding in [27, 45].",
+      "startOffset" : 118,
+      "endOffset" : 126
+    }, {
+      "referenceID" : 44,
+      "context" : "datasets, although not directly related to our work in this paper, were used for spatiotemporal language grounding in [27, 45].",
+      "startOffset" : 118,
+      "endOffset" : 126
+    }, {
+      "referenceID" : 19,
+      "context" : "Common datasets for visual grounding are the ReferItGame dataset [20] and a newly introduced Flickr 30k Entities dataset [35], which provides bounding box annotations for noun phrases of the original Flickr 30k dataset [44].",
+      "startOffset" : 65,
+      "endOffset" : 69
+    }, {
+      "referenceID" : 34,
+      "context" : "Common datasets for visual grounding are the ReferItGame dataset [20] and a newly introduced Flickr 30k Entities dataset [35], which provides bounding box annotations for noun phrases of the original Flickr 30k dataset [44].",
+      "startOffset" : 121,
+      "endOffset" : 125
+    }, {
+      "referenceID" : 43,
+      "context" : "Common datasets for visual grounding are the ReferItGame dataset [20] and a newly introduced Flickr 30k Entities dataset [35], which provides bounding box annotations for noun phrases of the original Flickr 30k dataset [44].",
+      "startOffset" : 219,
+      "endOffset" : 223
+    }, {
+      "referenceID" : 42,
+      "context" : "The approach has been applied to very efficient deformable part models [43], for object class detection [26], for weakly supervised localization [5], indoor scene understanding [40], diverse object proposals [41] and also for spatio-temporal object detection proposals [33].",
+      "startOffset" : 71,
+      "endOffset" : 75
+    }, {
+      "referenceID" : 25,
+      "context" : "The approach has been applied to very efficient deformable part models [43], for object class detection [26], for weakly supervised localization [5], indoor scene understanding [40], diverse object proposals [41] and also for spatio-temporal object detection proposals [33].",
+      "startOffset" : 104,
+      "endOffset" : 108
+    }, {
+      "referenceID" : 4,
+      "context" : "The approach has been applied to very efficient deformable part models [43], for object class detection [26], for weakly supervised localization [5], indoor scene understanding [40], diverse object proposals [41] and also for spatio-temporal object detection proposals [33].",
+      "startOffset" : 145,
+      "endOffset" : 148
+    }, {
+      "referenceID" : 39,
+      "context" : "The approach has been applied to very efficient deformable part models [43], for object class detection [26], for weakly supervised localization [5], indoor scene understanding [40], diverse object proposals [41] and also for spatio-temporal object detection proposals [33].",
+      "startOffset" : 177,
+      "endOffset" : 181
+    }, {
+      "referenceID" : 40,
+      "context" : "The approach has been applied to very efficient deformable part models [43], for object class detection [26], for weakly supervised localization [5], indoor scene understanding [40], diverse object proposals [41] and also for spatio-temporal object detection proposals [33].",
+      "startOffset" : 208,
+      "endOffset" : 212
+    }, {
+      "referenceID" : 32,
+      "context" : "The approach has been applied to very efficient deformable part models [43], for object class detection [26], for weakly supervised localization [5], indoor scene understanding [40], diverse object proposals [41] and also for spatio-temporal object detection proposals [33].",
+      "startOffset" : 269,
+      "endOffset" : 273
+    }, {
+      "referenceID" : 14,
+      "context" : "Approach Accuracy (%) SCRC (2016) [15] 27.",
+      "startOffset" : 34,
+      "endOffset" : 38
+    }, {
+      "referenceID" : 14,
+      "context" : "Approach Accuracy (%) SCRC (2016) [15] 17.",
+      "startOffset" : 34,
+      "endOffset" : 38
+    }, {
+      "referenceID" : 37,
+      "context" : "people clothing body parts animals vehicles instruments scene other # Instances 5,656 2,306 523 518 400 162 1,619 3,374 GroundeR(2016) [38] 61.",
+      "startOffset" : 135,
+      "endOffset" : 139
+    }, {
+      "referenceID" : 3,
+      "context" : "The k3 image based features are computed using deep neural nets as proposed by [4, 37, 2].",
+      "startOffset" : 79,
+      "endOffset" : 89
+    }, {
+      "referenceID" : 36,
+      "context" : "The k3 image based features are computed using deep neural nets as proposed by [4, 37, 2].",
+      "startOffset" : 79,
+      "endOffset" : 89
+    }, {
+      "referenceID" : 1,
+      "context" : "The k3 image based features are computed using deep neural nets as proposed by [4, 37, 2].",
+      "startOffset" : 79,
+      "endOffset" : 89
+    }, {
+      "referenceID" : 24,
+      "context" : "(1) is based on an iterative decomposition of the output space Y [25], summarized in Fig.",
+      "startOffset" : 65,
+      "endOffset" : 69
+    }, {
+      "referenceID" : 15,
+      "context" : "We found the cutting-plane algorithm [16] to work well in our context.",
+      "startOffset" : 37,
+      "endOffset" : 41
+    }, {
+      "referenceID" : 3,
+      "context" : "For segmentation, we use the DeepLab system [4], trained on PASCAL VOC-2012 [8] semantic image segmentation task, to extract the probability maps for 21 categories.",
+      "startOffset" : 44,
+      "endOffset" : 47
+    }, {
+      "referenceID" : 7,
+      "context" : "For segmentation, we use the DeepLab system [4], trained on PASCAL VOC-2012 [8] semantic image segmentation task, to extract the probability maps for 21 categories.",
+      "startOffset" : 76,
+      "endOffset" : 79
+    }, {
+      "referenceID" : 36,
+      "context" : "For detection, we use the YOLO object detection system [37], to extract 101 categories, 21 trained on PASCAL VOC-2012, and 80 trained on MSCOCO [28].",
+      "startOffset" : 55,
+      "endOffset" : 59
+    }, {
+      "referenceID" : 27,
+      "context" : "For detection, we use the YOLO object detection system [37], to extract 101 categories, 21 trained on PASCAL VOC-2012, and 80 trained on MSCOCO [28].",
+      "startOffset" : 144,
+      "endOffset" : 148
+    }, {
+      "referenceID" : 1,
+      "context" : "For pose estimation, we use the system from [2] to extract the body part location, then post-process to get the head, upper body, lower body, and hand regions.",
+      "startOffset" : 44,
+      "endOffset" : 47
+    }, {
+      "referenceID" : 35,
+      "context" : "’ For the Flickr 30k Entities, we also fine-tuned the last layer of the DeepLab system using the eight coarse-grained types and eleven colors from [36].",
+      "startOffset" : 147,
+      "endOffset" : 151
+    }, {
+      "referenceID" : 37,
+      "context" : "We use the same bounding boxes as [38] and the same training test set split, i.",
+      "startOffset" : 34,
+      "endOffset" : 38
+    }, {
+      "referenceID" : 34,
+      "context" : "We us the same training, validation and testing split as in [35].",
+      "startOffset" : 60,
+      "endOffset" : 64
+    }, {
+      "referenceID" : 2,
+      "context" : "We note that our results have been surpassed by [3, 7, 34], where they fine-tuned the entire network including the feature extractions or trained more feature detectors; CCA, GroundeR and our approach uses a fixed pre-trained network for extracting image features.",
+      "startOffset" : 48,
+      "endOffset" : 58
+    }, {
+      "referenceID" : 6,
+      "context" : "We note that our results have been surpassed by [3, 7, 34], where they fine-tuned the entire network including the feature extractions or trained more feature detectors; CCA, GroundeR and our approach uses a fixed pre-trained network for extracting image features.",
+      "startOffset" : 48,
+      "endOffset" : 58
+    }, {
+      "referenceID" : 33,
+      "context" : "We note that our results have been surpassed by [3, 7, 34], where they fine-tuned the entire network including the feature extractions or trained more feature detectors; CCA, GroundeR and our approach uses a fixed pre-trained network for extracting image features.",
+      "startOffset" : 48,
+      "endOffset" : 58
+    } ],
+    "year" : 2017,
+    "abstractText" : "Textual grounding is an important but challenging task for human-computer interaction, robotics and knowledge mining. Existing algorithms generally formulate the task as selection from a set of bounding box proposals obtained from deep net based systems. In this work, we demonstrate that we can cast the problem of textual grounding into a unified framework that permits efficient search over all possible bounding boxes. Hence, the method is able to consider significantly more proposals and doesn’t rely on a successful first stage hypothesizing bounding box proposals. Beyond, we demonstrate that the trained parameters of our model can be used as word-embeddings which capture spatial-image relationships and provide interpretability. Lastly, at the time of submission, our approach outperformed the current state-of-the-art methods on the Flickr 30k Entities and the ReferItGame dataset by 3.08% and 7.77% respectively.",
+    "creator" : null
+  }
+}

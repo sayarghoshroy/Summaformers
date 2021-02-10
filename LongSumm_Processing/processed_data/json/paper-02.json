@@ -1,0 +1,229 @@
+15:20:16.355 [main] DEBUG com.amazonaws.AmazonWebServiceClient - Internal logging successfully configured to commons logger: true
+15:20:16.420 [main] DEBUG com.amazonaws.metrics.AwsSdkMetrics - Admin mbean registered under com.amazonaws.management:type=AwsSdkMetrics
+15:20:16.490 [main] DEBUG c.a.internal.config.InternalConfig - Configuration override awssdk_config_override.json not found.
+15:20:16.881 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loading model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:20:16.881 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:20:16.883 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:20:16.886 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Creating gazetteer cache at /tmp/gazetteer-v5.json-fa485aef.gazetteerCache.bin
+15:20:28.364 [scala-execution-context-global-12] INFO  o.a.scienceparse.ParserGroundTruth - Read 1609659 papers.
+15:20:53.322 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loaded model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:21:04.957 [scala-execution-context-global-12] INFO  o.a.scienceparse.ExtractReferences - could not load kermit gazetter
+15:21:05.014 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:21:05.015 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:21:05.019 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.RunSP$ - Starting /home/risubaba/LongSumm/pdf/paper-02.pdf
+{
+  "name" : "/home/risubaba/LongSumm/pdf/paper-02.pdf",
+  "metadata" : {
+    "source" : "CRF",
+    "title" : "Interactive Dictionary Expansion using Neural Language Models",
+    "authors" : [ "Alfredo Alba", "Daniel Gruhl", "Petar Ristoski", "Steve Welch" ],
+    "emails" : [ "aalba@us.ibm.com,", "dgruhl@us.ibm.com,", "petar.ristoski@ibm.com,", "welchs@us.ibm.com" ],
+    "sections" : [ {
+      "heading" : "1 Introduction",
+      "text" : "Dictionary expansion [12] is one area where close integration of humans into the discovery loop has been shown to enhance task performance substantially over more traditional post-adjudication. This is not surprising, as dictionary membership is often a fairly subjective judgment (e.g., should a fruit dictionary include tomatoes?) [13]. Thus even with a system which finds “similar” terms (e.g., word2vec) guidance is important to keep the system focused on the subject matter expert’s notion of lexicon.\nIn this work we propose a feature agnostic approach for dictionary expansion based on lightweight neural language models, such as word2vec [9]. To prevent semantic drift during the dictionary expansion, we effectively include humanin-the-loop (HumL). Given an input text corpus and a set of seed examples, the proposed approach runs in two phases, explore and exploit, to identify new potential dictionary entries. The explore phase tries to identify similar instances to the dictionary entries that are present in the input text corpus, using term vectors from the neural language model to calculate a similarity score. The exploit phase tries to construct more complex multi-term phrases based on the instances\nalready in the input dictionary. Multi-term phrases are a challenge for word2vec style systems as they need to be “known” prior to model creation. To identify multi-term phrases, most commonly a simple phrase detection model is used, which is based on a term’s co-occurrence score, i.e., terms that often appear together probably are part of the same phrase [9]. The phrase detection must be done before the model is built, and they remain unchanged after the model is built. However, depending on the domain and the task, the instances of interest evolve, or the example corpus may not be complete. For example, valid phrase combinations may simply not occur (e.g., acute joint pain may appear in the sample corpus, but for some reason chronic hip pain may not). However, these phrases are likely to occur in future texts from the same source, and thus are important to include in any entity extraction lexicon.\nIn the exploit phase, the approach generates new phrases by analyzing the single terms of the instances in the input dictionary. We use two phrase generation algorithms: (i) modify the phrases by replacing single terms with similar terms from the text corpus, e.g., “abnormal behavior” can be modified to ”strange behavior”; (ii) extend the instances with terms from the text corpus that are related to the terms in the instance, e.g., abnormal blood clotting problems is a an adverse drug reaction, which doesn’t appear as such in a large text corpus, however the instances “abnormal blood count”, “blood clotting” and “clotting problems” appear several times in the corpus, which can be used to build the more complex instance. The approach allows us to construct new multi-term instances that don’t appear as such in the text corpus, but there is enough statistical evidence in the corpus that such instances might be of interest for the user.\nCombining the explore and exploit approaches in an unsupervised fashion (or an infrequently supervised fashion) is not particularly effective. It tends to generate many spurious results that the human subject matter expert needs to wade through. Close supervision, however, results in a much more performant system. The evaluation shows that high promptness of the HumL (tighter computer/human partnership) results in nearly perfect performance of the system, i.e., nearly all the candidates identified by the system are valid entries in the dictionary. More precisely, the experiments show that the system is 216% more effective when receiving HumL feedback after 10 identified candidates, compared to receiving HumL feedback after 500 identified candidates, while both cases require equal amount of human effort.\nThe rest of this paper is structured as follows. In Section 2, we give an overview of related work. In Section 3, we present our interactive dictionary expansion approach, followed by an evaluation in Section 4; We conclude with a summary and an outlook on future work."
+    }, {
+      "heading" : "2 Related Work",
+      "text" : "Dictionaries and ontologies are the backbone of many NLP and information retrieval systems. Hence, a lot of work in the literature focuses on identifying\nnew approaches for more efficient and more effective dictionary extraction from unstructured text.\nRiloff and Jones [12], is one of the first works to propose an automatic iterattive approach for dictionary extraction from unstructured text. The approach uses mutual bootstrapping technique that learns extraction patterns from the seed terms and then exploits the learned extraction patterns to identify more terms that belong to the semantic category. In the following years, many similar approaches have been developed [13,3,7,2]. However, all these approaches require NLP parsing for feature extraction, and have a reliance on syntactic information for identifying quality patterns. Hence, such approaches underperform on not-so-well structured texts, like user-generated text. Furthermore, without human-in-the-loop, iterative methods can easily generate semantic drift.\nOne of the major challenges with concept extraction involves dealing with not-so-well structured text, given the importance of user generated content, which can prove to be extremely valuable source of information for many domains, pharmacovigilance being one of those.1 To this end, Lee et al. [8] propose a semi-supervised model which uses a random Twitter stream as unlabeled training data and prove it successful for the recognition of Adverse Drug Reaction. Another hurdle is the fact that the dictionary to be created can be highly dependent on the task at hand, especially when dealing with positive/negative words which are highly domain-dependent [6,11]. While completely automatic techniques are highly appealing they need to be fine-tuned for every new task. We propose a human-in-the-loop approach where the “tuning” is an integral part of the process, i.e. the human works in partnership with the statistical method to drive the semantic of the task effectively and efficaciously.\nMany works rely on machine learning techniques and tailor the algorithms to certain specific domains (e.g. drugs): these methods are in general expensive, requiring an annotated corpus and/or domain specific feature extraction (a comprehensive overview can be found in [10]).\nOur work is closely related to glimpse [5] and glimpseLD [1]. Glimpse is a statistical algorithm for dictionary extraction based on SPOT [5] with a faster underlying matching engine. The input is a large text corpus and a set of seed examples. Starting from these it evaluates the contexts (the set of words surrounding an item) in which the seeds occur and identifies “good” contexts. Contexts are scored retrospectively in terms of how many “good” results they generate. All contexts are kept which have a score over a given threshold and the candidates that appear in the most “good” contexts are provided first to the HumL. The approach has been extended to glimpseLD [1], which is language agnostic and uses Linked Data to as a bootstrapping source. While both approaches have been proven to achieve high effectiveness for dictionary extension, both of the approaches can only identify new dictionary entries that are only present in the input text corpus. In this work, we adopt the glimpse computer/human part-\n1 PSB2016 is a recent benchmarking initiative on the problem http://diego.asu.edu/psb2016/ sharedtaskeval.html.\nnership architecture and extend it with the explore/exploit algorithm for more effective dictionary expansion."
+    }, {
+      "heading" : "3 Approach",
+      "text" : "The input of the algorithm is a text corpus TC and a set of dictionary seed example terms S. In the preprocessing step, we build a word2vec model [9], with the skip-gram implementation using TC as an input. Word2vec is a particularly computationally-efficient two-layer neural net model for learning term embeddings from raw text. The output of the model is an embedding matrix W, where each term (word or phrase) from the corpus vocabulary VTC is represented as an n-dimensional vector. Projecting such latent representations of words into a lower dimensional feature space shows that semantically similar words appear closer to each other.\nOur approach is based on the explore/exploit paradigm to effectively discover new instances (explore) from the text corpus and generate new “unseen” instances based on user feedback (exploit). The approach runs in iterations, where each iteration runs first the explore phase then the exploit phase. The explore phase uses the instances available in the input dictionary to identify similar candidates that are already present in the corpus vocabulary VTC , which are then accepted or rejected by the HumL. The accepted candidates are then added to the input dictionary and are used in the exploit phase as well as the next explore iteration. During the exploit phase, we use the instances in the input dictionary to construct more complex phrases that might be of interest for the user."
+    }, {
+      "heading" : "3.1 Explore",
+      "text" : "As previously mentioned, in the word2vec feature embedding space, semantically similar words appear close to each other in the feature space. Therefore, the problem of calculating the similarity between two instances is a matter of calculating the distance between two instances in the given feature space. To do so we use the standard cosine similarity measure which is applied on the vectors of the instances. Formally, the similarity between two terms w1 and w2, with vectors V1 and V2, is calculated as the cosine similarity between the vectors V1 and V2:\nsim(w1, w2) = V1 · V2\n||V1|| · ||V2|| (1)\nWe calculate the similarity between the instances in the input dictionary and all the words in the corpus vocabulary VTC . We sort the vocabulary in descending order using the cumulative similarity score, and choose the top-N candidates to present to the HumL. The accepted candidates are added in the input dictionary, which are then used in the exploit phase and the next iteration."
+    }, {
+      "heading" : "3.2 Exploit",
+      "text" : "In the exploit phase we try to identify more complex phrases that don’t exist in the corpus vocabulary by analyzing the structure of the instances in the input dictionary.\nThis is critical to help “future proof” a lexicon against new text. For a surveillance application (e.g., drug side effects mentioned on twitter) it reduces how frequently a human needs to “tune up” the lexicon to make sure it is catching all relevant entity instances.\nWe use two phrase generation algorithms.\nIn the first approach, we first break each instance in to a set of single terms T = {t1, t2, ..., tn}, then for each term ti in T we identify a set of similar terms TSti = {ts1, ts2, ..., tss} in the vocabulary VTC using Equation 1. In the next step, we build new phrases by replacing ti with a term tsi from TSti . The new phrases are sorted based on the similarity score and the top-N are selected as candidates. For example, given the entry “abnormal behavior” the approach will identify “strange behavior”, “abnormal attitude” and “strange attitude”.\nIn the second approach, we generate new phrases by extending the instances with terms from the text corpus that are related to the terms in the instance. Related terms are terms that often share the same context, which means they often are surrounded by similar words. Given a word2vec model, we calculate the relatedness between two terms w1 and w2, as the probability p(w1|w2) calculated using the softmax function,\np(w1|w2) = exp(v′Tw1vw2)∑V w=1 exp(v ′T w vw2) , (2)\nwhere vw and v ′ w are the input and the output vector of the word w, and V is the complete vocabulary of words.\nAs before, we first break each instance in to a set of single terms T = {t1, t2, ..., tn}, then for each term ti in T we identify a set of similar terms TRti = {tr1, tr2, ..., trr} in the vocabulary VTC using Equation 2. In the next step, we build new phrases by appending a term tri from TRti to each term ti from T . The new phrases are sorted based on the relatedness score and the top-N are selected as candidates. For example, given the instance “clotting problems” in the input dictionary the approach first tries to identify related terms in the text corpus for “clotting”. For which the top word is “blood”, because in many sentences “blood clotting” appears as a phrase, which can be used to generate new instances “blood clotting problems”. In the next iteration the phrase can be further extended, by identifying new related words. For example, in the top-N related words for “blood” we will find “abnormal”, which can be used to generate the instance “abnormal blood clotting problems”."
+    }, {
+      "heading" : "4 Evaluation",
+      "text" : "To evaluate our approach we conduct two experiments, i.e., (i) count the number of newly discovered dictionary entries per iteration; (ii) the impact of the promptness of the HumL on the system performance.\nFor the experiments we use data from the healtcare domain, specifically tackling the problem of identifying Adverse Drug Reactions in user generated data. As an input text corpus we use user blogs extracted from http://www. askapatient.com (a forum where patients report their experience with medication drugs). As an input set of seed examples we use a set of 203 instances referring to adverse drug events, which were labeled by a medical doctor [4]."
+    }, {
+      "heading" : "4.1 Dictionary Growth",
+      "text" : "In this experiment we compare the performance of the explore, exploit and the explore/exploit approaches for discovering new dictionary instances. We run the evaluation in 10 iterations, where after each iteration we count how many new instances are discovered in the top 50 proposed candidates by the algorithm. The accepted instances are then added in the dictionary and used for the next iteration. For the explore/exploit approach we run explore to identify 25 candidates, and exploit to identify another 25 candidates. The results are shown in Fig. 1.\nThe results show that using the explore/exploit approach we are able to discover significantly more instances in each iteration compared to the other approaches. We can observe that when using the explore approach the number of newly discovered instances quickly decreases as the number of available instances in the whole corpus is decreasing in each iteration. When using the exploit approach the number of newly discovered instances sharply decreases as no new base terms are introduced, thus the exploit cannot generate new instances that can be added in the dictionary.\nThe results show that using explore and exploit alternately leads to the best performances."
+    }, {
+      "heading" : "4.2 Impact of the HumL on the Dictionary Growth",
+      "text" : "In this experiment we show the importance of the promptness of the HumL on the number of newly discovered instances, i.e., we evaluate if the user gives their feedback to the system sooner it will improve the performance of the system. To do so, we run the explore/exploit approach with different feedback intervals. The feedback interval indicates how many candidates the system needs to identify before the user gives their feedback to the system. For example, when using feedback interval of 10, the user gives their feedback after 10 candidates are identified by the system. We evaluate feedback intervals of 10, 50, 100, 250 and 500. After each iteration we count the number of accepted candidates, and\ninclude them in the dictionary to be used for the next iteration. The results are shown in Fig 2.\nThe results show that the tighter the HumL integration is, the more quickly new instances are discovered. We see that with a large 500 examples feedback interval the HumL system discovers 212 new instances, but requires the human to consider 500 candidates.\nA more tightly integrated system with a 10 examples feedback interval finds 212 new instances in just 23 iterations, requiring the human to consider only 230 candidates. After 50 iterations the system discovered 460 new dictionary entries, compared to only 212 new entries when using 500 examples feedback interval. That yields 216% improvement in effectivness of the system."
+    }, {
+      "heading" : "5 Conclusions and future work",
+      "text" : "This paper proposes an interactive dictionary expansion tool using a lightweight neural language model. Our algorithm is iterative and purely statistical, hence does not require any feature extraction beyond tokenization. It incorporates human feedback to improve performance and control semantic drift at every iteration cycle. The experiments showed high importance of tight HumL integration on discovery efficiency.\nIn this work, we have considered only lightweight language models, which can be efficiently built and updated on large text corpora. In future work, we will analyze more complex language neural network models, such as Recurrent Neural Networks (RNN), Long Short Term Memory Networks (LSTM), and bidirectional LSTM, which might improve the search for similar and related terms, at the expense of higher training time. Furthermore, future work will include an evaluation of the approach on multiple datasets covering different domains."
+    } ],
+    "references" : [ {
+      "title" : "Multi-lingual concept extraction with linked data and human-in-the-loop",
+      "author" : [ "A. Alba", "A. Coden", "A.L. Gentile", "D. Gruhl", "P. Ristoski", "S. Welch" ],
+      "venue" : "Proceedings of the Knowledge Capture Conference",
+      "citeRegEx" : "1",
+      "shortCiteRegEx" : "1",
+      "year" : 2017
+    }, {
+      "title" : "Semantic lexicon construction: Learning from unlabeled data via spectral analysis",
+      "author" : [ "R.K. Ando" ],
+      "venue" : "Tech. rep., IBM THOMAS J WATSON RESEARCH CENTER YORKTOWN HEIGHTS NY",
+      "citeRegEx" : "2",
+      "shortCiteRegEx" : "2",
+      "year" : 2004
+    }, {
+      "title" : "Using the web to reduce data sparseness in pattern-based information extraction",
+      "author" : [ "S. Blohm", "P. Cimiano" ],
+      "venue" : "PKDD",
+      "citeRegEx" : "3",
+      "shortCiteRegEx" : "3",
+      "year" : 2007
+    }, {
+      "title" : "SPOT the drug! An unsupervised pattern matching method to extract drug names from very large clin- ical corpora",
+      "author" : [ "A. Coden", "D. Gruhl", "N. Lewis", "M. Tanenblatt", "J. Terdiman" ],
+      "venue" : "Proceedings - 2012 IEEE 2nd Conference on Healthcare Informatics, Imaging and Systems Biology,",
+      "citeRegEx" : "5",
+      "shortCiteRegEx" : "5",
+      "year" : 2012
+    }, {
+      "title" : "Inducing domain-specific sentiment lexicons from unlabeled corpora",
+      "author" : [ "W.L. Hamilton", "K. Clark", "J. Leskovec", "D. Jurafsky" ],
+      "venue" : "Proceedings of the 2016 Conference on Empirical Methods in Natural Language Processing. pp. 595–605",
+      "citeRegEx" : "6",
+      "shortCiteRegEx" : "6",
+      "year" : 2016
+    }, {
+      "title" : "Corpus-based semantic lexicon induction with web-based cor- roboration",
+      "author" : [ "S.P. Igo", "E. Riloff" ],
+      "venue" : "Proceedings of the Workshop on Unsupervised and Minimally Su- pervised Learning of Lexical Semantics. pp. 18–26",
+      "citeRegEx" : "7",
+      "shortCiteRegEx" : "7",
+      "year" : 2009
+    }, {
+      "title" : "Ad- verse Drug Event Detection in Tweets with Semi-Supervised Convolutional Neural Networks",
+      "author" : [ "K. Lee", "A. Qadir", "S.A. Hasan", "V. Datla", "A. Prakash", "J. Liu", "O. Farri" ],
+      "venue" : null,
+      "citeRegEx" : "8",
+      "shortCiteRegEx" : "8",
+      "year" : 2017
+    }, {
+      "title" : "Distributed repre- sentations of words and phrases and their compositionality",
+      "author" : [ "T. Mikolov", "I. Sutskever", "K. Chen", "G.S. Corrado", "J. Dean" ],
+      "venue" : "Advances in neural information processing systems. pp",
+      "citeRegEx" : "9",
+      "shortCiteRegEx" : "9",
+      "year" : 2013
+    }, {
+      "title" : "Terminology Extrac- tion: an analysis of linguistic and statistical approaches",
+      "author" : [ "M.T. Pazienza", "M. Pennacchiotti", "F.M. Zanzotto" ],
+      "venue" : "Knowledge Mining SFSC185(2005),",
+      "citeRegEx" : "10",
+      "shortCiteRegEx" : "10",
+      "year" : 2005
+    }, {
+      "title" : "Generating Domain-Specific Dictio- naries using Bayesian Learning",
+      "author" : [ "N. Pröllochs", "S. Feuerriegel", "D. Neumann" ],
+      "venue" : "Ecis (2015),",
+      "citeRegEx" : "11",
+      "shortCiteRegEx" : "11",
+      "year" : 2015
+    }, {
+      "title" : "Learning dictionaries for information extraction by multi-level bootstrapping",
+      "author" : [ "E. Riloff", "R Jones" ],
+      "venue" : "In: AAAI/IAAI. pp",
+      "citeRegEx" : "12",
+      "shortCiteRegEx" : "12",
+      "year" : 1999
+    }, {
+      "title" : "Learning subjective nouns using extraction pat- tern bootstrapping",
+      "author" : [ "E. Riloff", "J. Wiebe", "T. Wilson" ],
+      "venue" : "Proceedings of the Seventh Conference on Natural Lan- guage Learning at HLT-NAACL 2003 - Volume",
+      "citeRegEx" : "13",
+      "shortCiteRegEx" : "13",
+      "year" : 2003
+    } ],
+    "referenceMentions" : [ {
+      "referenceID" : 10,
+      "context" : "Dictionary expansion [12] is one area where close integration of humans into the discovery loop has been shown to enhance task performance substantially over more traditional post-adjudication.",
+      "startOffset" : 21,
+      "endOffset" : 25
+    }, {
+      "referenceID" : 11,
+      "context" : ", should a fruit dictionary include tomatoes?) [13].",
+      "startOffset" : 47,
+      "endOffset" : 51
+    }, {
+      "referenceID" : 7,
+      "context" : "In this work we propose a feature agnostic approach for dictionary expansion based on lightweight neural language models, such as word2vec [9].",
+      "startOffset" : 139,
+      "endOffset" : 142
+    }, {
+      "referenceID" : 7,
+      "context" : ", terms that often appear together probably are part of the same phrase [9].",
+      "startOffset" : 72,
+      "endOffset" : 75
+    }, {
+      "referenceID" : 10,
+      "context" : "Riloff and Jones [12], is one of the first works to propose an automatic iterattive approach for dictionary extraction from unstructured text.",
+      "startOffset" : 17,
+      "endOffset" : 21
+    }, {
+      "referenceID" : 11,
+      "context" : "In the following years, many similar approaches have been developed [13,3,7,2].",
+      "startOffset" : 68,
+      "endOffset" : 78
+    }, {
+      "referenceID" : 2,
+      "context" : "In the following years, many similar approaches have been developed [13,3,7,2].",
+      "startOffset" : 68,
+      "endOffset" : 78
+    }, {
+      "referenceID" : 5,
+      "context" : "In the following years, many similar approaches have been developed [13,3,7,2].",
+      "startOffset" : 68,
+      "endOffset" : 78
+    }, {
+      "referenceID" : 1,
+      "context" : "In the following years, many similar approaches have been developed [13,3,7,2].",
+      "startOffset" : 68,
+      "endOffset" : 78
+    }, {
+      "referenceID" : 6,
+      "context" : "[8] propose a semi-supervised model which uses a random Twitter stream as unlabeled training data and prove it successful for the recognition of Adverse Drug Reaction.",
+      "startOffset" : 0,
+      "endOffset" : 3
+    }, {
+      "referenceID" : 4,
+      "context" : "Another hurdle is the fact that the dictionary to be created can be highly dependent on the task at hand, especially when dealing with positive/negative words which are highly domain-dependent [6,11].",
+      "startOffset" : 193,
+      "endOffset" : 199
+    }, {
+      "referenceID" : 9,
+      "context" : "Another hurdle is the fact that the dictionary to be created can be highly dependent on the task at hand, especially when dealing with positive/negative words which are highly domain-dependent [6,11].",
+      "startOffset" : 193,
+      "endOffset" : 199
+    }, {
+      "referenceID" : 8,
+      "context" : "drugs): these methods are in general expensive, requiring an annotated corpus and/or domain specific feature extraction (a comprehensive overview can be found in [10]).",
+      "startOffset" : 162,
+      "endOffset" : 166
+    }, {
+      "referenceID" : 3,
+      "context" : "Our work is closely related to glimpse [5] and glimpseLD [1].",
+      "startOffset" : 39,
+      "endOffset" : 42
+    }, {
+      "referenceID" : 0,
+      "context" : "Our work is closely related to glimpse [5] and glimpseLD [1].",
+      "startOffset" : 57,
+      "endOffset" : 60
+    }, {
+      "referenceID" : 3,
+      "context" : "Glimpse is a statistical algorithm for dictionary extraction based on SPOT [5] with a faster underlying matching engine.",
+      "startOffset" : 75,
+      "endOffset" : 78
+    }, {
+      "referenceID" : 0,
+      "context" : "The approach has been extended to glimpseLD [1], which is language agnostic and uses Linked Data to as a bootstrapping source.",
+      "startOffset" : 44,
+      "endOffset" : 47
+    }, {
+      "referenceID" : 7,
+      "context" : "In the preprocessing step, we build a word2vec model [9], with the skip-gram implementation using TC as an input.",
+      "startOffset" : 53,
+      "endOffset" : 56
+    } ],
+    "year" : 2018,
+    "abstractText" : "Dictionaries and ontologies are foundational elements of systems extracting knowledge from unstructured text. However, as new content arrives keeping dictionaries up-to-date is a crucial operation. In this paper, we propose a human-in-the-loop (HumL) dictionary expansion approach that employs a lightweight neural language model coupled with tight HumL supervision to assist the user in building and maintaining a domain-specific dictionary from an input text corpus. The approach is based on the explore/exploit paradigm to effectively discover new instances (explore) from the text corpus as well as predict new “unseen” terms not currently in the corpus using the accepted dictionary entries (exploit). We evaluate our approach on a real-world scenario in the healthcare domain, in which we construct a dictionary of adverse drug reactions from user blogs as input text corpus. The evaluation shows that using our approach the user can easily extend the input dictionary, where tight human-in-the-loop integration results in a 216% improvement in effectiveness.",
+    "creator" : "LaTeX with hyperref package"
+  }
+}

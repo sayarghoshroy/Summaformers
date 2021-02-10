@@ -1,0 +1,524 @@
+15:23:20.801 [main] DEBUG com.amazonaws.AmazonWebServiceClient - Internal logging successfully configured to commons logger: true
+15:23:20.870 [main] DEBUG com.amazonaws.metrics.AwsSdkMetrics - Admin mbean registered under com.amazonaws.management:type=AwsSdkMetrics
+15:23:20.947 [main] DEBUG c.a.internal.config.InternalConfig - Configuration override awssdk_config_override.json not found.
+15:23:21.355 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loading model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:23:21.355 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:23:21.357 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:23:21.362 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Creating gazetteer cache at /tmp/gazetteer-v5.json-fa485aef.gazetteerCache.bin
+15:23:33.397 [scala-execution-context-global-12] INFO  o.a.scienceparse.ParserGroundTruth - Read 1609659 papers.
+15:23:54.091 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loaded model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:24:05.414 [scala-execution-context-global-12] INFO  o.a.scienceparse.ExtractReferences - could not load kermit gazetter
+15:24:05.477 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:24:05.477 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:24:05.482 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.RunSP$ - Starting /home/risubaba/LongSumm/pdf/Q19-1012.pdf
+{
+  "name" : "/home/risubaba/LongSumm/pdf/Q19-1012.pdf",
+  "metadata" : {
+    "source" : "CRF",
+    "title" : "Complex Program Induction for Querying Knowledge Bases in the Absence of Gold Programs",
+    "authors" : [ "Amrita Saha", "Ghulam Ahmed Ansari", "Abhishek Laddha", "Karthik Sankaranarayanan", "Soumen Chakrabarti" ],
+    "emails" : [ "amrsaha4@in.ibm.com,", "ansarigh@in.ibm.com,", "laddhaabhishek11@gmail.com,", "kartsank@in.ibm.com,", "soumen@cse.iitb.ac.in" ],
+    "sections" : [ {
+      "heading" : null,
+      "text" : "∗Now at Hike Messenger 1The NSM baseline in this work is a re-implemented\nversion, as the original code was not available."
+    }, {
+      "heading" : "1 Introduction",
+      "text" : "Structured knowledge bases (KB) like Wikidata and Freebase can support answering questions (KBQA) over a diverse spectrum of structural complexity. This includes queries with single-hop (Obama’s birthplace) (Yao, 2015; Berant et al., 2013), or multi-hop (who voiced Meg in Family Guy) (Bast and Haußmann, 2015; Yih et al., 2015; Xu et al., 2016; Guu et al., 2015; McCallum et al., 2017; Das et al., 2017), or complex queries such as ‘‘how many countries have more rivers and lakes than Brazil?’’ (Saha et al., 2018). Complex queries require a proper assembly of selected operators from a library of graph, set, logical, and arithmetic operations into a complex procedure, and is the subject of this paper.\nRelatively simple query classes, in particular, in which answers are KB entities, can be served with feed-forward (Yih et al., 2015) and seq2seq (McCallum et al., 2017; Das et al., 2017) networks. However, such systems show copying or rote learning behavior when Boolean or open numeric domains are involved. More complex queries need to be evaluated as an acyclic expression graph over nodes representing KB access, set, logical, and arithmetic operators (Andreas et al., 2016a). A practical alternative to inferring a stateless expression graph is to generate an imperative sequential program to solve the query. Each step of the program selects an atomic operator and a set of previously defined variables as arguments and writes the result to scratch memory, which can then be used in subsequent steps. Such imperative programs are preferable to opaque, monolithic networks for their interpretability and generalization to diverse domains. Another\n185\nTransactions of the Association for Computational Linguistics, vol. 7, pp. 185–200, 2019. Action Editor: Scott Wen-tau Yih. Submission batch: 8/2018; Revision batch: 11/2018; Final submission: 1/2019; Published 4/2019.\nc© 2019 Association for Computational Linguistics. Distributed under a CC-BY 4.0 license.\nmotivation behind opting for the program induction paradigm for solving complex tasks, such as complex question answering, is modularizing the end-to-end complex reasoning process. With this approach it is now possible to first train separate modules for each of the atomic operations involved and then train a program induction model that learns to use these separately trained models and invoke the sub-modules in the correct fashion to solve the task. These sub-modules can even be task-agnostic generic models that can be pretrained with much more extensive training data, while the program induction model learns from examples pertaining to the specific task. This paradigm of program induction has been used for decades, with rule induction and probabilistic program induction techniques in Lake et al. (2015) and by constructing algorithms utilizing formal theorem-proving techniques in Waldinger and Lee (1969). These traditional approaches (e.g., Muggleton and Raedt, 1994) incorporated domain specific knowledge about programming languages instead of applying learning techniques. More recently, to promote generalizability and reduce dependecy on domain specific knowledge, neural approaches have been applied to problems like addition, sorting, and word algebra problems (Reed and de Freitas, 2016; Bosnjak et al., 2017) as well as for manipulating a physical environment (Bunel et al., 2018).\nProgram Induction has also seen initial promise in translating simple natural language queries into programs executable in one or two hops over a KB to obtain answers (Liang et al., 2017). In contrast, many of the complex queries from Saha et al. (2018), such as the one in Figure 1, require up to 10-step programs involving multiple relations and several arithmetic and logical operations. Sample operations include gen−set: collecting {t : (h, r, t) ∈ KB}, computing set−union, counting set sizes (set−count), comparing numbers or sets, and so forth. These operations need to be executed in the correct order, with correct parameters, sharing information via intermediate results to arrive at the correct answer. Note also that the actual gold program is not available for supervision and therefore the large space of possible translation actions at each step, coupled with a large number of steps needed to get any payoff, makes the reward very sparse. This renders complex KBQA in the absence of gold programs extremely challenging.\nMain Contributions\n• We present ‘‘Complex Imperative Program Induction from Terminal Rewards’’ (CIPITR),2\nan advanced Neural Program Induction (NPI) system that is able to answer complex logical, quantitative, and comparative queries by inducing programs of length up to 7, using 20 atomic operators and 9 variable types. This, to our knowledge, is the first NPI system to be trained with only the gold answer as (very distant) supervision for inducing such complex programs.\n• CIPITR reduces the combinatorial program space to only semantically correct programs by (i) incorporating symbolic constraints guided by KB schema and inferred answer type, and (ii) adopting pragmatic programming techniques by decomposing the final goal into a hierarchy of sub-goals, thereby mitigating the sparse reward problem by considering additional auxiliary rewards in a generic, task-independent way.\nWe evaluate CIPITR on the following two challenging tasks: (i) complex KBQA posed by the recently-published CSQA data set (Saha et al., 2018) and (ii) multi-hop KBQA in one of the more\n2The code and reinforcement learning environment of CIPITR is made public inhttps://github.com/CIPITR/ CIPITR.\npopularly used KBQA data sets WebQuestionsSP (Yih et al., 2016). WebQuestionsSP involves complex multi-hop inferencing, sometimes with additional constraints, as we will describe later. However, CSQA poses a much greater challenge, with its more diverse classes of complex queries and almost 20-times larger scale. On a data set such as CSQA, contemporary models like neural symbolic machines (NSM) fail to handle exponential growth of the program search space caused by a large number of operator choices at every step of a lengthy program. Key-value memory networks (KVMnet) (Miller et al., 2016) are also unable to perform the necessary complex multi-step inference. CIPITR outperforms them both by a significant margin while avoiding exploration of unwanted program space or memorization of low-entropy answer distributions. On even moderately complex programs of length 2–5, CIPITR scored at least 3× higher F1 than both. On one of the hardest class of programs of around 5–10 steps (i.e., comparative reasoning), CIPITR outperformed NSM by a factor of 89 and KVMnet by a factor of 9. Further, we empirically observe that among all the competing models, CIPITR shows the best generalization across diverse program classes."
+    }, {
+      "heading" : "2 Related Work",
+      "text" : "Whereas most of the earlier efforts to handle complex KBQA did not involve writable memory, some recent systems (Miller et al., 2016; Neelakantan et al., 2015, 2016; Andreas et al., 2016b; Dong and Lapata, 2016) used end-toend differentiable neural networks. One of the state-of-the-art neural models for KBQA, the keyvalue memory network KVMnet (Miller et al., 2016) learns to answer questions by attending on the relevant KB subgraph stored in its memory. Neelakantan et al. (2016) and Pasupat and Liang (2015) support simple queries over tables, for example, of the form ‘‘find the sum of a specified column’’ or ‘‘list elements in a column more than a given value.’’ The query is read by a recurrent neural network (RNN), and then, in each translation step, the column and operator are selected using the query representation and history of operators and columns selected in the past. Andreas et al. (2016b) use a ‘‘stateless’’ model where neural network based subroutines are assembled using syntactic parsing.\nRecently, Reed and de Freitas (2016) took an early influential step with the NPI compositional framework that learns to decompose high level tasks like addition and sorting into program steps (carry, comparison) aided by persistent memory. It is trained by high-level task input and output as well as all the program steps. Li et al. (2016) and Bosnjak et al. (2017) took another important step forward by replacing NPI’s expensive strong supervision with supervision of the programsketch. This form of supervision at every intermediate step still keeps the problem simple, by arresting the program space to a tractable size. Although such data are easy to generate for simpler problems such as arithmetic and sorting, it is expensive for KBQA. Liang et al. (2017) proposed the NSM framework in absence of the gold program, which translates the KB query to a structured program token-by-token. While being a natural approach for program induction, NSM has several inherent limitations preventing generalization towards longer programs that are critical for complex KBQA. Subsequently, it was evaluated only on WebQuestionsSP (Yih et al., 2016), that requires relatively simpler programs. We consider NSM as the primary and KVMnet as an additional baseline and show that CIPITR significantly outperforms both, especially on the more complex query types."
+    }, {
+      "heading" : "3 Complex KBQA Problem Set-up",
+      "text" : ""
+    }, {
+      "heading" : "3.1 CSQA Data Set",
+      "text" : "The CSQA data set (Saha et al., 2018) contains 1.15M natural language questions and its corresponding gold answer from WikiData Knowledge Base. Figure 1 shows a sample query from the data set along with its true program-decomposed form, the latter not provided by CSQA. CSQA is particularly suited to study the Complex Program Induction (CPI) challenge over other KBQA data sets because:\n• It contains large-scale training data of question-answer pairs across diverse classes of complex queries, each requiring different inference tools over large KB sub-graphs.\n• Poor state-of-the-art performance of memory networks on it motivates the need for sweeping changes to the NPI’s learning strategy.\n• The massive size of the KB involved (13 million entities and 50 million tuples) poses a scalability challenge for prior NPI techniques.\n• Availability of KB metadata helps standardize comparisons across techniques (explained subsequently).\nWe adapt CSQA in two ways for the CPI problem.\nRemoval of extended conversations: To be consistent with the NSM work on KBQA, we discard QA pairs that depend on the previous dialogue context. This is possible as every query is annotated with information on whether it is self-contained or depends on the previous context. Relevant statistics of the resulting data set are presented in Table 3.\nUse of gold entity, type, and relation annotations to standardize comparisons: Our focus being on the reasoning aspect of the KBQA problem, we use the gold annotations of canonical KB entities, types, and relations available in the data set along with the the queries, in order to remove a prominent source of confusion in comparing KBQA systems (i.e., all systems take as inputs the natural language query, with spans identified with KB IDs of entities, types, relations, and integers). Although annotation accuracy affects a complete KBQA system, our focus here is on complex, multi-step program generation with only final answer as the distant supervision, and not entity/type/relation linking."
+    }, {
+      "heading" : "3.2 WebQuestionsSP Data Set",
+      "text" : "In Figure 2 we illustrate one of the most complex questions from the the WebQuestionsSP data set and its semantic parsed version provided by human annotator. Questions in the WebQuestionsSP data set are answerable from the Freebase KB and tyically require up to 2-hop inference chains, sometimes with additional requirements of satisfying specific constraints. These constraints can be temporal (e.g., governing−position−held−from) ornon-temporal (e.g., government−office−position− or−title). The human-annotated semantic parse of the questions provide the exact structure of the subgraph and the inference process on it to reach the final answer. As in this work, we are focusing on inducing programs where the gold entity relation annotations are known; for this data set as well, we use the human-annotations to collect all\nthe entities and relations in the oracle subgraph associated with the query. The NPI model has to understand the role of these gold program inputs in question-answering and learn to induce a program to reflect the same inferencing."
+    }, {
+      "heading" : "4 Complex Imperative Program Induction from Terminal Rewards",
+      "text" : ""
+    }, {
+      "heading" : "4.1 Notation",
+      "text" : "This subsection introduces the different notations commonly used by our model.\nNine variable-types: (distinct from KB types)\n• KB artifacts: ent(entity), rel(relation), type\n• Base data types: int, bool, None (empty argument type used for padding)\n• Composite data types: set (i.e., set of KB entities) or map−set and map−int (i.e., a mapping function from an entity to a set of KB entities or an integer)\nTwenty Operators:\n• gen−set(ent, rel, type) → set\n• verify(ent, rel, ent) → bool\n• gen−map set(type, rel, type) → map−set\n• map−count(map−set) → map−int\n• set {union/ints/diff}(set, set) → set\n• map−{union/ints/diff}(map−set, map−set) → map−set\n• set−count(set) → int\n• select−{atleast/atmost/more/less/ equal/approx}(map int, int) → set\n• select−{max/min}(map int) → ent\n• no−op() (i.e., no action taken)\nSymbols and Hyperparameters: (typical values)\n• num−op: Number of operators (20)\n• num−var−types: Number of variable types (9)\n• max−var: Maximum number of variables accommodated in memory for each type (3)\n• m: Maximum number of arguments for an operator (None padding for fewer arguments) (3)\n• dkey & dval: Dimension of the key and value embeddings (dkey dval) (100, 300)\n• np & nv: Number of operators and argument variables sampled per operator each time (4, 10)\n• f with subscript: some feed-forward network\nEmbedding Matrices: The model is trained with a vocabulary of operators and variable-types. In order to sample operators, two matrices Mop key ∈ Rnum op×dkey and Mop val ∈ Rnum op×dval are needed for encoding the operator’s key and value embedding. The key embedding is used for looking up and retrieving an entry from the operator vocabulary and the corresponding value embedding encodes the operator information. The variable type has only the value embedding Mvtype val ∈ Rnum op×dval as no lookup is needed on it.\nOperator Prototype Matrices: These matrices store the argument variable type information for the m arguments of every operator in Mop arg ∈ {0, 1, . . . , num−var−types}num op×m and the output variable type created by it in Mop out ∈ {0, 1, . . . , num−var−types}num op.\nMemory Matrices: This is the query-specific scratch memory for storing new program variables as they get created by CIPITR. For each variable type, we have separate key and value embedding matrices Mvar key ∈ Rnum var type×max var×dkey and Mvar val ∈ Rnum var type×max var×dval , respectively for looking up a variable in memory\nand accessing the information in it. In addition, we also have a variable attention matrix Mvar att ∈ R num var type×max var which stores the attention vector over the variables declared of each type. CIPITR consists of three components:\nThe preprocessor takes the input query and the KB and performs the task of entity, relation, and type linking which acts as input to the program induction. It also pre-populates the variable memory matrices with any entity, relation, type, or integer variable directly extracted from the query.\nThe programmer model takes as input the natural language question, the KB, and the pre-populated variable memory tables to generate a program (i.e., a sequence of operators invoked with past instantiated variables as their arguments and generating new variables in memory).\nThe interpreter executes the generated program with the help of the KB and scratch memory and outputs the system answer.\nDuring training, the predicted answer is compared with the gold to obtain a reward, which is sent back to CIPITR to update its model parameters through a REINFORCE (Williams, 1992) objective. In the current version of CIPITR, the preprocessor consults an oracle to link entities, types and relations in the query to the KB. This is to isolate the programming performance of CIPITR from the effect of imperfect linkage. Extending earlier studies (Karimi et al., 2012; Khalid et al., 2008) to investigate robustness of CIPITR to linkage errors may be of future interest."
+    }, {
+      "heading" : "4.2 Basic Memory Operations in CIPITR",
+      "text" : "We describe some of the foundational modules invoked by the rest of CIPITR.\nMemory Lookup: The memory lookup looks up scratch memory with a given probe, say x (of arbitrary dimension), and retrieves the memory entry having closest key embedding to x. It first passes x through a feed-forward layer to transform its dimension to key embedding dimensionx−key. Then, by computing softmax over the matrix multiplication ofMx key and xkey, the distribution over the memory variables for lookup is obtained.\nxkey = f(x), xdist = softmax(Mx keyxkey)\nFeasibility Sampling: To restrict the search space to meaningful programs, CIPITR incorporates both high-level generic or task-specific constraints when sampling any action. The generic constraints can help it adopt more pragmatic programming styles like not repeating lines of code or avoiding syntactical errors. The task specific constraints ensure that the generated program is consistent as per the KB schema or on execution gives an answer of the desired variable type. To sample from the feasible subset using these constraints, the input sampling distribution, xdist, is elementwise transformed by a feasibility vector xfeas followed by a L1-normalization. Along with the transformed distribution, the top-k entries xsampled is also returned.\nAlgorithm 1 Feasibility Sampling Input:\n• xdist ∈ RN (where N is the size of the population set over which lookup needs to be done)\n• xfeas ∈ {0, 1}N (boolean feasibility vector)\n• k (top-k sampled)\nProcedure: FeasSampling (xdist, xfeas, k) xdist = xdist xfeas (elementwise multiply) xdist = L1-Normalized(xdist) xsampled = k-argmax(xdist) Output: xdist, xsampled\nWriting a new variable to memory: This operation takes a newly generated variable, say x, of type xtype and adds its key and value embedding\nto the row corresponding to xtype in the memory matrices. Further, it updates the attention vector forxtype to provide maximum weight to the newest variable generated, thus, emulating a stack like behavior.\nAlgorithm 2 Write a new variable to memory Input:\n• xkey, xval the key and value embedding of x\n• xtype is a scalar denoting type of variable x\nProcedure: WriteVarToMem(xkey, xval, xtype) i is the 1st empty slot in the row Mx key[xtype, :] Mvar key[xtype, i] = xkey\nMvar val[xtype, i] = xval Mvar att[xtype, :] = L1-Normalized(Mvar att[xtype, :] + One-Hot(i))"
+    }, {
+      "heading" : "4.3 CIPITR Architecture",
+      "text" : "In Figure 3, we sketch the CIPITR components; in this section we describe them in the order they appear in the model.\nQuery Encoder: The query is first parsed into a sequence of KB-entities and non-KB words. KB entities e are embedded with the concatenated vector [TransE(e),0] using Bordes et al. (2013), and non-KB words ω with [0,GloVe(ω)]. The final query representation is obtained from a GRU encoder as q.\nNPI Core: The query representation q is fed at the initial timestep to an environment encoding\nRNN, which gives out the environment state et at every timestep. This, along with the value embedding uvalt−1 of the last output variable generated by the NPI engine, is fed at every timestep into another RNN that finally outputs the program state ht. ht is then fed into the successive modules of the program induction engine as described below. The ‘OutVarGen’ algorithm describes how to obtain uvalt−1.\nProcedure: NPI Core(et−1, ht−1, uvalt−1) et = GRU(et−1, u val t−1)\nht = GRU(et, u val t−1, ht−1)\nOutput: et, ht\nOperator Sampler: It takes the program state ht, a Boolean vector p feas t denoting operator feasibility, and the number of operators to sample np. It passes ht through the Lookup operation followed by Feasibility Sampling to obtain the top-np operations (Pt).\nArgument Variable Sampler: For each sampled operator p, it takes: (i) program state ht, (ii) the list of variable types V typep of the m arguments obtained by looking up the operator prototype matrix Mop arg, and (iii) a Boolean vector V feasp that indicates the valid variable configurations for the m-tuple arguments of the operator p. For each of them arguments, a feed-forward network fvtype first transforms the program state ht to a vector in R max var. It is then element-wise multiplied with the current attention state over the variables in memory of that type. This provides the programstate-specific attention over variables vattp,j which is then passed through the Lookup function to obtain the distribution over the variables in memory. Next, feasibility sampling is applied over the joint distribution of its argument variables, comprised of the m individual distributions. This provides the top-nv tuples of m-variable instantiations Vp.\nOutput Variable Generator: The new variable up of type u type p = Mop out[p] is generated by the procedure OutVarGen by invoking a sampled operator p with m variables vp,1 · · · vp,m of type vtypep,1 · · · v type p,m as arguments. This also requires generating the key and value embedding, which are both obtained by applying different feedforward layers over the concatenated representation of the value embedding of the operator Mop val[p], argument types (Mvtype val[vtypep,1 ] · · ·\nMvtype val[vtypep,m ]) and the instantiated variables (Mvar val[vtypep,1 , vp,1] · · · Mvar val[v type p,m , vp,m]). The newly generated variable is then written to memory using Algorithm WriteVarToMem.\nProcedure: ArgVarSampler(ht, V typep , V feasp , nv) forj ∈ 1, 2, · · · ,m do\nvattp,j = softmax(M var att[V typep,j ]) fvtype(ht) vdistp,j = Lookup(vattp,j , fvar,Mvar key[V type p,j ])\nV distp = v dist p,0 × vdistp,1 · · · × vdistp,m , Joint Distribution\nV distp , Vp = FeasSampling(V distp , V feasp , nv) Output: Vp\nEnd-to-End CIPITR training: CIPITR takes a natural language query and generates an output program in a number of steps. A program is composed of actions, which are operators applied over variables (as in Figure 3). In each step, it selects an operator and a set of previously defined variables as its arguments, and writes the operator output to a dynamic memory, to be subsequently used for further search of next actions. To reduce exposure bias (Ranzato et al., 2015), CIPITR uses a beam search to obtain multiple candidate programs to provide feedback to the model from a single training instance. Algorithm 3 shows the pseudocode of the program induction algorithm (with beam size b as 1 for simplicity), which goes over T time steps, each time sampling np feasible operators conditional to the program state. Then, for each of the np operators, it samples nv feasible\nAlgorithm 3 CIPITR pseudo-code (beam size=1) Query Encoding: q = GRU(Query) Initialization: e1, h1 = f(q), A = [ ]\nfor t ∈ 1, · · · , T do pfeast = FeasibleOp() Pt = OperatorSampler(ht, pfeast , np) C = {} for p ∈ Pt do\nV typep = [v type p,1 , · · · , vtypep,m ] = Mop arg[p] V feasp = FeasibleVar(p) Vp = ArgVarSampler(ht, V typep , V feasp , nv) for V ∈ Vp do\nC = C ⋃ (p, V, V typep )\n(p, V, V typep ) = argmax(C) ukeyp , u val p , u type p = OutVarGen(p, V typep , V ) WriteVarToMem(ukeyp , uvalp , utypep ) et+1, ht+1 = NPICore(et, ht) A.append((p, V ))\nOutput: A\nvariable instantiations, resulting in a total of np ∗ nv candidates out of which b most-likely actions are sampled for the b beams and the corresponding newly generated variables written into memory. This way the algorithm progresses to finally output b candidate programs, each of which will feed the model back with some reward. Finally, in order to learn from the discrete action samples, the REINFORCE objective (Williams, 1992) is used. Because of lack of space, we do not provide the equation for REINFORCE, but our objective formulation remains very similar to that in Liang et al. (2017). We next describe several learning challenges that arise in the context of this overall architecture."
+    }, {
+      "heading" : "5 Mitigating Large Program Space and Sparse Reward",
+      "text" : "Handling complex queries by expanding the operator set and generating longer programs blows up the program space to a huge size of (num−op ∗ (max−var)\nm)T . This, in absence of gold programs, poses serious training challenges for the programmer. Additionally, whereas the relatively simple NSM architecture could explore a large beam size (50–100), the complex architecture of CIPITR entailed by the CPI problem could only afford to operate with a smaller beam size (≤ 20), which further exacerbates the sparsity of the reward space. For example, for integer answers, only a single point in the integer space returns a positive reward, without any notion of partial reward. Such a delayed—indeed, terminal— reward causes high variance, instability, and local minima issues. A problem as complex as ours requires not only generic constraints for producing semantically correct programs, but also incorporation of prior knowledge, if the model permits. We now describe how to guide CIPITR more efficiently through such a challenging environment using both generic and task-specific constraints.\nPhase change network: For complex real-word problems, the reinforcement learning community has proposed various task-abstractions (Parr and Russell, 1998; Dietterich, 2000; Bakker and Schmidhuber, 2004; Barto and Mahadevan, 2003; Sutton et al., 1999) to address the curse of dimensionality in exponential action spaces. HAMs, proposed by Parr and Russell (1998), is one such important form of abstraction aimed at restricting\nthe realizable action sequences. Inspired by HAMs, we decompose the program synthesis into phases having restricted action spaces. The first phase (retrieval phase) constitutes gathering the information from the preprocessed input variables only (i.e., KB entities, relations, types, integers). This restricts the feasible operator set to gen−set, gen−map−set, and verify. In the second phase (algorithm phase) the model is allowed to operate on all the generated variables in order to reach the answer. The programmer learns whether to switch from the first phase to the second at any timestep t, based on parameter φt (φt=1 indicating\nchange of phase, where φ0 = 0) which is obtained as φt = 1{max(sigmoid(f(ht)), φt−1) ≥ φthresh} if t < T/2, else 1 (T being total timesteps and φthresh is set to 0.8 in our experiments). The motivation behind this is similar to the multi-staged techniques that have been adopted in order to make QA tasks more tractable, as in Yih et al. (2015) and Iyyer et al. (2017). In contrast, here we further allow the model to learn when to switch from one stage to the next. Note that this is a generic characteristic, as for every task, this kind of phase division is possible.\nGeneratingsemanticallycorrectprograms: Other than the generic syntactical and semantic rules, the NPI paradigm also allows us to leverage prior knowledge and to incorporate task-specific symbolic constraints in the program representation learning in an end-to-end differentiable way.\n• Enforcing KB consistency: Operators used in the retrieval phase (described above) must honor the KB-imposed constraints, so as not to initialize variables that are inconsistent with respect to the KB. For example, a set variable assigned from gen−set is considered valid only when the ent, rel, type arguments to gen−set are consistent with the KB.\n• Biasing the last operator using answer type predictor: Answer type prediction is a standard preprocessing step in question answering (Li and Roth, 2002). For this we use a rule-based predictor that has 98% accuracy. The predicted answer type helps in directing the program search toward the correct answer type by biasing the sampling towards feasible operators that can produce the desired answer type.\n• Auxiliary reward strategy: Jaccard scores of the executed program’s output and the gold answer set is used as reward. An invalid program gets a reward of −1. Further, to mitigate the sparsity of the extrinsic rewards, an additional auxiliary feedback is designed to reward the model on generating an answer of the predicted answer-type. A linear decay makes the effect of auxiliary reward vanish eventually. Such a curriculum learning mechanism, while being particularly useful for the more complex queries, is still\nquite generic as it does not require any additional task-specific prior knowledge.\nBeam Management and Action Sampling\n• Pruning beams by target answer type: Penalize beams that terminate with an answer type not matching the predicted answer type.\n• Length-based normalization of beam scores: To counteract the characteristic of beam search favoring shorter beams as more probable and to ensure the scoring is fair to the longer beams, we normalize the beam scores with respect to their length.\n• Penalizing beams for no−op operators: Another way of biasing the beams toward generating longer sequences, is by penalizing for the number of times a beam takes no−op as the action. Specifically, we reduce the beam score by a hyperparameter-controlled logarithmic factor of the number of no−op actions taken till now.\n• Stochastic beam exploration with entropy annealing: To avoid early local minima where the model severely biases towards specific actions, we added techniques like (i) a stochastic version of beam search to sample operators in an -greedy fashion (ii) dropout, and (iii) entropy-based regularization of action distribution.\nSampling only feasible actions: Sampling a feasible action requires first sampling a feasible operator and then its feasible variable arguments:\n• The operator must be allowed in the current phase of the model’s program induction.\n• Valid Variable instantiation: A feasible operator should be having at least one valid instantiation of its formal arguments with non-empty variable values that are also consistent with the KB.\n• Action Repetition: An action (i.e., an operator invoked with a specific argument instantiation) should not be repeated at any time step.\n• Some operators disallow some arguments; for example, union or intersection of a set with itself."
+    }, {
+      "heading" : "6 Experiments",
+      "text" : "We compare CIPITR against baselines (Miller et al., 2016; Liang et al., 2017) on complex KBQA and further identify the contributions of the ideas presented in Section 5 via ablation studies. For this work, we limit our effort on KBQA to the setting where the query is annotated with the gold KB-artifacts, which standardizes the input to the program induction for the competing models."
+    }, {
+      "heading" : "6.1 Hyperparameters Settings",
+      "text" : "We trained our model using the Adam Optimizer and tuned all hyperparameters on the validation set. Some parameters are selectively turned on/ off after few training iterations, which is itself a hyperparameter (see Table 1). We combined reward/ loss such as entropy annealing and auxiliary rewards using different weights detailed in Table 1. The key, value embedding dimensions are set to 100, 300."
+    }, {
+      "heading" : "6.2 WebQuestionsSP Data Set",
+      "text" : "We first evaluate our model on the more popularly used WebQuestionsSP data set."
+    }, {
+      "heading" : "6.2.1 Rule-Based Model on WebQuestionsSP",
+      "text" : "Though quite a few recent works on KBQA have evaluated their model on WebQuestionsSP, the reported performance is always in a setting where the gold entities/relations are not known. They either internally handle the entity and relationlinking problem or outsource it to some external or in-house model, which itself might have been trained with additional data. Additionally, the entity/relation linker outputs used by these models are also not made public, making it difficult to set up a fair ground for evaluating the program induction model, especially because we are interested in the program induction given the program inputs\nand handling the entity/relation linking is beyond the scope of this work. To avoid these issues, we use the human-annotated entity/relation linking data available along with the questions as input to the program induction model. Consequently the performance reported here is not comparable to the previous works evaluated on this data set, as the query annotation is obtained here from an oracle linker.\nFurther, to gauge the proficiency of the proposed program induction model, we construct a rule-based model which is aware of the human annotated semantic parsed form of the query—that is, the inference chain of relations and the exact constraints that need to be additionally applied to reach the answer. The pseudocode below elaborates how the rule based model works on the human-annotated parse of the given query, taking as input the central entity, the inference chain, and associated constraints and their type. This\nProcedure: RuleBasedModel(parse,KB) ent1 ← parse[‘TopicEntityMid’] rel1 ← parse[‘InferentialChain’][0] ans ← {x | (ent1, rel1, x) ∈ KB} for c ∈ parse[‘Constraints’] c−rel ← c[‘NodePredicate’] c−op ← c[‘Operator’] c−arg ← c[‘Argument’] if c[‘ArgumentType’] == ‘Entity’ ans ← ans ∩ {x | (c−arg, c−rel, x) ∈ KB}\nelse ans ← ⋃\nx∈ans {x | (x, c rel, y) ∈ KB,\nc−arg c−op y} if len(parse[‘InferentialChain’]) > 1 rel2 ← parse[‘InferentialChain’][1] ans ← ⋃\nx∈ans {y | (x, rel2, y) ∈ KB}\nOutput: ans\ninference rule, manually derived, can be written out in a program form, which on execution will give the final answer. On the other hand, the task of CIPITR is to actually learn the program by looking at training examples of the query and corresponding answer. Both the models need to induce the program using the gold entity/relation data. Subsequently, the rule-based model is indeed a very strong competitor as it is generated by annotators having detailed knowledge about the KB."
+    }, {
+      "heading" : "6.2.2 Results on WebQuestionsSP",
+      "text" : "A comparative performance analysis of the proposed CIPITR model, the rule-based model and the SparQL executor is tabulated in Table 2. The main take-away from these results is that CIPITR is indeed able to learn the rules behind the multi-step inference process simply from the distance supervision provided by the questionanswer pairs and even perform slightly better in some of the query classes."
+    }, {
+      "heading" : "6.3 CSQA Data Set",
+      "text" : "We now showcase the performance of the proposed models and related baselines on the CSQA data set."
+    }, {
+      "heading" : "6.3.1 Baselines on CSQA",
+      "text" : "KVMnet with decoder (2016), which performed best on CSQA data set (Saha et al., 2018) (as discussed in Section 2), learns to attend on a KB subgraph in memory and decode the attention over memory-entries as their likelihood of being in the answer. Further, it can also decode a vocabulary of non-KB words like integers or booleans. However, because of the inherent architectural constraints, it is not possible to incorporate most of the symbolic constraints presented in Section 5 in this model, other than KB-guided consistency\nand biasing towards answer-type. More importantly, recently the usage of these models have been criticized for numerical and boolean question answering as these deep networks can easily memorize answers without ‘‘understanding’’ the logic behind the queries simply because of the skew in the answer distribution. In our case this effect is more pronounced as CSQA evinces a curious skew in integer answers to ‘‘count’’ queries. Fifty-six percent of training and 52% of test count-queries have single digit answers. Ninety percent of training and 81% of test count-queries have answers less than 200. Though this makes it unfair to compare NPI models (that are oblivious to the answer vocabulary) with KVMnet on such queries, we still train a KVMnet version on a balanced resample of CSQA, where, for only the count queries, the answer distribution over integers has been made uniform.\nNSM (2017) uses a key-variable memory and decodes the program as a sequence of operators and memory variables. As the NSM code was not available, we implemented it and further incorporated most of the six techniques presented in Table 4. However, constraints like action repetition, biasing last operator selection, and phase change cannot be incorporated in NSM while keeping the model generic, as it decodes the program token by token."
+    }, {
+      "heading" : "6.3.2 Results on CSQA",
+      "text" : "In Table 3 we compare the F1 scores obtained by our system, CIPITR, against the KVMnet and NSM baselines. For NSM and CIPITR, we train seven models with different hyperparameters tuned on each of the seven question types. For the train and valid splits, a rule-based query type classifier with 97% accuracy was used to bucket queries into the classes listed in Table 3. For each of these three systems, we also train and evaluate\none single model over all question types. KVMnet does not have any beam search, the NSM model uses a beam size of 50, and CIPITR uses only 20 beams for exploring the program space.\nOur manual inspection of these seven query categories show that simple and verify are simplest in nature requiring 1-line programs while logical is moderately difficult, with around 3 lines of code. The query categories next in order of complexity are quantitative and quantitative count, needing a sequence of 2–5 operations. The hardest types are comparative and comparative count, which translate to an average of 5–10 lined programs.\nAnalysis: The experiments show that on the simple to moderately difficult (i.e., first three) query classes, CIPITR’s performance at the top beam is up to 3 times better than both the baselines. The superiority of CIPITR over NSM is showcased better on the more complex classes where it outperforms the latter by 5–10 times, with the biggest impact (by a factor of 89 times) being on the ‘‘comparative’’ questions. Also, the 5× better performance of CIPITR over NSM over All category evinces the better generalizability of the abstract high-level program decomposition approach of the former.\nOn the other hand, training the KVMnet model on the balanced data helps showcase the real performance of the model, where CIPITR outperforms KVMnet significantly on most of the harder query classes. The only exception is the hardest class (Comp, Count with numerical answers) where the abrupt ‘‘best performance’’ of KVMnet can be attributed to its rote learning\nabilities simply because of its knowledge of the answer vocabulary, which the program induction models are oblivious to, as they never see the actual answer.\nLastly, in our experimental configurations, whereas CIPITR and NSM’s parameter-size is almost comparable, KVMnet’s is approximately 6× larger.\nAblation Study: To quantitatively analyze the utility of the features mentioned in Section 5, we experiment with various ablations in Table 4 by turning off each feature, one at a time. We show the effect on the hardest question category (‘‘comparative’’) on which our proposed model achieved reasonable performance. We see in the table that each of the 6 techniques helped the model significantly. Some of them boosted F1 by 1.5–4 times, while others proved to be instrumental to obtained large improvements in F1 score of over 6–9 times.\nTo summarize, CIPITR has the following advantages, inducing programs more efficiently\nand pragmatically, as illustrated by the sample outputs in Table 5:\n• Generating syntactically correct programs: Because of the token-by-token decoding of the program, NSM cannot restrict its search to only syntactically correct programs, but rather only resorts to a post-filtering step during training. However, at test time, it could still generate programs with wrong syntax, as shown in Table 5. For example, for the Logical question, it invokes a gen−set with a wrong argument type None and for the Quantitative count question, it invokes the set−union operator on a non-set argument. On the other hand, CIPITR, by design, can never generate a syntactically incorrect program because at every step it implicitly samples only feasible actions.\n• Generating semantically correct programs: CIPITR is capable of incorporating different generic programming styles as well as problemspecific constraints, restricting its search space to only semantically correct programs. As shown in Table 5, CIPITR is able to generate at least meaningful programs having the desired answer-type or without repeating lines of code. On the other hand the NSMgenerated programs are often semantically wrong, for instance, both in the Quantitative and Quantitative Count based questions, the\ntype of the answer is itself wrong, rendering the program meaningless. This arises once again, owing to the token-by-token decoding of the program by NSM which makes it hard to incorporate high level rules to guide or constrain the search.\n• Efficient search-space exploration: Owing to the different strategies used to explore the program space more intelligently, CIPITR scales better to a wide variety of complex queries by using less than half of NSM’s beam size. We experimentally established that for programs of length 7 these various techniques reduced the average program space from 1.33× 1019 to 2,998 programs."
+    }, {
+      "heading" : "7 Conclusion",
+      "text" : "We presented CIPITR, an advanced NPI framework that significantly pushes the frontier of complex program induction in absence of gold programs. CIPITR uses auxiliary rewarding techniques to mitigate the extreme reward sparsity and incorporates generic pragmatic programming styles to constrain the combinatorial program space to only semantically correct programs. As future directions of work, CIPITR can be further improved to handle the hardest question types by making the search more strategic, and can be further generalized to a diverse set of goals when training on all question categories together.\nOther potential directions of research could be toward learning to discover sub-goals to further decompose the most complex classes beyond just the two-level phase transition proposed here. Additionally, further improvements are required to induce complex programs without availability of gold program input variables."
+    } ],
+    "references" : [ {
+      "title" : "Learning to compose neural networks for question answering",
+      "author" : [ "Jacob Andreas", "Marcus Rohrbach", "Trevor Darrell", "Dan Klein." ],
+      "venue" : "NAACL HLT 2016, The 2016 Conference of the North American Chapter of the Association for",
+      "citeRegEx" : "Andreas et al\\.,? 2016a",
+      "shortCiteRegEx" : "Andreas et al\\.",
+      "year" : 2016
+    }, {
+      "title" : "Learning to compose neural networks for question answering",
+      "author" : [ "Jacob Andreas", "Marcus Rohrbach", "Trevor Darrell", "Dan Klein." ],
+      "venue" : "NAACL-HLT , pages 1545–1554.",
+      "citeRegEx" : "Andreas et al\\.,? 2016b",
+      "shortCiteRegEx" : "Andreas et al\\.",
+      "year" : 2016
+    }, {
+      "title" : "Hierarchical reinforcement learning based on subgoal discovery and subpolicy specialization",
+      "author" : [ "B. Bakker", "J. Schmidhuber." ],
+      "venue" : "Proceedings of the 8th Conference on Intelligent Autonomous Systems IAS-8, pages 438–445.",
+      "citeRegEx" : "Bakker and Schmidhuber.,? 2004",
+      "shortCiteRegEx" : "Bakker and Schmidhuber.",
+      "year" : 2004
+    }, {
+      "title" : "Recent advances in hierarchical reinforcement learning",
+      "author" : [ "Andrew G. Barto", "Sridhar Mahadevan." ],
+      "venue" : "Discrete Event Dynamic Systems, 13(1-2):41–77.",
+      "citeRegEx" : "Barto and Mahadevan.,? 2003",
+      "shortCiteRegEx" : "Barto and Mahadevan.",
+      "year" : 2003
+    }, {
+      "title" : "More accurate question answering on freebase",
+      "author" : [ "Hannah Bast", "Elmar Haußmann." ],
+      "venue" : "CIKM, pages 1431–1440.",
+      "citeRegEx" : "Bast and Haußmann.,? 2015",
+      "shortCiteRegEx" : "Bast and Haußmann.",
+      "year" : 2015
+    }, {
+      "title" : "Semantic parsing on Freebase from question-answer pairs",
+      "author" : [ "J. Berant", "A. Chou", "R. Frostig", "P. Liang." ],
+      "venue" : "EMNLP Conference, pages 1533–1544.",
+      "citeRegEx" : "Berant et al\\.,? 2013",
+      "shortCiteRegEx" : "Berant et al\\.",
+      "year" : 2013
+    }, {
+      "title" : "Translating embeddings for modeling multi-relational data",
+      "author" : [ "Antoine Bordes", "Nicolas Usunier", "Alberto GarciaDuran", "Jason Weston", "Oksana Yakhnenko." ],
+      "venue" : "NIPS Conference, pages 2787–2795.",
+      "citeRegEx" : "Bordes et al\\.,? 2013",
+      "shortCiteRegEx" : "Bordes et al\\.",
+      "year" : 2013
+    }, {
+      "title" : "Programming with a differentiable forth interpreter",
+      "author" : [ "Matko Bosnjak", "Tim Rocktäschel", "Jason Naradowsky", "Sebastian Riedel." ],
+      "venue" : "Proceedings of the 34th International Conference on Machine Learning, ICML 2017,",
+      "citeRegEx" : "Bosnjak et al\\.,? 2017",
+      "shortCiteRegEx" : "Bosnjak et al\\.",
+      "year" : 2017
+    }, {
+      "title" : "Leveraging grammar and reinforcement learning for neural program synthesis",
+      "author" : [ "Rudy Bunel", "Matthew J. Hausknecht", "Jacob Devlin", "Rishabh Singh", "Pushmeet Kohli." ],
+      "venue" : "International Conference on Learning Representa-",
+      "citeRegEx" : "Bunel et al\\.,? 2018",
+      "shortCiteRegEx" : "Bunel et al\\.",
+      "year" : 2018
+    }, {
+      "title" : "Question answering on knowledge bases and text using universal schema and memory networks",
+      "author" : [ "Rajarshi Das", "Manzil Zaheer", "Siva Reddy", "Andrew McCallum." ],
+      "venue" : "ACL (2), pages 358–365.",
+      "citeRegEx" : "Das et al\\.,? 2017",
+      "shortCiteRegEx" : "Das et al\\.",
+      "year" : 2017
+    }, {
+      "title" : "Feudal reinforcement learning",
+      "author" : [ "Peter Dayan", "Geoffrey E. Hinton." ],
+      "venue" : "Advances in Neural Information Processing Systems 5,",
+      "citeRegEx" : "Dayan and Hinton.,? 1993",
+      "shortCiteRegEx" : "Dayan and Hinton.",
+      "year" : 1993
+    }, {
+      "title" : "Hierarchical reinforcement learning with the maxq value function decomposition",
+      "author" : [ "Thomas G. Dietterich." ],
+      "venue" : "Journal of Artificial Intelligence Research, 13(1):227–303.",
+      "citeRegEx" : "Dietterich.,? 2000",
+      "shortCiteRegEx" : "Dietterich.",
+      "year" : 2000
+    }, {
+      "title" : "Language to logical form with neural attention",
+      "author" : [ "Li Dong", "Mirella Lapata." ],
+      "venue" : "ACL, volume 1, pages 33–43.",
+      "citeRegEx" : "Dong and Lapata.,? 2016",
+      "shortCiteRegEx" : "Dong and Lapata.",
+      "year" : 2016
+    }, {
+      "title" : "Traversing knowledge graphs in vector space",
+      "author" : [ "Kelvin Guu", "John Miller", "Percy Liang." ],
+      "venue" : "EMNLP Conference.",
+      "citeRegEx" : "Guu et al\\.,? 2015",
+      "shortCiteRegEx" : "Guu et al\\.",
+      "year" : 2015
+    }, {
+      "title" : "Search-based neural structured learning for sequential question answering",
+      "author" : [ "Mohit Iyyer", "Wen-tau Yih", "Ming-Wei Chang." ],
+      "venue" : "ACL, volume 1, pages 1821–1831.",
+      "citeRegEx" : "Iyyer et al\\.,? 2017",
+      "shortCiteRegEx" : "Iyyer et al\\.",
+      "year" : 2017
+    }, {
+      "title" : "Quantifying the impact of concept recognition on biomedical information retrieval",
+      "author" : [ "Sarvnaz Karimi", "Justin Zobel", "Falk Scholer." ],
+      "venue" : "Information Processing & Management, 48(1): 94–106.",
+      "citeRegEx" : "Karimi et al\\.,? 2012",
+      "shortCiteRegEx" : "Karimi et al\\.",
+      "year" : 2012
+    }, {
+      "title" : "The impact of named entity normalization on information retrieval for question answering",
+      "author" : [ "Mahboob Alam Khalid", "Valentin Jijkoun", "Maarten De Rijke." ],
+      "venue" : "Proceedings of the IR Research, 30th European Conference on",
+      "citeRegEx" : "Khalid et al\\.,? 2008",
+      "shortCiteRegEx" : "Khalid et al\\.",
+      "year" : 2008
+    }, {
+      "title" : "Human-level concept learning through probabilistic program induction",
+      "author" : [ "Brenden M. Lake", "Ruslan Salakhutdinov", "Joshua B. Tenenbaum." ],
+      "venue" : "Science, 350(6266):1332–1338.",
+      "citeRegEx" : "Lake et al\\.,? 2015",
+      "shortCiteRegEx" : "Lake et al\\.",
+      "year" : 2015
+    }, {
+      "title" : "Neural program lattices",
+      "author" : [ "Chengtao Li", "Daniel Tarlow", "Alexander L. Gaunt", "Marc Brockschmidt", "Nate Kushman." ],
+      "venue" : "International Conference on Learning Representations (ICLR).",
+      "citeRegEx" : "Li et al\\.,? 2016",
+      "shortCiteRegEx" : "Li et al\\.",
+      "year" : 2016
+    }, {
+      "title" : "Learning question classifiers",
+      "author" : [ "X. Li", "D. Roth." ],
+      "venue" : "COLING, pages 556–562.",
+      "citeRegEx" : "Li and Roth.,? 2002",
+      "shortCiteRegEx" : "Li and Roth.",
+      "year" : 2002
+    }, {
+      "title" : "Neural symbolic machines: Learning semantic parsers on freebase with weak supervision",
+      "author" : [ "Chen Liang", "Jonathan Berant", "Quoc Le", "Kenneth D. Forbus", "Ni Lao." ],
+      "venue" : "Proceedings of the 55th Annual Meeting of the Association for",
+      "citeRegEx" : "Liang et al\\.,? 2017",
+      "shortCiteRegEx" : "Liang et al\\.",
+      "year" : 2017
+    }, {
+      "title" : "Chains of reasoning over entities, relations, and text using recurrent neural networks",
+      "author" : [ "Andrew McCallum", "Arvind Neelakantan", "Rajarshi Das", "David Belanger." ],
+      "venue" : "Proceedings of the 15th Conference of the European",
+      "citeRegEx" : "McCallum et al\\.,? 2017",
+      "shortCiteRegEx" : "McCallum et al\\.",
+      "year" : 2017
+    }, {
+      "title" : "Key-value memory networks for directly reading documents",
+      "author" : [ "Alexander H. Miller", "Adam Fisch", "Jesse Dodge", "Amir-Hossein Karimi", "Antoine Bordes", "Jason Weston." ],
+      "venue" : "EMNLP, pages 1400–1409.",
+      "citeRegEx" : "Miller et al\\.,? 2016",
+      "shortCiteRegEx" : "Miller et al\\.",
+      "year" : 2016
+    }, {
+      "title" : "Inductive logic programming: Theory and methods",
+      "author" : [ "Stephen Muggleton", "Luc De Raedt." ],
+      "venue" : "Journal of Logic Programming, 19/20: 629–679.",
+      "citeRegEx" : "Muggleton and Raedt.,? 1994",
+      "shortCiteRegEx" : "Muggleton and Raedt.",
+      "year" : 1994
+    }, {
+      "title" : "Learning a natural language interface with neural programmer",
+      "author" : [ "Arvind Neelakantan", "Quoc V. Le", "Martin Abadi", "Andrew McCallum", "Dario Amodei." ],
+      "venue" : "arXiv preprint, arXiv: 1611.08945.",
+      "citeRegEx" : "Neelakantan et al\\.,? 2016",
+      "shortCiteRegEx" : "Neelakantan et al\\.",
+      "year" : 2016
+    }, {
+      "title" : "Neural programmer: Inducing latent programs with gradient descent",
+      "author" : [ "Arvind Neelakantan", "Quoc V. Le", "Ilya Sutskever." ],
+      "venue" : "CoRR, abs/1511.04834.",
+      "citeRegEx" : "Neelakantan et al\\.,? 2015",
+      "shortCiteRegEx" : "Neelakantan et al\\.",
+      "year" : 2015
+    }, {
+      "title" : "Reinforcement learning with hierarchies of machines",
+      "author" : [ "Ronald Parr", "Stuart Russell." ],
+      "venue" : "Proceedings of the 1997 Conference on Advances in Neural Information Processing Systems 10, NIPS ’97, pages 1043–1049.",
+      "citeRegEx" : "Parr and Russell.,? 1998",
+      "shortCiteRegEx" : "Parr and Russell.",
+      "year" : 1998
+    }, {
+      "title" : "Compositional semantic parsing on semi-structured tables",
+      "author" : [ "Panupong Pasupat", "Percy Liang." ],
+      "venue" : "arXiv preprint arXiv:1508.00305.",
+      "citeRegEx" : "Pasupat and Liang.,? 2015",
+      "shortCiteRegEx" : "Pasupat and Liang.",
+      "year" : 2015
+    }, {
+      "title" : "Sequence level training with recurrent neural networks. CoRR, abs/1511.06732",
+      "author" : [ "Marc’Aurelio Ranzato", "Sumit Chopra", "Michael Auli", "Wojciech Zaremba" ],
+      "venue" : null,
+      "citeRegEx" : "Ranzato et al\\.,? \\Q2015\\E",
+      "shortCiteRegEx" : "Ranzato et al\\.",
+      "year" : 2015
+    }, {
+      "title" : "Neural programmer-interpreters",
+      "author" : [ "Scott Reed", "Nando de Freitas." ],
+      "venue" : "International Conference on Learning Representations (ICLR).",
+      "citeRegEx" : "Reed and Freitas.,? 2016",
+      "shortCiteRegEx" : "Reed and Freitas.",
+      "year" : 2016
+    }, {
+      "title" : "Complex sequential question answering: Towards learning to converse over linked question answer pairs with a knowledge graph",
+      "author" : [ "Amrita Saha", "Vardaan Pahuja", "Mitesh M. Khapra", "Karthik Sankaranarayanan", "Sarath Chandar" ],
+      "venue" : null,
+      "citeRegEx" : "Saha et al\\.,? \\Q2018\\E",
+      "shortCiteRegEx" : "Saha et al\\.",
+      "year" : 2018
+    }, {
+      "title" : "Between mdps and semi-mdps: A framework for temporal abstraction in reinforcement learning",
+      "author" : [ "Richard S. Sutton", "Doina Precup", "Satinder Singh." ],
+      "venue" : "Artificial Intelligence, 112(1-2):181–211.",
+      "citeRegEx" : "Sutton et al\\.,? 1999",
+      "shortCiteRegEx" : "Sutton et al\\.",
+      "year" : 1999
+    }, {
+      "title" : "Semantic parsing using content and context: A case study from requirements elicitation",
+      "author" : [ "Reut Tsarfaty", "Ilia Pogrebezky", "Guy Weiss", "Yaarit Natan", "Smadar Szekely", "David Harel." ],
+      "venue" : "Proceedings of the 2014 Conference on",
+      "citeRegEx" : "Tsarfaty et al\\.,? 2014",
+      "shortCiteRegEx" : "Tsarfaty et al\\.",
+      "year" : 2014
+    }, {
+      "title" : "PROW: A step toward automatic program writing",
+      "author" : [ "Richard J. Waldinger", "Richard C.T. Lee." ],
+      "venue" : "Proceedings of the 1st International Joint Conference on Artificial Intelligence, pages 241–252.",
+      "citeRegEx" : "Waldinger and Lee.,? 1969",
+      "shortCiteRegEx" : "Waldinger and Lee.",
+      "year" : 1969
+    }, {
+      "title" : "Simple statistical gradientfollowing algorithms for connectionist reinforcement learning",
+      "author" : [ "Ronald J Williams." ],
+      "venue" : "Reinforcement Learning, Springer, pages 5–32.",
+      "citeRegEx" : "Williams.,? 1992",
+      "shortCiteRegEx" : "Williams.",
+      "year" : 1992
+    }, {
+      "title" : "Question answering on Freebase via relation extraction and textual evidence",
+      "author" : [ "Kun Xu", "Siva Reddy", "Yansong Feng", "Songfang Huang", "Dongyan Zhao." ],
+      "venue" : "arXiv preprint, arXiv: 1603.00957.",
+      "citeRegEx" : "Xu et al\\.,? 2016",
+      "shortCiteRegEx" : "Xu et al\\.",
+      "year" : 2016
+    }, {
+      "title" : "Lean question answering over Freebase from scratch",
+      "author" : [ "Xuchen Yao." ],
+      "venue" : "NAACL Conference, pages 66–70.",
+      "citeRegEx" : "Yao.,? 2015",
+      "shortCiteRegEx" : "Yao.",
+      "year" : 2015
+    }, {
+      "title" : "Semantic parsing via staged query graph generation: Question",
+      "author" : [ "Scott Wen-tau Yih", "Ming-Wei Chang", "Xiaodong He", "Jianfeng Gao" ],
+      "venue" : null,
+      "citeRegEx" : "Yih et al\\.,? \\Q2015\\E",
+      "shortCiteRegEx" : "Yih et al\\.",
+      "year" : 2015
+    } ],
+    "referenceMentions" : [ {
+      "referenceID" : 36,
+      "context" : "This includes queries with single-hop (Obama’s birthplace) (Yao, 2015; Berant et al., 2013), or multi-hop (who voiced Meg in Family Guy) (Bast and Haußmann, 2015; Yih et al.",
+      "startOffset" : 59,
+      "endOffset" : 91
+    }, {
+      "referenceID" : 5,
+      "context" : "This includes queries with single-hop (Obama’s birthplace) (Yao, 2015; Berant et al., 2013), or multi-hop (who voiced Meg in Family Guy) (Bast and Haußmann, 2015; Yih et al.",
+      "startOffset" : 59,
+      "endOffset" : 91
+    }, {
+      "referenceID" : 4,
+      "context" : ", 2013), or multi-hop (who voiced Meg in Family Guy) (Bast and Haußmann, 2015; Yih et al., 2015; Xu et al., 2016; Guu et al., 2015; McCallum et al., 2017; Das et al., 2017), or complex queries such as ‘‘how many countries have more rivers and lakes than Brazil?’’ (Saha et al.",
+      "startOffset" : 53,
+      "endOffset" : 172
+    }, {
+      "referenceID" : 37,
+      "context" : ", 2013), or multi-hop (who voiced Meg in Family Guy) (Bast and Haußmann, 2015; Yih et al., 2015; Xu et al., 2016; Guu et al., 2015; McCallum et al., 2017; Das et al., 2017), or complex queries such as ‘‘how many countries have more rivers and lakes than Brazil?’’ (Saha et al.",
+      "startOffset" : 53,
+      "endOffset" : 172
+    }, {
+      "referenceID" : 35,
+      "context" : ", 2013), or multi-hop (who voiced Meg in Family Guy) (Bast and Haußmann, 2015; Yih et al., 2015; Xu et al., 2016; Guu et al., 2015; McCallum et al., 2017; Das et al., 2017), or complex queries such as ‘‘how many countries have more rivers and lakes than Brazil?’’ (Saha et al.",
+      "startOffset" : 53,
+      "endOffset" : 172
+    }, {
+      "referenceID" : 13,
+      "context" : ", 2013), or multi-hop (who voiced Meg in Family Guy) (Bast and Haußmann, 2015; Yih et al., 2015; Xu et al., 2016; Guu et al., 2015; McCallum et al., 2017; Das et al., 2017), or complex queries such as ‘‘how many countries have more rivers and lakes than Brazil?’’ (Saha et al.",
+      "startOffset" : 53,
+      "endOffset" : 172
+    }, {
+      "referenceID" : 21,
+      "context" : ", 2013), or multi-hop (who voiced Meg in Family Guy) (Bast and Haußmann, 2015; Yih et al., 2015; Xu et al., 2016; Guu et al., 2015; McCallum et al., 2017; Das et al., 2017), or complex queries such as ‘‘how many countries have more rivers and lakes than Brazil?’’ (Saha et al.",
+      "startOffset" : 53,
+      "endOffset" : 172
+    }, {
+      "referenceID" : 9,
+      "context" : ", 2013), or multi-hop (who voiced Meg in Family Guy) (Bast and Haußmann, 2015; Yih et al., 2015; Xu et al., 2016; Guu et al., 2015; McCallum et al., 2017; Das et al., 2017), or complex queries such as ‘‘how many countries have more rivers and lakes than Brazil?’’ (Saha et al.",
+      "startOffset" : 53,
+      "endOffset" : 172
+    }, {
+      "referenceID" : 30,
+      "context" : ", 2017), or complex queries such as ‘‘how many countries have more rivers and lakes than Brazil?’’ (Saha et al., 2018).",
+      "startOffset" : 99,
+      "endOffset" : 118
+    }, {
+      "referenceID" : 37,
+      "context" : "Relatively simple query classes, in particular, in which answers are KB entities, can be served with feed-forward (Yih et al., 2015) and seq2seq (McCallum et al.",
+      "startOffset" : 114,
+      "endOffset" : 132
+    }, {
+      "referenceID" : 0,
+      "context" : "More complex queries need to be evaluated as an acyclic expression graph over nodes representing KB access, set, logical, and arithmetic operators (Andreas et al., 2016a).",
+      "startOffset" : 147,
+      "endOffset" : 170
+    }, {
+      "referenceID" : 7,
+      "context" : "More recently, to promote generalizability and reduce dependecy on domain specific knowledge, neural approaches have been applied to problems like addition, sorting, and word algebra problems (Reed and de Freitas, 2016; Bosnjak et al., 2017) as well as for manipulating a physical environment (Bunel et al.",
+      "startOffset" : 192,
+      "endOffset" : 241
+    }, {
+      "referenceID" : 8,
+      "context" : ", 2017) as well as for manipulating a physical environment (Bunel et al., 2018).",
+      "startOffset" : 59,
+      "endOffset" : 79
+    }, {
+      "referenceID" : 20,
+      "context" : "Program Induction has also seen initial promise in translating simple natural language queries into programs executable in one or two hops over a KB to obtain answers (Liang et al., 2017).",
+      "startOffset" : 167,
+      "endOffset" : 187
+    }, {
+      "referenceID" : 30,
+      "context" : "We evaluate CIPITR on the following two challenging tasks: (i) complex KBQA posed by the recently-published CSQA data set (Saha et al., 2018) and (ii) multi-hop KBQA in one of the more",
+      "startOffset" : 122,
+      "endOffset" : 141
+    }, {
+      "referenceID" : 22,
+      "context" : "Key-value memory networks (KVMnet) (Miller et al., 2016) are also unable to perform the necessary complex multi-step inference.",
+      "startOffset" : 35,
+      "endOffset" : 56
+    }, {
+      "referenceID" : 22,
+      "context" : "Whereas most of the earlier efforts to handle complex KBQA did not involve writable memory, some recent systems (Miller et al., 2016; Neelakantan et al., 2015, 2016; Andreas et al., 2016b; Dong and Lapata, 2016) used end-toend differentiable neural networks.",
+      "startOffset" : 112,
+      "endOffset" : 211
+    }, {
+      "referenceID" : 1,
+      "context" : "Whereas most of the earlier efforts to handle complex KBQA did not involve writable memory, some recent systems (Miller et al., 2016; Neelakantan et al., 2015, 2016; Andreas et al., 2016b; Dong and Lapata, 2016) used end-toend differentiable neural networks.",
+      "startOffset" : 112,
+      "endOffset" : 211
+    }, {
+      "referenceID" : 12,
+      "context" : "Whereas most of the earlier efforts to handle complex KBQA did not involve writable memory, some recent systems (Miller et al., 2016; Neelakantan et al., 2015, 2016; Andreas et al., 2016b; Dong and Lapata, 2016) used end-toend differentiable neural networks.",
+      "startOffset" : 112,
+      "endOffset" : 211
+    }, {
+      "referenceID" : 22,
+      "context" : "One of the state-of-the-art neural models for KBQA, the keyvalue memory network KVMnet (Miller et al., 2016) learns to answer questions by attending on the relevant KB subgraph stored in its memory.",
+      "startOffset" : 87,
+      "endOffset" : 108
+    }, {
+      "referenceID" : 34,
+      "context" : "During training, the predicted answer is compared with the gold to obtain a reward, which is sent back to CIPITR to update its model parameters through a REINFORCE (Williams, 1992) objective.",
+      "startOffset" : 164,
+      "endOffset" : 180
+    }, {
+      "referenceID" : 15,
+      "context" : "Extending earlier studies (Karimi et al., 2012; Khalid et al., 2008) to investigate robustness of CIPITR to linkage errors may be of future interest.",
+      "startOffset" : 26,
+      "endOffset" : 68
+    }, {
+      "referenceID" : 16,
+      "context" : "Extending earlier studies (Karimi et al., 2012; Khalid et al., 2008) to investigate robustness of CIPITR to linkage errors may be of future interest.",
+      "startOffset" : 26,
+      "endOffset" : 68
+    }, {
+      "referenceID" : 28,
+      "context" : "To reduce exposure bias (Ranzato et al., 2015), CIPITR uses a beam search to obtain multiple candidate programs to provide feedback to the model from a single training instance.",
+      "startOffset" : 24,
+      "endOffset" : 46
+    }, {
+      "referenceID" : 34,
+      "context" : "Finally, in order to learn from the discrete action samples, the REINFORCE objective (Williams, 1992) is used.",
+      "startOffset" : 85,
+      "endOffset" : 101
+    }, {
+      "referenceID" : 26,
+      "context" : "Phase change network: For complex real-word problems, the reinforcement learning community has proposed various task-abstractions (Parr and Russell, 1998; Dietterich, 2000; Bakker and Schmidhuber, 2004; Barto and Mahadevan, 2003; Sutton et al., 1999) to address the curse of dimensionality in exponential action spaces.",
+      "startOffset" : 130,
+      "endOffset" : 250
+    }, {
+      "referenceID" : 11,
+      "context" : "Phase change network: For complex real-word problems, the reinforcement learning community has proposed various task-abstractions (Parr and Russell, 1998; Dietterich, 2000; Bakker and Schmidhuber, 2004; Barto and Mahadevan, 2003; Sutton et al., 1999) to address the curse of dimensionality in exponential action spaces.",
+      "startOffset" : 130,
+      "endOffset" : 250
+    }, {
+      "referenceID" : 2,
+      "context" : "Phase change network: For complex real-word problems, the reinforcement learning community has proposed various task-abstractions (Parr and Russell, 1998; Dietterich, 2000; Bakker and Schmidhuber, 2004; Barto and Mahadevan, 2003; Sutton et al., 1999) to address the curse of dimensionality in exponential action spaces.",
+      "startOffset" : 130,
+      "endOffset" : 250
+    }, {
+      "referenceID" : 3,
+      "context" : "Phase change network: For complex real-word problems, the reinforcement learning community has proposed various task-abstractions (Parr and Russell, 1998; Dietterich, 2000; Bakker and Schmidhuber, 2004; Barto and Mahadevan, 2003; Sutton et al., 1999) to address the curse of dimensionality in exponential action spaces.",
+      "startOffset" : 130,
+      "endOffset" : 250
+    }, {
+      "referenceID" : 31,
+      "context" : "Phase change network: For complex real-word problems, the reinforcement learning community has proposed various task-abstractions (Parr and Russell, 1998; Dietterich, 2000; Bakker and Schmidhuber, 2004; Barto and Mahadevan, 2003; Sutton et al., 1999) to address the curse of dimensionality in exponential action spaces.",
+      "startOffset" : 130,
+      "endOffset" : 250
+    }, {
+      "referenceID" : 19,
+      "context" : "• Biasing the last operator using answer type predictor: Answer type prediction is a standard preprocessing step in question answering (Li and Roth, 2002).",
+      "startOffset" : 135,
+      "endOffset" : 154
+    }, {
+      "referenceID" : 22,
+      "context" : "We compare CIPITR against baselines (Miller et al., 2016; Liang et al., 2017) on complex KBQA and further identify the contributions of the ideas presented in Section 5 via ablation studies.",
+      "startOffset" : 36,
+      "endOffset" : 77
+    }, {
+      "referenceID" : 20,
+      "context" : "We compare CIPITR against baselines (Miller et al., 2016; Liang et al., 2017) on complex KBQA and further identify the contributions of the ideas presented in Section 5 via ablation studies.",
+      "startOffset" : 36,
+      "endOffset" : 77
+    }, {
+      "referenceID" : 30,
+      "context" : "KVMnet with decoder (2016), which performed best on CSQA data set (Saha et al., 2018) (as discussed in Section 2), learns to attend on a KB subgraph in memory and decode the attention over memory-entries as their likelihood of being in the answer.",
+      "startOffset" : 66,
+      "endOffset" : 85
+    } ],
+    "year" : 2019,
+    "abstractText" : "Recent years have seen increasingly complex question-answering on knowledge bases (KBQA) involving logical, quantitative, and comparative reasoning over KB subgraphs. Neural Program Induction (NPI) is a pragmatic approach toward modularizing the reasoning process by translating a complex natural language query into a multi-step executable program. While NPI has been commonly trained with the ‘‘gold’’ program or its sketch, for realistic KBQA applications such gold programs are expensive to obtain. There, practically only natural language queries and the corresponding answers can be provided for training. The resulting combinatorial explosion in program space, along with extremely sparse rewards, makes NPI for KBQA ambitious and challenging. We present Complex Imperative Program Induction from Terminal Rewards (CIPITR), an advanced neural programmer that mitigates reward sparsity with auxiliary rewards, and restricts the program space to semantically correct programs using high-level constraints, KB schema, and inferred answer type. CIPITR solves complex KBQA considerably more accurately than key-value memory networks and neural symbolic machines (NSM). For moderately complex queries requiring 2to 5-step programs, CIPITR scores at least 3× higher F1 than the competing systems. On one of the hardest class of programs (comparative reasoning) with 5–10 steps, CIPITR outperforms NSM by a factor of 89 and memory networks by 9 times.1 ∗Now at Hike Messenger 1The NSM baseline in this work is a re-implemented version, as the original code was not available.",
+    "creator" : "LaTeX with hyperref package"
+  }
+}

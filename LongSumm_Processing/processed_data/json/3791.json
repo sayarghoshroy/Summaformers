@@ -1,0 +1,1061 @@
+15:14:58.172 [main] DEBUG com.amazonaws.AmazonWebServiceClient - Internal logging successfully configured to commons logger: true
+15:14:58.224 [main] DEBUG com.amazonaws.metrics.AwsSdkMetrics - Admin mbean registered under com.amazonaws.management:type=AwsSdkMetrics
+15:14:58.295 [main] DEBUG c.a.internal.config.InternalConfig - Configuration override awssdk_config_override.json not found.
+15:14:58.654 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:14:58.654 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loading model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:14:58.656 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:14:58.662 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Creating gazetteer cache at /tmp/gazetteer-v5.json-fa485aef.gazetteerCache.bin
+15:15:08.733 [scala-execution-context-global-12] INFO  o.a.scienceparse.ParserGroundTruth - Read 1609659 papers.
+15:15:25.240 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loaded model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:15:38.115 [scala-execution-context-global-12] INFO  o.a.scienceparse.ExtractReferences - could not load kermit gazetter
+15:15:42.441 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:15:42.441 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:15:42.445 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.RunSP$ - Starting /home/risubaba/LongSumm/pdf/3791.pdf
+{
+  "name" : "/home/risubaba/LongSumm/pdf/3791.pdf",
+  "metadata" : {
+    "source" : "CRF",
+    "title" : "A Low Power, High Throughput, Fully Event-Based Stereo System",
+    "authors" : [ "Alexander Andreopoulos", "Hirak J. Kashyap", "Tapan K. Nayak", "Arnon Amir", "Myron D. Flickner" ],
+    "emails" : [ ],
+    "sections" : [ {
+      "heading" : null,
+      "text" : "We introduce a stereo correspondence system implemented fully on event-based digital hardware, using a fully graph-based non von-Neumann computation model, where no frames, arrays, or any other such data-structures are used. This is the first time that an end-to-end stereo pipeline from image acquisition and rectification, multi-scale spatiotemporal stereo correspondence, winner-take-all, to disparity regularization is implemented fully on event-based hardware. Using a cluster of TrueNorth neurosynaptic processors, we demonstrate their ability to process bilateral event-based inputs streamed live by Dynamic Vision Sensors (DVS), at up to 2,000 disparity maps per second, producing high fidelity disparities which are in turn used to reconstruct, at low power, the depth of events produced from rapidly changing scenes. Experiments on real-world sequences demonstrate the ability of the system to take full advantage of the asynchronous and sparse nature of DVS sensors for low power depth reconstruction, in environments where conventional frame-based cameras connected to synchronous processors would be inefficient for rapidly moving objects. System evaluation on event-based sequences demonstrates a ∼ 200 × improvement in terms of power per pixel per disparity map compared to the closest stateof-the-art, and maximum latencies of up to 11ms from spike injection to disparity map ejection."
+    }, {
+      "heading" : "1. Introduction",
+      "text" : "Sparsity and parallel asynchronous computation are two key principles of information processing in the brain. They allow to solve complex tasks using a tiny fraction of the energy consumed by stored-program computers [64]. While the successful artificial neural networks may not operate the same way as the brain, both of them utilize highly parallel and hierarchical architectures that gradually abstract input data to more meaningful concepts [8, 51, 16]. However, event-based computation has not been equally adopted [4].\n∗equal contribution. †Work done as an intern at IBM Research - Almaden. Cognitive Anteater Robotics Lab (CARL), University of California, Irvine\nAnother barrier for sparse computation are traditional sensors, such as frame-based cameras, which provide regular inputs. For autonomous vehicles, drones, and satellites, energy consumption is a challenge [6]. Event-based processing dramatically reduces power consumption by computing only what is new while omitting unchanged input parts.\nRecently developed event-based cameras such as Dynamic Vision Sensor (DVS) [37, 10] and ATIS [50], inspired by the biological retina, encode pixel illumination changes as events. These sensors solve two major drawbacks of frame-based cameras. First, temporal resolution of frame-based applications is limited by the camera frame rate, usually 30 frames per second. Event-based cameras can generate events at microsecond resolution. Second, consecutive frames in videos are usually highly redundant, which waste downstream data transfer, computing resources and power. Since events are sparse, event-based cameras lead to better downstream resource usage. Moreover, eventbased cameras have high dynamic range (∼ 100 dB), which is useful for real world variations in lighting conditions.\nTo achieve the low energy and high temporal resolution benefits of event-based inputs, computations must be performed asynchronously. To benefit from sparse and asynchronous computation, neuromorphic processors have been developed [44, 24, 30, 9, 56]. These processors represent input events as spikes and process them in parallel using a large neuron population. They are stimulus-driven and the propagation delay of an event through the neuron layers is usually a few milliseconds, suitable for many real-time applications. For example, the TrueNorth neuromorphic chip [44] has been used for high throughput Convolutional neural networks (CNNs) [22], character recognition [53], optic flow [11], saliency [3], and gesture recognition [2].\nDepth perception is an important task for autonomous mobile agents to navigate in the real world. The speed and low power requirements of these applications can be effectively met using event-based sensors. Event-based stereo provides additional advantages over other depth estimation methods that increase accuracy and save energy, such as high temporal resolution, high dynamic range, and robustness to interference with other agents.\nSeveral methods have been proposed to solve event-\nbased stereo correspondence. Most global methods [40, 17, 49, 45] are derived from the Marr and Poggio cooperative stereo algorithm [42]. The algorithm assumes depth continuity and often event-based implementations are not tested with objects tilted in depth. Local methods can be parallelized and find corresponding events using either local features over a spatiotemporal window or event-to-event features [13, 58, 52, 32, 57]. However, most approaches use non-event-based hardware, such as CPU or DSP.\nWe propose a fully neuromorphic event-based stereo disparity algorithm. A live-feed version of the system running on nine TrueNorth chips is shown to calculate 400 disparity maps per second, and the ability to increase this up to 2,000 disparities per second (subject to certain trade-offs) is demonstrated, for use with high speed event cameras, such as DVS. The main advantages of the proposed method, compared to the related work [17, 49, 45, 52, 57], are simultaneous end-to-end neuromorphic disparity calculation, low power, high throughput, low latency (9-11 ms), and linear scalability to multiple neuromorphic processors for larger input sizes. Compared to frame-based computation, in the asynchronous, event-based computation supported by TrueNorth, at each time cycle, in general only neurons that have input spikes are computed, and only spike events “1” are communicated. When the data in a cycle is sparse, as is the case with a DVS sensor, most neurons would not compute for most of the time, resulting in low active power [44]. This processing differs from traditional architectures that use frame-buffers and other conventional data structures; where same memory fetching and computation is repeated for each pixel every frame, independent of scene activity.\nThe proposed event-based disparity method is implemented using a stereo pair of DAVIS sensors [10] (a version of DVS) and nine TrueNorth NS1e boards [53]. However, the method is applicable to other spiking neuromorphic architectures, and it is also tested offline on larger models using a TrueNorth simulator. Input rectification, spatiotemporal scaling, feature matching, search for best matches, morphological erosion and dilation, and bidirectional consistency check are all performed on TrueNorth, for a fully neuromorphic disparity solution. With respect to the most relevant state-of-the-art approach [17], our method uses ∼ 200× less power per pixel per disparity map. We also release the event-based stereo dataset used, which includes Kinect-based registered ground-truth."
+    }, {
+      "heading" : "2. Related work",
+      "text" : "Frame-based stereo disparity methods calculate matching cost using a spatial similarity metric [25, 27, 29] or a cost function learned from a dataset (see reviews [62, 55, 34, 63]). CNNs [35] have been used to learn stereo matching cost [66, 46]. Ground truth disparity maps from benchmark frame-based datasets [27, 54, 26, 43] are used to train these\nmodels, followed by sparse-to-dense conversions [18, 5]. Feature based matching techniques, such as color, edge, histogram, and SIFT [39] based matching, produce sparse disparity maps [28, 38, 21, 61].\nIn contrast, event-based stereo correspondence literature is relatively new. Mahowald and Delbrück [41] implemented the Marr and Poggio cooperative stereo algorithm [42], a global approach, in an analog VLSI circuit. The algorithm converges well when object surfaces are fronto-parallel and candidate matches injected to the network are close together [40, 17]. Later Mahowald [40] modified the VLSI embodied algorithm to solve tilted depth maps using a network of analog valued disparity units, which linearly interpolates the cooperative network output.\nHowever, most of the recent event-based implementations of the cooperative algorithm do not consider depth gradients [47, 48, 23, 17]. Piatkowska et al. [49] inject neighborhood similarity of candidate matches into the cooperative network. Dikov et al. [17] use six SpiNNaker [24] processor boards to implement the cooperative network for 106 × 106 pixels of stereo event data. Osswald et al. [45] propose an FPGA based implementation of spiking neurons as the nodes of the cooperative network. Xie et al. [65] employ message passing on a Markov Random Field with depth continuity for a global solution.\nLocal event-based stereo correspondence approaches are area-based or time-based. Area-based methods assume that object shapes appear identically on left and right sensors. Camuñas-Mesa et al. [13, 12] propose to match edge orientations in event frames accumulated over 50 ms. Schraml et al. [60, 58] propose DSP implementation of a spatiotemporal similarity method using two live event sensors [37]. Belbachir et al. [7] use a rotating pair of event-based line (vertical) sensors in static scenes and render events from each rotation to an edge map [33], which is subsequently processed using a frame-based panoramic stereo algorithm [36].\nTime-based methods utilize event timestamps for matching. Although spike dynamics vary among pixels and sensors [52] and events cannot be matched based on exact timestamps. Rogister et al. [52, 14] propose to use event-toevent constraints for calculating matching cost, such as time window, distance to the epipolar line, ordering constraint, and polarity. Kogler et al. [32, 31] calculate similarity as the\ninverse of temporal distance and average them within each depth plane. The proposed method and its FPGA implementations [20, 19] are equivalent to the cooperative stereo algorithm [42] with noisy time difference inputs. Schraml et al. [59, 57] propose a cost function for the rotating stereo panorama setup in [7] based on temporal event difference."
+    }, {
+      "heading" : "3. Event-based hardware",
+      "text" : "Our implementation uses a pair of synchronized DAVIS240C cameras [10], connected via Ethernet to a cluster of TrueNorth NS1e boards (Fig. 1). The use of DAVIS sensors improve speed, power, dynamic range, and computational requirements. As shown in Fig. 2, fast moving objects are more challenging for frame-based cameras.\nThe IBM TrueNorth is a reconfigurable, non-von Neumann neuromorphic chip containing 1 million spiking neurons and 256 million synapses distributed across 4096 parallel, event-driven, neurosynaptic cores [44]. Cores are tiled in a 64 × 64 array, embedded in a fully asynchronous network-on-chip. The chip consumes 70mW when operating at a 1 ms computation tick and normal workloads. Depending on event dynamics and network architecture, faster tick period is possible, which we take advantage of in this work to achieve as low as 0.5 ms per tick, thus doubling the maximum throughput achievable. Each neurosynaptic core connects 256 inputs to 256 neurons using a crossbar of 256 × 256 binary synapses with a lookup table of weights for 8 bits of precision, plus a sign bit. A neuron state variable, called membrane potential, integrates synaptically weighted input events with an optional leak decay. Each neuron can generate an output event deterministically, if the membrane potential V (t) exceeds a threshold; or stochastically, with a probability that is a function of the difference between the membrane potential and its threshold [2, 15]. The membrane potential is updated at each tick t to V (t) = V (t− 1) + ∂V (t) ∂t , followed by the application of an activation function an(V (t)) where\nan(V (t)) =\n{\n1, if V (t) ≥ n 0, otherwise (1)\nEach neuron is assigned an initial membrane potential\nV (0). Furthermore, upon producing an event, a neuron is reset to a user-specified value. Unless specified otherwise, we assume initial membrane potentials and reset values of zero. TrueNorth programs are written in the Corelet Programming Language — a hierarchical, compositional, object-oriented language [1]."
+    }, {
+      "heading" : "4. Stereo correspondence on TrueNorth",
+      "text" : "The proposed local event-based stereo correspondence algorithm is implemented end-to-end as a neuromorphic event-based algorithm. This consists of systems of equations defining the behavior of TrueNorth neurons, encased in modules called corelets [1], and the subsequent composition of the inputs and outputs of these modules. Fig. 3 depicts the sequence of operations performed by the corelets using inputs from stereo event sensors."
+    }, {
+      "heading" : "4.1. Rectification",
+      "text" : "The stereo rectification is defined by a pair of functions L, R which map each pixel in the left and right sensor’s rectified space to a pixel in the left and right sensor’s native resolution respectively. On TrueNorth, this is implemented using |H| · |W | splitter neurons per sensor & polarity channel, arranged in an |H| × |W | retinotopic map. The events at each rectified pixel p ∈ H ×\nW ×{L,R}×{+,−, {+,−}} are generated through splitter neurons which replicate corresponding sensor pixels. Their membrane potential V splp (t) is defined by ∂V splp (t) ∂t = I(t− 1; p′) where I(t; p′) → {0, 1} denotes whether a sensor event is produced at time t and the sensor pixel p′ corresponding to the rectified pixel p. a1(V spl p (t)) defines the activation of the corresponding neuron. Potentials are initialized to zero and set to also reset to zero upon spiking."
+    }, {
+      "heading" : "4.2. Multiscale temporal representation",
+      "text" : "The event rate of an event-based sensor depends on factors, such as scene contrast, sensor bias parameters, and object velocity. To add invariance across event rates, we accumulate spikes over various temporal scales through the use of temporally overlapping sliding windows. These temporal scales are implemented through the use of splitter neurons which cause each event to appear at its corresponding pixel multiple times, depending on the desired temporal scale, or through the use of temporal ring buffer mechanisms, which lead to lower event rates. The ring buffer is implemented by storing events in membrane potentials of memory cell neurons in a circular buffer, and through the use of control neurons which spike periodically to polarize appropriate memory cell neurons. Buffers can encode the input at various temporal scales. For example at a scale T = 5 the buffer denotes if an event occurred at the corresponding pixel during the last 5 ticks (logical disjunction).\nA control neuron that produces events with period T and phase φ is defined by a neuron aT (V ctrl φ ) that satisfies ∂V ctrlφ (t)\n∂t = 1, V (0) = φ and resets to zero upon pro-\nducing an event. Through populations of such neurons one can also define aT (V ctrl [φ,θ]) corresponding to phase intervals [φ, θ] (where θ − φ + 1 ≤ T ), defining periodic intervals of events. Such control neurons are used to probe (prb) or reset (rst) neuron membrane potentials. A memory cell neuron is a recurrent neuron which accepts as input either its own output (so that it does not lose its stored value whenever the neuron is queried for its stored value), input axons to set the neuron value and control axons for resetting and querying the memory cell. In more detail the output at index r ∈ {0, ..., T +1} of a T +2 size memory cell ring-buffer at a given pixel p, is multiplexed via two copies (m ∈ {0, 1}) and is defined as a2(V mem p,m,r) where\n∂V memp,m,r(t+ 1)\n∂t = [ − aT+2(V\nrst ŝ+1(t))\n+([a1(V spl p (t))] r r̂ ∨ [a2(V mem p,m,r(t− 1))] m t̂ )\n+[aT+2(V prb [3−r,T+2−r](t))] m t̂\n−[aT+2(V rst [2−r,T+1−r](t))] 1−m t̂ ]+ (2)\nwhere probe/reset (prb/rst) control neurons are used, r̂ = t mod (T + 2), ŝ = T + 2− r mod (T + 2), t̂ = t mod 2,\n∨ is logical disjunction1,\n[x]rr̂ =\n{\nmax {0, x}, if r = r̂ 0, otherwise (3)\nand [x]+ def = [x]11 defines a ReLU function. Eq. 2 defines a ring-buffer with T + 2 memory cells, where probe pulses periodically and uniformly query T of the T+2 cells for the stored memory contents at each tick, where m = 0 neurons are probed at odd ticks and m = 1 neurons are probed at even ticks. Reset pulses control when to reset one of the T + 2 memory cells to zero in preparation of a new input. Notice that new inputs (a1(V spl p (·))) are always routed to the cell r that was reset in the previous tick. The probe pulses result in the creation of an output event if during the last T ticks a1(V spl p (·)) produced an event. After a probe event, a reset event decrements the previous +1 membrane potential increase, followed by the restoring of the memory event output during the last probe (a2(V mem p,m,r(t− 1)))."
+    }, {
+      "heading" : "4.3. Morphological erosion and dilation",
+      "text" : "Binary morphological erosion and dilation is optionally applied on the previous module’s outputs to denoise the image. Given a 2-D neighborhood N(p) centered around each pixel p, the erosion neuron’s membrane potential V ep is guided by the system of equations ∂V ep (t) ∂t = [1 − |N(p)| + ∑\nq∈N(p)\n∑\nm\n∨\nr a2(V mem q,m,r (t − 1))]+ and\nuses an a1 activation function. Similarly, dilation neurons V dp with receptive fields N(p) evolve according to ∂V dp (t)\n∂t =\n∑\nq∈N(p) a1(V e q (t− 1)) where a1 is also used as\nthe dilation neurons’ activation function. The neuron potentials are initialized to zero and set to also reset to zero upon producing a spike. In practice 3 × 3 pixel neighborhoods are used. At each tick, erosion and dilation neurons output the minimum and maximum value respectively, of their receptive fields. Cascades of erosion and dilation neurons, are used to denoise retinotopic binary inputs (Fig. 3)."
+    }, {
+      "heading" : "4.4. Multiscale spatiotemporal features",
+      "text" : "Each feature extracted around a rectified pixel p is a concatenation of event patches, extracted from one or more spatiotemporal scales. Spatial scaling consists of spatially sub-sampling each output map of the temporal scale phase (Sec. 4.2/4.3), as specified in the corelet parameters, to apply the window matching (Sec. 4.5) on the sub-sampled data. This results in spatiotemporal coordinate tensors XL,p, XR,p defining the coordinates where events form feature vectors. The ith of these coordinates is represented by neuron activations a1(V L{+,−}\nX (i) L,p\n(t)) and a1(V R{+,−}\nX (i) R,p\n(t)) in\n1disjunction is implemented by sending input events to the same neuron\ninput axon, effectively merging any input events to a single input event.\nthe left and right sensor’s positive (+) or negative (−) polarity channel.2"
+    }, {
+      "heading" : "4.5. Hadamard product for matching",
+      "text" : "Given a pair of spatiotemporal coordinate tensors XL,p, XR,q centered at coordinates p, q in the left and right rectified image respectively and representing K coordinates each, we calculate the binary Hadamard product fL(p, t) ◦ fR(q, t) associated with the corresponding patches at time t, where fL(p, t) = ∏ i{a1(V L\nX (i) L,p\n(t))} ∈ {0, 1}K and\nfR(q, t) = ∏ i{a1(V R\nX (i) R,q\n(t))} ∈ {0, 1}K . The product is\ncalculated in parallel across multiple neurons, as K pairwise logical AND operations of corresponding feature vector entries, resulting in (a1(V dot p,q,1), ...,a1(V dot p,q,K)) where ∂V dotp,q,i(t)\n∂t = [a1(V\nL\nX (i) L,p\n(t − 1)) + a1(V R\nX (i) R,q\n(t − 1)) − 1]+\nThe population code representation of the Hadamard product output is converted to a thermometer code3, which is passed to the winner-take-all circuit described below."
+    }, {
+      "heading" : "4.6. Winner-Take-All system",
+      "text" : "The winner-take-all (WTA) system is a feed-forward neural network that takes as input D thermometer code representations of the Hadamard products for D distinct candidate disparity levels, and finds the disparity with the largest value, at every tick. For designing a scalable and compact WTA system on a neuromorphic hardware, we introduced a novel encoding technique for inputs. In a binary eventbased system, numbers can be efficiently coded using base4 representation where each digit is encoded using a 3-bits thermometer code. We denote it as Quaternary Thermometer Code (QTC). Note that a thermometer code of length 2n bits can be represented by a QTC of length 3 ∗ ⌈n/2⌉ bits. For example, values between 0–255 are represented by a QTC of 12 bits. While it takes a few more bits than an 8 bits binary code, it allows designing a feed-forward WTA network comprising only four cascaded subnetworks, compared to eight for a binary representation, requiring fewer hardware resources as well as half the latency. Latency is further improved with larger bases, but the growth in thermometer code length for each digit results in consuming more hardware resources. Table 1 shows binary, base-4 and QTC representation of different decimal numbers.\nWe assume a maximum thermometer code length of 4B+1 ≥ K for some B ∈ N. Then for any α ∈ {0, 1, 2}, β∈{0, 1, ..., B}, we define the conversion of candidate disparity level d ∈ {0, ..., D − 1} to a QT-coded membrane potential V CNVα,β,d (t) as\n2for notational simplicity we henceforth drop the +,− superscripts: the left and right sensors could produce distinct event streams based on event polarity, or could merge events in a single polarity-agnostic stream. 3e.g., given a population code (1, 1, 0, 1, 0) for value 3, its thermometer code is the right-aligned juxtaposition of all events: (0, 0, 1, 1, 1).\n∂V CNVα,β,d (t)\n∂t = [\n∑\ni∈U(β)\nvid(t−1)− ∑\ni∈U(β+1)\n4 vid(t−1)−α]+\n(4) where vid(t) is the i-th element of the input thermometer code4 for dth disparity level at time t and U(β) = {n ∈ N : n ≡ 0 (mod 4β), 1≤ n< 4B+1}. All the conversion neurons use an a1 activation function and reset to 0 membrane potential upon spiking. Notice that (a1(V CNV 2,β,d (t)), a1(V CNV 1,β,d (t)), a1(V CNV 0,β,d (t))) is a length-3 thermometer code representation of a value in {0, 1, 2, 3}, representing the βth digit in the base-4 representation of vd(t−1).\nFor a set of QT-coded inputs, the WTA system is realized by a cascade of (B+1) feed-forward pruning networks where each of the pruning networks process only 3-bits of the QT codes and prune the inputs not equal to the bit-wise maximum of corresonding 3-bits thermometer codes from all inputs. Now starting from the most significant bits, all the inputs smaller than the maximum will be pruned at different stages and only the winner(s) will survive at the output of the last cascade network. The membrane potential V WTAβ,d of stage β and disparity index d is given by,\n∂V WTAβ,d (t)\n∂t = [4 ·Wβ,d(t−1)+\n2 ∑\nα=0\n[a1(V CNV α,B−β,d(t−β))\n− max d̄∈{d′|Wβ,d′ (t−1)>0}\n{a1(V CNV α,B−β,d̄(t−β))}]− 3]+, (5)\nwhere Wβ,d(t)=\n{\na1(V WTA β−1,d (t)), ∀β> 0, 1, if β = 0 (6)\nNote that the function Wβ,d(t) represents the candidate status of the d-th input at the end of β-th stage. Initially all the\n4the i variable indexing (vi d ) starts from the right of the thermometer\ncode vd of (a1(V dot p,q,1), ...,a1(V dot p,q,K )) ∈ {0, 1}K . The dependence of vd and d on pixels p, q is implicit and is not shown to simplify notation.\ninputs are winning candidates (W0,d(t) = 1) and the status changes after the input is pruned at any stage indicating it is out of the competition and the selection process continues with remaining candidates. As an illustration, winner is computed from the example set of numbers in Table 1 and the winner selection process is shown in Table 2."
+    }, {
+      "heading" : "4.7. Bidirectional consistency check",
+      "text" : "A left-right consistency check is then performed to verify that for each left-rectified pixel p matched to right-rectified pixel q, it is also the case that right-rectified pixel q gets matched to left-rectified pixel p. This is achieved using two parallel WTA streams. Stream 1 calculates the winner disparities for left-to-right matching, and stream 2 calculates the winner disparities of right-to-left matching. The outputs of each stream are represented by D retinotopic maps expressed in a fixed resolution (Dvi,j,d(t), d ∈ {0, ..., D − 1}, v ∈ {L,R}), where events represent the retinotopic winner disparities for that stream. The streams are then merged to produce the disparity map D L,R i,j,d(t) = a1(V L,R i,j,d (t)) where\n∂V L,Ri,j,d (t)\n∂t = [DLi,j,d(t− 1) +D R i,j−d,d(t− 1)+\na1(V spl\n(i,j,L,·)(t− t̂))− 2]+ (7)\nwhere t̂ is the propagation delay of the first layer splitter output events until the left-right consistency constraint merging takes place. This enforces that an output disparity\nis produced at time-stamp t and pixel (i, j) only for leftrectified pixel (i, j), where an event was produced at t− t̂."
+    }, {
+      "heading" : "5. Experiments",
+      "text" : ""
+    }, {
+      "heading" : "5.1. Datasets",
+      "text" : "We evaluate the performance of the system on sequences of random dot stereograms (RDS) representing a rotating synthetic 3D object (Fig. 4a-f), and two real world sets of sequences, consisting of a fast rotating fan (Fig. 4g-m) and a rotating toy butterfly (Fig. 4n-u) captured using the DAVIS stereo cameras. The synthetic dataset provides dense disparity estimates, which are difficult to acquire with the sparse event based cameras. The dataset is generated by assigning to each left sensor pixel a random event with a 50% probability per polarity. Similarly, each right sensor pixel is assigned a value by projecting it to the 3D scene and reprojecting the corresponding data-point to the left camera coordinate frame to find the closest pixel value. Self-occluded pixels are assigned random values.\nFor the non-synthetic datasets, a Kinect [67] is used to extract ground truth of the scene structure. This also entails a calibration process for transforming the undistorted Kinect coordinate frame to the undistorted DAVIS sensor coordinate frame. The fan sequence is useful for testing the ability of the algorithm to operate on rapidly moving objects. Varying orientations of the revolving fan add continuously varying depth gradient to the dataset. Ground truth\nis extracted in terms of the plane in 3D space representing the blades’ plane of rotation (Fig. 4m). The butterfly sequence tests the ability of the algorithm to operate on nonrigid objects which are rapidly rotating in a circular plane approximately perpendicular to the y-axis. Ground truth is extracted in terms of the coordinates of the circle spanned by the rotating butterfly (Fig. 4p). Nine Fan sequences (3 distances × 3 orientations) and three Butterfly sequences (3 distances) are used. The dataset, with Kinect ground-truth, is at: http://ibm.biz/StereoEventData."
+    }, {
+      "heading" : "5.2. Evaluation",
+      "text" : "On the synthetic dataset we measure the average absolute disparity error, and the average recall, which is defined as the fraction of pixels where a disparity measurement was found. On the non-synthetic data, performance is measured in terms of precision, which is defined as the median relative error ‖x−x′‖ ‖x′‖ between each 3D coordinate x extracted in the DAVIS frame using the neuromorphic algorithm, and the corresponding ground coordinate x′ in the aligned Kinect coordinate frame. Performance is also reported in terms of the recall, defined herein as the percentage of DAVIS pixels containing events, where a disparity estimate was also extracted. We tested a suite of sixty stereo disparity networks generated with ranges of spatiotemporal scales, denoising parameters, kernel match thresholds, with/without left-right consistency constraints etc."
+    }, {
+      "heading" : "5.3. Power measurement",
+      "text" : "Power is measured using the same process described in [2]. We calculate the power consumed by an n-chip system by measuring power on a single TrueNorth chip model running on an NS1t board with a high event rate input generated by the fan sequence. This board has circuitry to measure the power consumed by a TrueNorth chip. We multiply the power value by n to extrapolate the power consumed by an n-chip system. Measurements are reported at supply\nvoltages of 0.8V, 1.0V. Total chip power is the sum of passive power, computed by multiplying the idle power by the fraction of the chip’s cores under use, and active power — computed by subtracting idle power from the total power measured when the system is accepting input events ."
+    }, {
+      "heading" : "5.4. Results",
+      "text" : "The RDS is tested on a model using 3 × 5 spatial windows, left-right consistency constraints, no morphological erosion/dilation after rectification, and 31 disparity levels (0-30) plus a ‘no-disparity’ indicator (often occurring due to self-occlusions). We also experiment with a postprocessing phase with erosion and dilation applied to output disparity maps in order to better regularize the output. Average disparity error and recall before regularization is 0.19/0.66 and post-regularization is 0.04/0.63. We observe major improvements due to the regularization, often occurring in self-occluded regions. Errors increase in slanted regions due to foreshortening effects. The left-right consistency constraint decreases false predictions in those regions.\nThe evaluation on the non-synthetic dataset was done under the practical constraints of the availability of a limited number of NS1e boards on which non-simulated models could be run, as well as the need to process the full DAVIS inputs at as high of a throughput as possible. The models that run on live DAVIS input are operated at spike injection rate of up to 2,000Hz (a new input every 1/2,000 seconds) and disparity map throughput of 400Hz at a 0.5ms tick period (400 distinct disparity maps produced every second) across a cluster of 9 TrueNorth chips. Single chip passive/active power on a characteristic model and input is 34.4mW/35.8mW (0.8V) and 82.1mW/56.4mW (1.0V).\nRunning a model at the full 2,000Hz throughput comes at the expense of an increased neuron count. By adding a multiplexing spiking network to the network, we are able to reuse each feature-extraction/WTA circuit to process the disparities for 5 different pixels, effectively decreasing the maximum disparity map throughput from 2,000Hz to 400Hz, requiring fewer chips to process the full image (9 TrueNorth chips). We tested the maximum disparity map throughput achievable, by executing a one-chip model on a cropped input, with no multiplexing (one disparity map ejected per tick) at a 0.5ms tick period, achieving the 2,000Hz disparity map throughput. We tested sixty models on the TrueNorth simulator which provides a spike-forspike equivalent behavior to the chip. We achieved best relative errors of 5 − 11.6% and 7.3 − 8% on the Fan and Butterfly sequence respectively (Fig. 5). We also observe qualitatively good performance (Fig. 6). It is observed that the temporal scale has a higher effect on accuracy than spatial scale. Left-right consistency constraints are typically present in the best performing fan-sequence models, but not so in the Butterfly sequences. Distance and orientation do not have a significant effect on performance. See supplementary materials for more details."
+    }, {
+      "heading" : "6. Discussion",
+      "text" : "We have introduced an advanced neuromorphic 3D vision system uniting a pair of DAVIS cameras with multiple TrueNorth processors, to create an end-to-end, scalable, event-based stereo system. By using a spiking neural network, with low-precision weights, we have shown that the system is capable of injecting event streams and ejecting disparity maps at high throughputs, low latencies, and low power. The system is highly parameterized and can operate with other event based sensors such as ATIS [50] or DVS [37]. Table 3 compares our approach with the literature on event based disparity. Comparative advantages are low power, multi-resolution disparity calculation, scalability to live sensor feed with large input sizes, and evaluation using synthetic as well as real world fast movements and depth gradients, in neuromorphic, non von-Neumann hardware. The implemented neuromorphic stereo disparity system achieves these advantages, while consuming ∼ 200× less power per pixel per disparity map compared to the stateof-the-art [17]. The homogeneous computational substrate provides the first example of a fully end-to-end low-power, high throughput fully event-based neuromorphic stereo system capable of running on live input event streams, using a fully graph-based computation model, where no frames, arrays or other such data-structures are used."
+    } ],
+    "references" : [ {
+      "title" : "et al",
+      "author" : [ "A. Amir", "P. Datta", "W.P. Risk", "A.S. Cassidy", "J.A. Kusnitz", "S.K. Esser", "A. Andreopoulos", "T.M. Wong", "M. Flickner", "R. Alvarez-Icaza" ],
+      "venue" : "Cognitive computing programming paradigm: a corelet language for composing networks of neurosynaptic cores. In International Joint Conference on Neural Networks (IJCNN)",
+      "citeRegEx" : "1",
+      "shortCiteRegEx" : null,
+      "year" : 2013
+    }, {
+      "title" : "et al",
+      "author" : [ "A. Amir", "B. Taba", "D. Berg", "T. Melano", "J. McKinstry", "C. Di Nolfo", "T. Nayak", "A. Andreopoulos", "G. Garreau", "M. Mendoza" ],
+      "venue" : "A low power, fully event-based gesture recognition system. In IEEE Conference on Computer Vision and Pattern Recognition",
+      "citeRegEx" : "2",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "et al",
+      "author" : [ "A. Andreopoulos", "B. Taba", "A.S. Cassidy", "R. Alvarez-Icaza", "M. Flickner", "W.P. Risk", "A. Amir", "P. Merolla", "J.V. Arthur", "D.J. Berg" ],
+      "venue" : "Visual saliency on networks of neurosynaptic cores. IBM Journal of Research and Development, 59(2/3):9–1",
+      "citeRegEx" : "3",
+      "shortCiteRegEx" : null,
+      "year" : 2015
+    }, {
+      "title" : "50 years of object recognition: Directions forward",
+      "author" : [ "A. Andreopoulos", "J.K. Tsotsos" ],
+      "venue" : "Computer Vision and Image Understanding, 117(8):827–891",
+      "citeRegEx" : "4",
+      "shortCiteRegEx" : null,
+      "year" : 2013
+    }, {
+      "title" : "The fast bilateral solver",
+      "author" : [ "J.T. Barron", "B. Poole" ],
+      "venue" : "European Conference on Computer Vision",
+      "citeRegEx" : "5",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Autonomous vehicle technologies for small fixedwing uavs",
+      "author" : [ "R.W. Beard", "D.B. Kingston", "M. Quigley", "D. Snyder", "R. Christiansen", "W. Johnson", "T.W. McLain", "M.A. Goodrich" ],
+      "venue" : "JACIC, 2(1):92–108",
+      "citeRegEx" : "6",
+      "shortCiteRegEx" : null,
+      "year" : 2005
+    }, {
+      "title" : "A novel hdr depth camera for real-time 3d 360 panoramic vision",
+      "author" : [ "A.N. Belbachir", "S. Schraml", "M. Mayerhofer", "M. Hofstätter" ],
+      "venue" : "Computer Vision and Pattern Recognition Workshops (CVPRW), pages 425–432. IEEE",
+      "citeRegEx" : "7",
+      "shortCiteRegEx" : null,
+      "year" : 2014
+    }, {
+      "title" : "Representation learning: A review and new perspectives",
+      "author" : [ "Y. Bengio", "A. Courville", "P. Vincent" ],
+      "venue" : "IEEE transactions on pattern analysis and machine intelligence, 35(8):1798– 1828",
+      "citeRegEx" : "8",
+      "shortCiteRegEx" : null,
+      "year" : 2013
+    }, {
+      "title" : "Neurogrid: A mixedanalog-digital multichip system for large-scale neural simulations",
+      "author" : [ "B.V. Benjamin", "P. Gao", "E. McQuinn", "S. Choudhary", "A.R. Chandrasekaran", "J.-M. Bussat", "R. Alvarez-Icaza", "J.V. Arthur", "P.A. Merolla", "K. Boahen" ],
+      "venue" : "Proceedings of the IEEE, 102(5):699–716",
+      "citeRegEx" : "9",
+      "shortCiteRegEx" : null,
+      "year" : 2014
+    }, {
+      "title" : "A 240× 180 130 db 3 μs latency global shutter spatiotemporal vision sensor",
+      "author" : [ "C. Brandli", "R. Berner", "M. Yang", "S.-C. Liu", "T. Delbruck" ],
+      "venue" : "IEEE Journal of Solid-State Circuits, 49(10):2333–2341",
+      "citeRegEx" : "10",
+      "shortCiteRegEx" : null,
+      "year" : 2014
+    }, {
+      "title" : "Event-based optical flow on neuromorphic hardware",
+      "author" : [ "T. Brosch", "H. Neumann" ],
+      "venue" : "proceedings of the 9th EAI International Conference on Bio-inspired Information and Communications Technologies (formerly BIONETICS) on 9th EAI International Conference on Bio-inspired Information and Communications Technologies (formerly BIONET- ICS), pages 551–558. ICST (Institute for Computer Sciences, Social-Informatics and Telecommunications Engineering)",
+      "citeRegEx" : "11",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Event-driven stereo vision with orientation filters",
+      "author" : [ "L. Camunas-Mesa", "T. Serrano-Gotarredona", "B. Linares- Barranco", "S. Ieng", "R. Benosman" ],
+      "venue" : "IEEE International Symposium on Circuits and Systems (ISCAS), pages 257–260",
+      "citeRegEx" : "12",
+      "shortCiteRegEx" : null,
+      "year" : 2014
+    }, {
+      "title" : "On the use of orientation filters for 3d reconstruction in event-driven stereo vision",
+      "author" : [ "L.A. Camuñas-Mesa", "T. Serrano-Gotarredona", "S.H. Ieng", "R.B. Benosman", "B. Linares-Barranco" ],
+      "venue" : "Frontiers in neuroscience, 8",
+      "citeRegEx" : "13",
+      "shortCiteRegEx" : null,
+      "year" : 2014
+    }, {
+      "title" : "Eventbased 3d reconstruction from neuromorphic retinas",
+      "author" : [ "J. Carneiro", "S.-H. Ieng", "C. Posch", "R. Benosman" ],
+      "venue" : "Neural Networks, 45:27–38",
+      "citeRegEx" : "14",
+      "shortCiteRegEx" : null,
+      "year" : 2013
+    }, {
+      "title" : "et al",
+      "author" : [ "A.S. Cassidy", "P. Merolla", "J.V. Arthur", "S.K. Esser", "B. Jackson", "R. Alvarez-Icaza", "P. Datta", "J. Sawada", "T.M. Wong", "V. Feldman" ],
+      "venue" : "Cognitive computing building block: A versatile and efficient digital neuron model for neurosynaptic cores. In International Joint Conference on Neural Networks (IJCNN)",
+      "citeRegEx" : "15",
+      "shortCiteRegEx" : null,
+      "year" : 2013
+    }, {
+      "title" : "How does the brain solve visual object recognition? Neuron",
+      "author" : [ "J.J. DiCarlo", "D. Zoccolan", "N.C. Rust" ],
+      "venue" : "73(3):415– 434",
+      "citeRegEx" : "16",
+      "shortCiteRegEx" : null,
+      "year" : 2012
+    }, {
+      "title" : "Spiking cooperative stereo-matching at 2 ms latency with neuromorphic hardware",
+      "author" : [ "G. Dikov", "M. Firouzi", "F. Röhrbein", "J. Conradt", "C. Richter" ],
+      "venue" : "Conference on Biomimetic and Biohybrid Systems, pages 119–137. Springer",
+      "citeRegEx" : "17",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "Sparse stereo disparity map densification using hierarchical image segmentation",
+      "author" : [ "S. Drouyer", "S. Beucher", "M. Bilodeau", "M. Moreaud", "L. Sorbier" ],
+      "venue" : "International Symposium on Mathematical Morphology and Its Applications to Signal and Image Processing, pages 172–184. Springer",
+      "citeRegEx" : "18",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "Event-driven stereo vision algorithm based on silicon retina sensors",
+      "author" : [ "F. Eibensteiner", "H.G. Brachtendorf", "J. Scharinger" ],
+      "venue" : "Radioelektronika (RADIOELEKTRONIKA)",
+      "citeRegEx" : "19",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "A highperformance hardware architecture for a frameless stereo vision algorithm implemented on a fpga platform",
+      "author" : [ "F. Eibensteiner", "J. Kogler", "J. Scharinger" ],
+      "venue" : "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition Workshops, pages 623–630",
+      "citeRegEx" : "20",
+      "shortCiteRegEx" : null,
+      "year" : 2014
+    }, {
+      "title" : "High-speed segmentation-driven high-resolution matching",
+      "author" : [ "F. Ekstrand", "C. Ahlberg", "M. Ekström", "G. Spampinato" ],
+      "venue" : "Seventh International Conference on Machine Vision",
+      "citeRegEx" : "21",
+      "shortCiteRegEx" : null,
+      "year" : 2015
+    }, {
+      "title" : "et al",
+      "author" : [ "S.K. Esser", "P.A. Merolla", "J.V. Arthur", "A.S. Cassidy", "R. Appuswamy", "A. Andreopoulos", "D.J. Berg", "J.L. McKinstry", "T. Melano", "D.R. Barch" ],
+      "venue" : "Convolutional networks for fast, energy-efficient neuromorphic computing. Proceedings of the National Academy of Sciences",
+      "citeRegEx" : "22",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Asynchronous event-based cooperative stereo matching using neuromorphic silicon retinas",
+      "author" : [ "M. Firouzi", "J. Conradt" ],
+      "venue" : "Neural Processing Letters, 43(2):311–326",
+      "citeRegEx" : "23",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Overview of the spinnaker system architecture",
+      "author" : [ "S.B. Furber", "D.R. Lester", "L.A. Plana", "J.D. Garside", "E. Painkras", "S. Temple", "A.D. Brown" ],
+      "venue" : "IEEE Transactions on Computers, 62(12):2454–2467",
+      "citeRegEx" : "24",
+      "shortCiteRegEx" : null,
+      "year" : 2013
+    }, {
+      "title" : "Relaxing symmetric multiple windows stereo using markov random fields",
+      "author" : [ "A. Fusiello", "U. Castellani", "V. Murino" ],
+      "venue" : "EMMCVPR, pages 91–104. Springer",
+      "citeRegEx" : "25",
+      "shortCiteRegEx" : null,
+      "year" : 2001
+    }, {
+      "title" : "Are we ready for autonomous driving? the kitti vision benchmark suite",
+      "author" : [ "A. Geiger", "P. Lenz", "R. Urtasun" ],
+      "venue" : "Computer Vision and Pattern Recognition (CVPR)",
+      "citeRegEx" : "26",
+      "shortCiteRegEx" : null,
+      "year" : 2012
+    }, {
+      "title" : "Evaluation of cost functions for stereo matching",
+      "author" : [ "H. Hirschmuller", "D. Scharstein" ],
+      "venue" : "Computer Vision and Pattern Recognition (CVPR)",
+      "citeRegEx" : "27",
+      "shortCiteRegEx" : null,
+      "year" : 2007
+    }, {
+      "title" : "A region and feature-based matching algorithm for dynamic object recognition",
+      "author" : [ "H. Huang", "Q. Wang" ],
+      "venue" : "IEEE International Conference on Intelligent Computing and Intelligent Systems (ICIS)",
+      "citeRegEx" : "28",
+      "shortCiteRegEx" : null,
+      "year" : 2010
+    }, {
+      "title" : "A fast stereo matching algorithm suitable for embedded real-time systems",
+      "author" : [ "M. Humenberger", "C. Zinner", "M. Weber", "W. Kubinger", "M. Vincze" ],
+      "venue" : "Computer Vision and Image Understanding, 114(11):1180–1202",
+      "citeRegEx" : "29",
+      "shortCiteRegEx" : null,
+      "year" : 2010
+    }, {
+      "title" : "A vlsi array of low-power spiking neurons and bistable synapses with spiketiming dependent plasticity",
+      "author" : [ "G. Indiveri", "E. Chicca", "R. Douglas" ],
+      "venue" : "IEEE transactions on neural networks, 17(1):211–221",
+      "citeRegEx" : "30",
+      "shortCiteRegEx" : null,
+      "year" : 2006
+    }, {
+      "title" : "Eventbased stereo matching approaches for frameless address event stereo data",
+      "author" : [ "J. Kogler", "M. Humenberger", "C. Sulzbachner" ],
+      "venue" : "Advances in Visual Computing, pages 674– 685",
+      "citeRegEx" : "31",
+      "shortCiteRegEx" : null,
+      "year" : 2011
+    }, {
+      "title" : "Address-event based stereo vision with bio-inspired silicon retina imagers",
+      "author" : [ "J. Kogler", "C. Sulzbachner", "M. Humenberger", "F. Eibensteiner" ],
+      "venue" : "Advances in theory and applications of stereo vision. InTech",
+      "citeRegEx" : "32",
+      "shortCiteRegEx" : null,
+      "year" : 2011
+    }, {
+      "title" : "Bio-inspired stereo vision system with silicon retina imagers",
+      "author" : [ "J. Kogler", "C. Sulzbachner", "W. Kubinger" ],
+      "venue" : "Computer Vision Systems, pages 174–183",
+      "citeRegEx" : "33",
+      "shortCiteRegEx" : null,
+      "year" : 2009
+    }, {
+      "title" : "Review of stereo vision algorithms: from software to hardware",
+      "author" : [ "N. Lazaros", "G.C. Sirakoulis", "A. Gasteratos" ],
+      "venue" : "International Journal of Optomechatronics, 2(4):435–462",
+      "citeRegEx" : "34",
+      "shortCiteRegEx" : null,
+      "year" : 2008
+    }, {
+      "title" : "Gradientbased learning applied to document recognition",
+      "author" : [ "Y. LeCun", "L. Bottou", "Y. Bengio", "P. Haffner" ],
+      "venue" : "Proceedings of the IEEE, 86(11):2278–2324",
+      "citeRegEx" : "35",
+      "shortCiteRegEx" : null,
+      "year" : 1998
+    }, {
+      "title" : "Stereo reconstruction from multiperspective panoramas",
+      "author" : [ "Y. Li", "H.-Y. Shum", "C.-K. Tang", "R. Szeliski" ],
+      "venue" : "IEEE Transactions on Pattern Analysis and Machine Intelligence, 26(1):45–62",
+      "citeRegEx" : "36",
+      "shortCiteRegEx" : null,
+      "year" : 2004
+    }, {
+      "title" : "A 128 x 128 120db 30mw asynchronous vision sensor that responds to relative intensity change",
+      "author" : [ "P. Lichtsteiner", "C. Posch", "T. Delbruck" ],
+      "venue" : "IEEE International Solid-State Circuits Conference",
+      "citeRegEx" : "37",
+      "shortCiteRegEx" : null,
+      "year" : 2006
+    }, {
+      "title" : "Efficient stereo matching algorithm with edge-detecting",
+      "author" : [ "J. Liu", "X. Sang", "C. Jia", "N. Guo", "Y. Liu", "G. Shi" ],
+      "venue" : "Optoelectronic Imaging and Multimedia Technology III",
+      "citeRegEx" : "38",
+      "shortCiteRegEx" : null,
+      "year" : 2014
+    }, {
+      "title" : "Distinctive image features from scaleinvariant keypoints",
+      "author" : [ "D.G. Lowe" ],
+      "venue" : "International journal of computer vision, 60(2):91–110",
+      "citeRegEx" : "39",
+      "shortCiteRegEx" : null,
+      "year" : 2004
+    }, {
+      "title" : "VLSI analogs of neuronal visual processing: a synthesis of form and function",
+      "author" : [ "M. Mahowald" ],
+      "venue" : "PhD thesis, California Institute of Technology",
+      "citeRegEx" : "40",
+      "shortCiteRegEx" : null,
+      "year" : 1992
+    }, {
+      "title" : "Cooperative stereo matching using static and dynamic image features",
+      "author" : [ "M. Mahowald", "T. Delbrück" ],
+      "venue" : "Analog VLSI implementation of neural systems, 80:213–238",
+      "citeRegEx" : "41",
+      "shortCiteRegEx" : null,
+      "year" : 1989
+    }, {
+      "title" : "et al",
+      "author" : [ "D. Marr", "T. Poggio" ],
+      "venue" : "Cooperative computation of stereo disparity. From the Retina to the Neocortex, pages 239–243",
+      "citeRegEx" : "42",
+      "shortCiteRegEx" : null,
+      "year" : 1976
+    }, {
+      "title" : "Object scene flow for autonomous vehicles",
+      "author" : [ "M. Menze", "A. Geiger" ],
+      "venue" : "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, pages 3061–3070",
+      "citeRegEx" : "43",
+      "shortCiteRegEx" : null,
+      "year" : 2015
+    }, {
+      "title" : "et al",
+      "author" : [ "P.A. Merolla", "J.V. Arthur", "R. Alvarez-Icaza", "A.S. Cassidy", "J. Sawada", "F. Akopyan", "B.L. Jackson", "N. Imam", "C. Guo", "Y. Nakamura" ],
+      "venue" : "A million spiking-neuron integrated circuit with a scalable communication network and interface. Science, 345(6197):668–673",
+      "citeRegEx" : "44",
+      "shortCiteRegEx" : null,
+      "year" : 2014
+    }, {
+      "title" : "A spiking neural network model of 3d perception for eventbased neuromorphic stereo vision systems",
+      "author" : [ "M. Osswald", "S.-H. Ieng", "R. Benosman", "G. Indiveri" ],
+      "venue" : "Scientific reports",
+      "citeRegEx" : "45",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "Look wider to match image patches with convolutional neural networks",
+      "author" : [ "H. Park", "K.M. Lee" ],
+      "venue" : "IEEE Signal Processing Letters",
+      "citeRegEx" : "46",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Asynchronous stereo vision for event-driven dynamic stereo sensor using an adaptive cooperative approach",
+      "author" : [ "E. Piatkowska", "A. Belbachir", "M. Gelautz" ],
+      "venue" : "Proceedings of the IEEE International Conference on Computer Vision Workshops, pages 45–50",
+      "citeRegEx" : "47",
+      "shortCiteRegEx" : null,
+      "year" : 2013
+    }, {
+      "title" : "Cooperative and asynchronous stereo vision for dynamic vision sensors",
+      "author" : [ "E. Piatkowska", "A.N. Belbachir", "M. Gelautz" ],
+      "venue" : "Measurement Science and Technology",
+      "citeRegEx" : "48",
+      "shortCiteRegEx" : null,
+      "year" : 2014
+    }, {
+      "title" : "Improved cooperative stereo matching for dynamic vision sensors with ground truth evaluation",
+      "author" : [ "E. Piatkowska", "J. Kogler", "N. Belbachir", "M. Gelautz" ],
+      "venue" : "IEEE Computer Vision and Pattern Recognition Workshops (CVPRW)",
+      "citeRegEx" : "49",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "A qvga 143 db dynamic range frame-free pwm image sensor with lossless pixel-level video compression and time-domain cds",
+      "author" : [ "C. Posch", "D. Matolin", "R. Wohlgenannt" ],
+      "venue" : "IEEE Journal of Solid-State Circuits, 46(1):259–275",
+      "citeRegEx" : "50",
+      "shortCiteRegEx" : null,
+      "year" : 2011
+    }, {
+      "title" : "Hierarchical models of object recognition in cortex",
+      "author" : [ "M. Riesenhuber", "T. Poggio" ],
+      "venue" : "Nature neuroscience, 2(11):1019– 1025",
+      "citeRegEx" : "51",
+      "shortCiteRegEx" : null,
+      "year" : 1999
+    }, {
+      "title" : "Asynchronous event-based binocular stereo matching",
+      "author" : [ "P. Rogister", "R. Benosman", "S.-H. Ieng", "P. Lichtsteiner", "T. Delbruck" ],
+      "venue" : "IEEE Transactions on Neural Networks and Learning Systems, 23(2):347–353",
+      "citeRegEx" : "52",
+      "shortCiteRegEx" : null,
+      "year" : 2012
+    }, {
+      "title" : "et al",
+      "author" : [ "J. Sawada", "F. Akopyan", "A.S. Cassidy", "B. Taba", "M.V. Debole", "P. Datta", "R. Alvarez-Icaza", "A. Amir", "J.V. Arthur", "A. Andreopoulos" ],
+      "venue" : "Truenorth ecosystem for brain-inspired computing: scalable systems, software, and applications. In High Performance Computing, Networking, Storage and Analysis, SC16: International Conference for, pages 130– 141. IEEE",
+      "citeRegEx" : "53",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "High-resolution stereo datasets with subpixel-accurate ground truth",
+      "author" : [ "D. Scharstein", "H. Hirschmüller", "Y. Kitajima", "G. Krathwohl", "N. Nešić", "X. Wang", "P. Westling" ],
+      "venue" : "German Conference on Pattern Recognition, pages 31–42. Springer",
+      "citeRegEx" : "54",
+      "shortCiteRegEx" : null,
+      "year" : 2014
+    }, {
+      "title" : "A taxonomy and evaluation of dense two-frame stereo correspondence algorithms",
+      "author" : [ "D. Scharstein", "R. Szeliski" ],
+      "venue" : "International journal of computer vision, 47(1-3):7–42",
+      "citeRegEx" : "55",
+      "shortCiteRegEx" : null,
+      "year" : 2002
+    }, {
+      "title" : "A wafer-scale neuromorphic hardware system for large-scale neural modeling",
+      "author" : [ "J. Schemmel", "D. Briiderle", "A. Griibl", "M. Hock", "K. Meier", "S. Millner" ],
+      "venue" : "IEEE International Symposium on Circuits and systems (ISCAS)",
+      "citeRegEx" : "56",
+      "shortCiteRegEx" : null,
+      "year" : 2010
+    }, {
+      "title" : "An eventdriven stereo system for real-time 3-d 360 panoramic vision",
+      "author" : [ "S. Schraml", "A.N. Belbachir", "H. Bischof" ],
+      "venue" : "IEEE Transactions on Industrial Electronics, 63(1):418– 428",
+      "citeRegEx" : "57",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Dynamic stereo vision system for real-time tracking",
+      "author" : [ "S. Schraml", "A.N. Belbachir", "N. Milosevic", "P. Schön" ],
+      "venue" : "IEEE International Symposium on Circuits and Systems (ISCAS)",
+      "citeRegEx" : "58",
+      "shortCiteRegEx" : null,
+      "year" : 2010
+    }, {
+      "title" : "Eventdriven stereo matching for real-time 3d panoramic vision",
+      "author" : [ "S. Schraml", "A. Nabil Belbachir", "H. Bischof" ],
+      "venue" : "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, pages 466–474",
+      "citeRegEx" : "59",
+      "shortCiteRegEx" : null,
+      "year" : 2015
+    }, {
+      "title" : "Smartcam for realtime stereo vision-address-event based embedded system",
+      "author" : [ "S. Schraml", "P. Schön", "N. Milosevic" ],
+      "venue" : "VISAPP (2), pages 466–471",
+      "citeRegEx" : "60",
+      "shortCiteRegEx" : null,
+      "year" : 2007
+    }, {
+      "title" : "Vision based autonomous vehicle navigation with self-organizing map feature matching technique",
+      "author" : [ "K. Sharma", "K.-y. Jeong", "S.-G. Kim" ],
+      "venue" : "In International Conference on Control, Automation and Systems (ICCAS),",
+      "citeRegEx" : "61",
+      "shortCiteRegEx" : "61",
+      "year" : 2011
+    }, {
+      "title" : "Review of stereo vision algorithms and their suitability for resource-limited systems",
+      "author" : [ "B. Tippetts", "D.J. Lee", "K. Lillywhite", "J. Archibald" ],
+      "venue" : "Journal of Real-Time Image Processing, 11(1):5–25",
+      "citeRegEx" : "62",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Evaluation of stereo algorithms for 3d object recognition",
+      "author" : [ "F. Tombari", "F. Gori" ],
+      "venue" : "IEEE International Conference on Computer Vision Workshops (ICCV Workshops)",
+      "citeRegEx" : "63",
+      "shortCiteRegEx" : null,
+      "year" : 2011
+    }, {
+      "title" : "The computer and the brain",
+      "author" : [ "J. Von Neumann" ],
+      "venue" : "Yale University Press",
+      "citeRegEx" : "64",
+      "shortCiteRegEx" : null,
+      "year" : 2012
+    }, {
+      "title" : "Event-based stereo depth estimation using belief propagation",
+      "author" : [ "Z. Xie", "S. Chen", "G. Orchard" ],
+      "venue" : "Frontiers in Neuroscience, 11:535",
+      "citeRegEx" : "65",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "Stereo matching by training a convolutional neural network to compare image patches",
+      "author" : [ "J. Zbontar", "Y. LeCun" ],
+      "venue" : "Journal of Machine Learning Research, 17(1-32):2",
+      "citeRegEx" : "66",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Microsoft kinect sensor and its effect",
+      "author" : [ "Z. Zhang" ],
+      "venue" : "IEEE multimedia, 19(2):4–10",
+      "citeRegEx" : "67",
+      "shortCiteRegEx" : null,
+      "year" : 2012
+    } ],
+    "referenceMentions" : [ {
+      "referenceID" : 63,
+      "context" : "They allow to solve complex tasks using a tiny fraction of the energy consumed by stored-program computers [64].",
+      "startOffset" : 107,
+      "endOffset" : 111
+    }, {
+      "referenceID" : 7,
+      "context" : "While the successful artificial neural networks may not operate the same way as the brain, both of them utilize highly parallel and hierarchical architectures that gradually abstract input data to more meaningful concepts [8, 51, 16].",
+      "startOffset" : 222,
+      "endOffset" : 233
+    }, {
+      "referenceID" : 50,
+      "context" : "While the successful artificial neural networks may not operate the same way as the brain, both of them utilize highly parallel and hierarchical architectures that gradually abstract input data to more meaningful concepts [8, 51, 16].",
+      "startOffset" : 222,
+      "endOffset" : 233
+    }, {
+      "referenceID" : 15,
+      "context" : "While the successful artificial neural networks may not operate the same way as the brain, both of them utilize highly parallel and hierarchical architectures that gradually abstract input data to more meaningful concepts [8, 51, 16].",
+      "startOffset" : 222,
+      "endOffset" : 233
+    }, {
+      "referenceID" : 3,
+      "context" : "However, event-based computation has not been equally adopted [4].",
+      "startOffset" : 62,
+      "endOffset" : 65
+    }, {
+      "referenceID" : 5,
+      "context" : "For autonomous vehicles, drones, and satellites, energy consumption is a challenge [6].",
+      "startOffset" : 83,
+      "endOffset" : 86
+    }, {
+      "referenceID" : 36,
+      "context" : "Recently developed event-based cameras such as Dynamic Vision Sensor (DVS) [37, 10] and ATIS [50], inspired by the biological retina, encode pixel illumination changes as events.",
+      "startOffset" : 75,
+      "endOffset" : 83
+    }, {
+      "referenceID" : 9,
+      "context" : "Recently developed event-based cameras such as Dynamic Vision Sensor (DVS) [37, 10] and ATIS [50], inspired by the biological retina, encode pixel illumination changes as events.",
+      "startOffset" : 75,
+      "endOffset" : 83
+    }, {
+      "referenceID" : 49,
+      "context" : "Recently developed event-based cameras such as Dynamic Vision Sensor (DVS) [37, 10] and ATIS [50], inspired by the biological retina, encode pixel illumination changes as events.",
+      "startOffset" : 93,
+      "endOffset" : 97
+    }, {
+      "referenceID" : 43,
+      "context" : "To benefit from sparse and asynchronous computation, neuromorphic processors have been developed [44, 24, 30, 9, 56].",
+      "startOffset" : 97,
+      "endOffset" : 116
+    }, {
+      "referenceID" : 23,
+      "context" : "To benefit from sparse and asynchronous computation, neuromorphic processors have been developed [44, 24, 30, 9, 56].",
+      "startOffset" : 97,
+      "endOffset" : 116
+    }, {
+      "referenceID" : 29,
+      "context" : "To benefit from sparse and asynchronous computation, neuromorphic processors have been developed [44, 24, 30, 9, 56].",
+      "startOffset" : 97,
+      "endOffset" : 116
+    }, {
+      "referenceID" : 8,
+      "context" : "To benefit from sparse and asynchronous computation, neuromorphic processors have been developed [44, 24, 30, 9, 56].",
+      "startOffset" : 97,
+      "endOffset" : 116
+    }, {
+      "referenceID" : 55,
+      "context" : "To benefit from sparse and asynchronous computation, neuromorphic processors have been developed [44, 24, 30, 9, 56].",
+      "startOffset" : 97,
+      "endOffset" : 116
+    }, {
+      "referenceID" : 43,
+      "context" : "For example, the TrueNorth neuromorphic chip [44] has been used for high throughput Convolutional neural networks (CNNs) [22], character recognition [53], optic flow [11], saliency [3], and gesture recognition [2].",
+      "startOffset" : 45,
+      "endOffset" : 49
+    }, {
+      "referenceID" : 21,
+      "context" : "For example, the TrueNorth neuromorphic chip [44] has been used for high throughput Convolutional neural networks (CNNs) [22], character recognition [53], optic flow [11], saliency [3], and gesture recognition [2].",
+      "startOffset" : 121,
+      "endOffset" : 125
+    }, {
+      "referenceID" : 52,
+      "context" : "For example, the TrueNorth neuromorphic chip [44] has been used for high throughput Convolutional neural networks (CNNs) [22], character recognition [53], optic flow [11], saliency [3], and gesture recognition [2].",
+      "startOffset" : 149,
+      "endOffset" : 153
+    }, {
+      "referenceID" : 10,
+      "context" : "For example, the TrueNorth neuromorphic chip [44] has been used for high throughput Convolutional neural networks (CNNs) [22], character recognition [53], optic flow [11], saliency [3], and gesture recognition [2].",
+      "startOffset" : 166,
+      "endOffset" : 170
+    }, {
+      "referenceID" : 2,
+      "context" : "For example, the TrueNorth neuromorphic chip [44] has been used for high throughput Convolutional neural networks (CNNs) [22], character recognition [53], optic flow [11], saliency [3], and gesture recognition [2].",
+      "startOffset" : 181,
+      "endOffset" : 184
+    }, {
+      "referenceID" : 1,
+      "context" : "For example, the TrueNorth neuromorphic chip [44] has been used for high throughput Convolutional neural networks (CNNs) [22], character recognition [53], optic flow [11], saliency [3], and gesture recognition [2].",
+      "startOffset" : 210,
+      "endOffset" : 213
+    }, {
+      "referenceID" : 39,
+      "context" : "Most global methods [40, 17, 49, 45] are derived from the Marr and Poggio cooperative stereo algorithm [42].",
+      "startOffset" : 20,
+      "endOffset" : 36
+    }, {
+      "referenceID" : 16,
+      "context" : "Most global methods [40, 17, 49, 45] are derived from the Marr and Poggio cooperative stereo algorithm [42].",
+      "startOffset" : 20,
+      "endOffset" : 36
+    }, {
+      "referenceID" : 48,
+      "context" : "Most global methods [40, 17, 49, 45] are derived from the Marr and Poggio cooperative stereo algorithm [42].",
+      "startOffset" : 20,
+      "endOffset" : 36
+    }, {
+      "referenceID" : 44,
+      "context" : "Most global methods [40, 17, 49, 45] are derived from the Marr and Poggio cooperative stereo algorithm [42].",
+      "startOffset" : 20,
+      "endOffset" : 36
+    }, {
+      "referenceID" : 41,
+      "context" : "Most global methods [40, 17, 49, 45] are derived from the Marr and Poggio cooperative stereo algorithm [42].",
+      "startOffset" : 103,
+      "endOffset" : 107
+    }, {
+      "referenceID" : 12,
+      "context" : "Local methods can be parallelized and find corresponding events using either local features over a spatiotemporal window or event-to-event features [13, 58, 52, 32, 57].",
+      "startOffset" : 148,
+      "endOffset" : 168
+    }, {
+      "referenceID" : 57,
+      "context" : "Local methods can be parallelized and find corresponding events using either local features over a spatiotemporal window or event-to-event features [13, 58, 52, 32, 57].",
+      "startOffset" : 148,
+      "endOffset" : 168
+    }, {
+      "referenceID" : 51,
+      "context" : "Local methods can be parallelized and find corresponding events using either local features over a spatiotemporal window or event-to-event features [13, 58, 52, 32, 57].",
+      "startOffset" : 148,
+      "endOffset" : 168
+    }, {
+      "referenceID" : 31,
+      "context" : "Local methods can be parallelized and find corresponding events using either local features over a spatiotemporal window or event-to-event features [13, 58, 52, 32, 57].",
+      "startOffset" : 148,
+      "endOffset" : 168
+    }, {
+      "referenceID" : 56,
+      "context" : "Local methods can be parallelized and find corresponding events using either local features over a spatiotemporal window or event-to-event features [13, 58, 52, 32, 57].",
+      "startOffset" : 148,
+      "endOffset" : 168
+    }, {
+      "referenceID" : 16,
+      "context" : "The main advantages of the proposed method, compared to the related work [17, 49, 45, 52, 57], are simultaneous end-to-end neuromorphic disparity calculation, low power, high throughput, low latency (9-11 ms), and linear scalability to multiple neuromorphic processors for larger input sizes.",
+      "startOffset" : 73,
+      "endOffset" : 93
+    }, {
+      "referenceID" : 48,
+      "context" : "The main advantages of the proposed method, compared to the related work [17, 49, 45, 52, 57], are simultaneous end-to-end neuromorphic disparity calculation, low power, high throughput, low latency (9-11 ms), and linear scalability to multiple neuromorphic processors for larger input sizes.",
+      "startOffset" : 73,
+      "endOffset" : 93
+    }, {
+      "referenceID" : 44,
+      "context" : "The main advantages of the proposed method, compared to the related work [17, 49, 45, 52, 57], are simultaneous end-to-end neuromorphic disparity calculation, low power, high throughput, low latency (9-11 ms), and linear scalability to multiple neuromorphic processors for larger input sizes.",
+      "startOffset" : 73,
+      "endOffset" : 93
+    }, {
+      "referenceID" : 51,
+      "context" : "The main advantages of the proposed method, compared to the related work [17, 49, 45, 52, 57], are simultaneous end-to-end neuromorphic disparity calculation, low power, high throughput, low latency (9-11 ms), and linear scalability to multiple neuromorphic processors for larger input sizes.",
+      "startOffset" : 73,
+      "endOffset" : 93
+    }, {
+      "referenceID" : 56,
+      "context" : "The main advantages of the proposed method, compared to the related work [17, 49, 45, 52, 57], are simultaneous end-to-end neuromorphic disparity calculation, low power, high throughput, low latency (9-11 ms), and linear scalability to multiple neuromorphic processors for larger input sizes.",
+      "startOffset" : 73,
+      "endOffset" : 93
+    }, {
+      "referenceID" : 43,
+      "context" : "When the data in a cycle is sparse, as is the case with a DVS sensor, most neurons would not compute for most of the time, resulting in low active power [44].",
+      "startOffset" : 153,
+      "endOffset" : 157
+    }, {
+      "referenceID" : 9,
+      "context" : "The proposed event-based disparity method is implemented using a stereo pair of DAVIS sensors [10] (a version of DVS) and nine TrueNorth NS1e boards [53].",
+      "startOffset" : 94,
+      "endOffset" : 98
+    }, {
+      "referenceID" : 52,
+      "context" : "The proposed event-based disparity method is implemented using a stereo pair of DAVIS sensors [10] (a version of DVS) and nine TrueNorth NS1e boards [53].",
+      "startOffset" : 149,
+      "endOffset" : 153
+    }, {
+      "referenceID" : 16,
+      "context" : "With respect to the most relevant state-of-the-art approach [17], our method uses ∼ 200× less power per pixel per disparity map.",
+      "startOffset" : 60,
+      "endOffset" : 64
+    }, {
+      "referenceID" : 24,
+      "context" : "Frame-based stereo disparity methods calculate matching cost using a spatial similarity metric [25, 27, 29] or a cost function learned from a dataset (see reviews [62, 55, 34, 63]).",
+      "startOffset" : 95,
+      "endOffset" : 107
+    }, {
+      "referenceID" : 26,
+      "context" : "Frame-based stereo disparity methods calculate matching cost using a spatial similarity metric [25, 27, 29] or a cost function learned from a dataset (see reviews [62, 55, 34, 63]).",
+      "startOffset" : 95,
+      "endOffset" : 107
+    }, {
+      "referenceID" : 28,
+      "context" : "Frame-based stereo disparity methods calculate matching cost using a spatial similarity metric [25, 27, 29] or a cost function learned from a dataset (see reviews [62, 55, 34, 63]).",
+      "startOffset" : 95,
+      "endOffset" : 107
+    }, {
+      "referenceID" : 61,
+      "context" : "Frame-based stereo disparity methods calculate matching cost using a spatial similarity metric [25, 27, 29] or a cost function learned from a dataset (see reviews [62, 55, 34, 63]).",
+      "startOffset" : 163,
+      "endOffset" : 179
+    }, {
+      "referenceID" : 54,
+      "context" : "Frame-based stereo disparity methods calculate matching cost using a spatial similarity metric [25, 27, 29] or a cost function learned from a dataset (see reviews [62, 55, 34, 63]).",
+      "startOffset" : 163,
+      "endOffset" : 179
+    }, {
+      "referenceID" : 33,
+      "context" : "Frame-based stereo disparity methods calculate matching cost using a spatial similarity metric [25, 27, 29] or a cost function learned from a dataset (see reviews [62, 55, 34, 63]).",
+      "startOffset" : 163,
+      "endOffset" : 179
+    }, {
+      "referenceID" : 62,
+      "context" : "Frame-based stereo disparity methods calculate matching cost using a spatial similarity metric [25, 27, 29] or a cost function learned from a dataset (see reviews [62, 55, 34, 63]).",
+      "startOffset" : 163,
+      "endOffset" : 179
+    }, {
+      "referenceID" : 34,
+      "context" : "CNNs [35] have been used to learn stereo matching cost [66, 46].",
+      "startOffset" : 5,
+      "endOffset" : 9
+    }, {
+      "referenceID" : 65,
+      "context" : "CNNs [35] have been used to learn stereo matching cost [66, 46].",
+      "startOffset" : 55,
+      "endOffset" : 63
+    }, {
+      "referenceID" : 45,
+      "context" : "CNNs [35] have been used to learn stereo matching cost [66, 46].",
+      "startOffset" : 55,
+      "endOffset" : 63
+    }, {
+      "referenceID" : 26,
+      "context" : "Ground truth disparity maps from benchmark frame-based datasets [27, 54, 26, 43] are used to train these Figure 1.",
+      "startOffset" : 64,
+      "endOffset" : 80
+    }, {
+      "referenceID" : 53,
+      "context" : "Ground truth disparity maps from benchmark frame-based datasets [27, 54, 26, 43] are used to train these Figure 1.",
+      "startOffset" : 64,
+      "endOffset" : 80
+    }, {
+      "referenceID" : 25,
+      "context" : "Ground truth disparity maps from benchmark frame-based datasets [27, 54, 26, 43] are used to train these Figure 1.",
+      "startOffset" : 64,
+      "endOffset" : 80
+    }, {
+      "referenceID" : 42,
+      "context" : "Ground truth disparity maps from benchmark frame-based datasets [27, 54, 26, 43] are used to train these Figure 1.",
+      "startOffset" : 64,
+      "endOffset" : 80
+    }, {
+      "referenceID" : 17,
+      "context" : "models, followed by sparse-to-dense conversions [18, 5].",
+      "startOffset" : 48,
+      "endOffset" : 55
+    }, {
+      "referenceID" : 4,
+      "context" : "models, followed by sparse-to-dense conversions [18, 5].",
+      "startOffset" : 48,
+      "endOffset" : 55
+    }, {
+      "referenceID" : 38,
+      "context" : "Feature based matching techniques, such as color, edge, histogram, and SIFT [39] based matching, produce sparse disparity maps [28, 38, 21, 61].",
+      "startOffset" : 76,
+      "endOffset" : 80
+    }, {
+      "referenceID" : 27,
+      "context" : "Feature based matching techniques, such as color, edge, histogram, and SIFT [39] based matching, produce sparse disparity maps [28, 38, 21, 61].",
+      "startOffset" : 127,
+      "endOffset" : 143
+    }, {
+      "referenceID" : 37,
+      "context" : "Feature based matching techniques, such as color, edge, histogram, and SIFT [39] based matching, produce sparse disparity maps [28, 38, 21, 61].",
+      "startOffset" : 127,
+      "endOffset" : 143
+    }, {
+      "referenceID" : 20,
+      "context" : "Feature based matching techniques, such as color, edge, histogram, and SIFT [39] based matching, produce sparse disparity maps [28, 38, 21, 61].",
+      "startOffset" : 127,
+      "endOffset" : 143
+    }, {
+      "referenceID" : 60,
+      "context" : "Feature based matching techniques, such as color, edge, histogram, and SIFT [39] based matching, produce sparse disparity maps [28, 38, 21, 61].",
+      "startOffset" : 127,
+      "endOffset" : 143
+    }, {
+      "referenceID" : 40,
+      "context" : "Mahowald and Delbrück [41] implemented the Marr and Poggio cooperative stereo algorithm [42], a global approach, in an analog VLSI circuit.",
+      "startOffset" : 22,
+      "endOffset" : 26
+    }, {
+      "referenceID" : 41,
+      "context" : "Mahowald and Delbrück [41] implemented the Marr and Poggio cooperative stereo algorithm [42], a global approach, in an analog VLSI circuit.",
+      "startOffset" : 88,
+      "endOffset" : 92
+    }, {
+      "referenceID" : 39,
+      "context" : "The algorithm converges well when object surfaces are fronto-parallel and candidate matches injected to the network are close together [40, 17].",
+      "startOffset" : 135,
+      "endOffset" : 143
+    }, {
+      "referenceID" : 16,
+      "context" : "The algorithm converges well when object surfaces are fronto-parallel and candidate matches injected to the network are close together [40, 17].",
+      "startOffset" : 135,
+      "endOffset" : 143
+    }, {
+      "referenceID" : 39,
+      "context" : "Later Mahowald [40] modified the VLSI embodied algorithm to solve tilted depth maps using a network of analog valued disparity units, which linearly interpolates the cooperative network output.",
+      "startOffset" : 15,
+      "endOffset" : 19
+    }, {
+      "referenceID" : 46,
+      "context" : "However, most of the recent event-based implementations of the cooperative algorithm do not consider depth gradients [47, 48, 23, 17].",
+      "startOffset" : 117,
+      "endOffset" : 133
+    }, {
+      "referenceID" : 47,
+      "context" : "However, most of the recent event-based implementations of the cooperative algorithm do not consider depth gradients [47, 48, 23, 17].",
+      "startOffset" : 117,
+      "endOffset" : 133
+    }, {
+      "referenceID" : 22,
+      "context" : "However, most of the recent event-based implementations of the cooperative algorithm do not consider depth gradients [47, 48, 23, 17].",
+      "startOffset" : 117,
+      "endOffset" : 133
+    }, {
+      "referenceID" : 16,
+      "context" : "However, most of the recent event-based implementations of the cooperative algorithm do not consider depth gradients [47, 48, 23, 17].",
+      "startOffset" : 117,
+      "endOffset" : 133
+    }, {
+      "referenceID" : 48,
+      "context" : "[49] inject neighborhood similarity of candidate matches into the cooperative network.",
+      "startOffset" : 0,
+      "endOffset" : 4
+    }, {
+      "referenceID" : 16,
+      "context" : "[17] use six SpiNNaker [24] processor boards to implement the cooperative network for 106 × 106 pixels of stereo event data.",
+      "startOffset" : 0,
+      "endOffset" : 4
+    }, {
+      "referenceID" : 23,
+      "context" : "[17] use six SpiNNaker [24] processor boards to implement the cooperative network for 106 × 106 pixels of stereo event data.",
+      "startOffset" : 23,
+      "endOffset" : 27
+    }, {
+      "referenceID" : 44,
+      "context" : "[45] propose an FPGA based implementation of spiking neurons as the nodes of the cooperative network.",
+      "startOffset" : 0,
+      "endOffset" : 4
+    }, {
+      "referenceID" : 64,
+      "context" : "[65] employ message passing on a Markov Random Field with depth continuity for a global solution.",
+      "startOffset" : 0,
+      "endOffset" : 4
+    }, {
+      "referenceID" : 12,
+      "context" : "[13, 12] propose to match edge orientations in event frames accumulated over 50 ms.",
+      "startOffset" : 0,
+      "endOffset" : 8
+    }, {
+      "referenceID" : 11,
+      "context" : "[13, 12] propose to match edge orientations in event frames accumulated over 50 ms.",
+      "startOffset" : 0,
+      "endOffset" : 8
+    }, {
+      "referenceID" : 59,
+      "context" : "[60, 58] propose DSP implementation of a spatiotemporal similarity method using two live event sensors [37].",
+      "startOffset" : 0,
+      "endOffset" : 8
+    }, {
+      "referenceID" : 57,
+      "context" : "[60, 58] propose DSP implementation of a spatiotemporal similarity method using two live event sensors [37].",
+      "startOffset" : 0,
+      "endOffset" : 8
+    }, {
+      "referenceID" : 36,
+      "context" : "[60, 58] propose DSP implementation of a spatiotemporal similarity method using two live event sensors [37].",
+      "startOffset" : 103,
+      "endOffset" : 107
+    }, {
+      "referenceID" : 6,
+      "context" : "[7] use a rotating pair of event-based line (vertical) sensors in static scenes and render events from each rotation to an edge map [33], which is subsequently processed using a frame-based panoramic stereo algorithm [36].",
+      "startOffset" : 0,
+      "endOffset" : 3
+    }, {
+      "referenceID" : 32,
+      "context" : "[7] use a rotating pair of event-based line (vertical) sensors in static scenes and render events from each rotation to an edge map [33], which is subsequently processed using a frame-based panoramic stereo algorithm [36].",
+      "startOffset" : 132,
+      "endOffset" : 136
+    }, {
+      "referenceID" : 35,
+      "context" : "[7] use a rotating pair of event-based line (vertical) sensors in static scenes and render events from each rotation to an edge map [33], which is subsequently processed using a frame-based panoramic stereo algorithm [36].",
+      "startOffset" : 217,
+      "endOffset" : 221
+    }, {
+      "referenceID" : 51,
+      "context" : "Although spike dynamics vary among pixels and sensors [52] and events cannot be matched based on exact timestamps.",
+      "startOffset" : 54,
+      "endOffset" : 58
+    }, {
+      "referenceID" : 51,
+      "context" : "[52, 14] propose to use event-toevent constraints for calculating matching cost, such as time window, distance to the epipolar line, ordering constraint, and polarity.",
+      "startOffset" : 0,
+      "endOffset" : 8
+    }, {
+      "referenceID" : 13,
+      "context" : "[52, 14] propose to use event-toevent constraints for calculating matching cost, such as time window, distance to the epipolar line, ordering constraint, and polarity.",
+      "startOffset" : 0,
+      "endOffset" : 8
+    }, {
+      "referenceID" : 19,
+      "context" : "The proposed method and its FPGA implementations [20, 19] are equivalent to the cooperative stereo algorithm [42] with noisy time difference inputs.",
+      "startOffset" : 49,
+      "endOffset" : 57
+    }, {
+      "referenceID" : 18,
+      "context" : "The proposed method and its FPGA implementations [20, 19] are equivalent to the cooperative stereo algorithm [42] with noisy time difference inputs.",
+      "startOffset" : 49,
+      "endOffset" : 57
+    }, {
+      "referenceID" : 41,
+      "context" : "The proposed method and its FPGA implementations [20, 19] are equivalent to the cooperative stereo algorithm [42] with noisy time difference inputs.",
+      "startOffset" : 109,
+      "endOffset" : 113
+    }, {
+      "referenceID" : 58,
+      "context" : "[59, 57] propose a cost function for the rotating stereo panorama setup in [7] based on temporal event difference.",
+      "startOffset" : 0,
+      "endOffset" : 8
+    }, {
+      "referenceID" : 56,
+      "context" : "[59, 57] propose a cost function for the rotating stereo panorama setup in [7] based on temporal event difference.",
+      "startOffset" : 0,
+      "endOffset" : 8
+    }, {
+      "referenceID" : 6,
+      "context" : "[59, 57] propose a cost function for the rotating stereo panorama setup in [7] based on temporal event difference.",
+      "startOffset" : 75,
+      "endOffset" : 78
+    }, {
+      "referenceID" : 9,
+      "context" : "Our implementation uses a pair of synchronized DAVIS240C cameras [10], connected via Ethernet to a cluster of TrueNorth NS1e boards (Fig.",
+      "startOffset" : 65,
+      "endOffset" : 69
+    }, {
+      "referenceID" : 43,
+      "context" : "The IBM TrueNorth is a reconfigurable, non-von Neumann neuromorphic chip containing 1 million spiking neurons and 256 million synapses distributed across 4096 parallel, event-driven, neurosynaptic cores [44].",
+      "startOffset" : 203,
+      "endOffset" : 207
+    }, {
+      "referenceID" : 1,
+      "context" : "Each neuron can generate an output event deterministically, if the membrane potential V (t) exceeds a threshold; or stochastically, with a probability that is a function of the difference between the membrane potential and its threshold [2, 15].",
+      "startOffset" : 237,
+      "endOffset" : 244
+    }, {
+      "referenceID" : 14,
+      "context" : "Each neuron can generate an output event deterministically, if the membrane potential V (t) exceeds a threshold; or stochastically, with a probability that is a function of the difference between the membrane potential and its threshold [2, 15].",
+      "startOffset" : 237,
+      "endOffset" : 244
+    }, {
+      "referenceID" : 0,
+      "context" : "TrueNorth programs are written in the Corelet Programming Language — a hierarchical, compositional, object-oriented language [1].",
+      "startOffset" : 125,
+      "endOffset" : 128
+    }, {
+      "referenceID" : 0,
+      "context" : "This consists of systems of equations defining the behavior of TrueNorth neurons, encased in modules called corelets [1], and the subsequent composition of the inputs and outputs of these modules.",
+      "startOffset" : 117,
+      "endOffset" : 120
+    }, {
+      "referenceID" : 66,
+      "context" : "For the non-synthetic datasets, a Kinect [67] is used to extract ground truth of the scene structure.",
+      "startOffset" : 41,
+      "endOffset" : 45
+    }, {
+      "referenceID" : 1,
+      "context" : "Power is measured using the same process described in [2].",
+      "startOffset" : 54,
+      "endOffset" : 57
+    }, {
+      "referenceID" : 49,
+      "context" : "The system is highly parameterized and can operate with other event based sensors such as ATIS [50] or DVS [37].",
+      "startOffset" : 95,
+      "endOffset" : 99
+    }, {
+      "referenceID" : 36,
+      "context" : "The system is highly parameterized and can operate with other event based sensors such as ATIS [50] or DVS [37].",
+      "startOffset" : 107,
+      "endOffset" : 111
+    }, {
+      "referenceID" : 16,
+      "context" : "The implemented neuromorphic stereo disparity system achieves these advantages, while consuming ∼ 200× less power per pixel per disparity map compared to the stateof-the-art [17].",
+      "startOffset" : 174,
+      "endOffset" : 178
+    } ],
+    "year" : 2018,
+    "abstractText" : "We introduce a stereo correspondence system implemented fully on event-based digital hardware, using a fully graph-based non von-Neumann computation model, where no frames, arrays, or any other such data-structures are used. This is the first time that an end-to-end stereo pipeline from image acquisition and rectification, multi-scale spatiotemporal stereo correspondence, winner-take-all, to disparity regularization is implemented fully on event-based hardware. Using a cluster of TrueNorth neurosynaptic processors, we demonstrate their ability to process bilateral event-based inputs streamed live by Dynamic Vision Sensors (DVS), at up to 2,000 disparity maps per second, producing high fidelity disparities which are in turn used to reconstruct, at low power, the depth of events produced from rapidly changing scenes. Experiments on real-world sequences demonstrate the ability of the system to take full advantage of the asynchronous and sparse nature of DVS sensors for low power depth reconstruction, in environments where conventional frame-based cameras connected to synchronous processors would be inefficient for rapidly moving objects. System evaluation on event-based sequences demonstrates a ∼ 200 × improvement in terms of power per pixel per disparity map compared to the closest stateof-the-art, and maximum latencies of up to 11ms from spike injection to disparity map ejection.",
+    "creator" : "'Certified by IEEE PDFeXpress at 03/25/2018 9:42:37 PM'"
+  }
+}

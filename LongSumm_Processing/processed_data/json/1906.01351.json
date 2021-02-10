@@ -1,0 +1,291 @@
+15:17:59.681 [main] DEBUG com.amazonaws.AmazonWebServiceClient - Internal logging successfully configured to commons logger: true
+15:17:59.748 [main] DEBUG com.amazonaws.metrics.AwsSdkMetrics - Admin mbean registered under com.amazonaws.management:type=AwsSdkMetrics
+15:17:59.818 [main] DEBUG c.a.internal.config.InternalConfig - Configuration override awssdk_config_override.json not found.
+15:18:00.194 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loading model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:18:00.193 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:18:00.195 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:18:00.201 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Creating gazetteer cache at /tmp/gazetteer-v5.json-fa485aef.gazetteerCache.bin
+15:18:11.665 [scala-execution-context-global-12] INFO  o.a.scienceparse.ParserGroundTruth - Read 1609659 papers.
+15:18:26.245 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loaded model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:18:40.000 [scala-execution-context-global-12] INFO  o.a.scienceparse.ExtractReferences - could not load kermit gazetter
+15:18:40.058 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:18:40.058 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:18:40.063 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.RunSP$ - Starting /home/risubaba/LongSumm/pdf/1906.01351.pdf
+{
+  "name" : "/home/risubaba/LongSumm/pdf/1906.01351.pdf",
+  "metadata" : {
+    "source" : "CRF",
+    "title" : "TALKSUMM: A Dataset and Scalable Annotation Method for Scientific Paper Summarization Based on Conference Talks",
+    "authors" : [ "Guy Lev", "Michal Shmueli-Scheuer", "Jonathan Herzig", "Achiya Jerbi" ],
+    "emails" : [ "guylev@il.ibm.com,", "shmueli@il.ibm.com,", "hjon@il.ibm.com,", "davidko@il.ibm.com,", "achiya.jerbi@ibm.com" ],
+    "sections" : [ {
+      "heading" : null,
+      "text" : "ar X\niv :1\n90 6.\n01 35\n1v 2\n[ cs\n.C L\n] 1\n3 Ju\nn 20\n19\nable for the task of scientific paper summarization. In this paper, we propose a novel method that automatically generates summaries for scientific papers, by utilizing videos of talks at scientific conferences. We hypothesize that such talks constitute a coherent and concise description of the papers’ content, and can form the basis for good summaries. We collected 1716 papers and their corresponding videos, and created a dataset of paper summaries. A model trained on this dataset achieves similar performance as models trained on a dataset of summaries created manually. In addition, we validated the quality of our summaries by human experts."
+    }, {
+      "heading" : "1 Introduction",
+      "text" : "The rate of publications of scientific papers is\nincreasing and it is almost impossible for re-\nsearchers to keep up with relevant research. Au-\ntomatic text summarization could help mitigate\nthis problem. In general, there are two com-\nmon approaches to summarizing scientific papers:\ncitations-based, based on a set of citation sen-\ntences (Nakov et al., 2004; Abu-Jbara and Radev,\n2011; Yasunaga et al., 2019), and content-based,\nbased on the paper itself (Collins et al., 2017;\nNikola Nikolov and Hahnloser, 2018). Automatic\nsummarization is studied exhaustively for the\nnews domain (Cheng and Lapata, 2016; See et al.,\n2017), while summarization of scientific papers is\nless studied, mainly due to the lack of large-scale\ntraining data. The papers’ length and complexity\nrequire substantial summarization effort from ex-\nperts. Several methods were suggested to reduce\nthese efforts (Yasunaga et al., 2019; Collins et al.,\n2017), still they are not scalable as they require\nhuman annotations. ∗ The authors contributed equally.\nRecently, academic conferences started publishing videos of talks (e.g., ACL1, EMNLP1, ICML2,\nand more). In such talks, the presenter (usually\na co-author) must describe their paper coherently\nand concisely (since there is a time limit), provid-\ning a good basis for generating summaries. Based\non this idea, in this paper, we propose a new\nmethod, named TALKSUMM (acronym for Talk-\nbased Summarization), to automatically generate\nextractive content-based summaries for scientific\npapers based on video talks. Our approach uti-\nlizes the transcripts of video content of conference\ntalks, and treat them as spoken summaries of pa-\npers. Then, using unsupervised alignment algo-\nrithms, we map the transcripts to the correspond-\ning papers’ text, and create extractive summaries.\nTable 1 gives an example of an alignment between\n1vimeo.com/aclweb 2 icml.cc/Conferences/2017/Videos\na paper and its talk transcript (see Table 3 in the\nappendix for a complete example).\nSummaries generated with our approach can\nthen be used to train more complex and data-\ndemanding summarization models. Although our\nsummaries may be noisy (as they are created auto-\nmatically from transcripts), our dataset can easily\ngrow in size as more conference videos are aggre-\ngated. Moreover, our approach can generate sum-\nmaries of various lengths.\nOur main contributions are as follows: (1) we\npropose a new approach to automatically gener-\nate summaries for scientific papers based on video\ntalks; (2) we create a new dataset, that contains\n1716 summaries for papers from several computer science conferences, that can be used as training\ndata; (3) we show both automatic and human eval-\nuations for our approach. We make our dataset and related code publicly available3. To our knowl-\nedge, this is the first approach to automatically cre-\nate extractive summaries for scientific papers by\nutilizing the videos of conference talks."
+    }, {
+      "heading" : "2 Related Work",
+      "text" : "Several works focused on generating train-\ning data for scientific paper summariza-\ntion (Yasunaga et al., 2019; Jaidka et al., 2018;\nCollins et al., 2017; Cohan and Goharian, 2018).\nMost prominently, the CL-SciSumm shared\ntasks (Jaidka et al., 2016, 2018) provide a total of\n40 human generated summaries; there, a citations-\nbased approach is used, where experts first read\ncitation sentences (citances) that reference the\npaper being summarized, and then read the whole\npaper. Then, they create a summary of 150 words\non average.\nRecently, to mitigate annotation cost,\nYasunaga et al. (2019) proposed a method, in\nwhich human annotators only read the abstract in\naddition to citances (not reading the full paper).\nUsing this approach, they generated 1000 summaries, costing 600+ person-hours. Conversely,\nwe generate summaries, given transcripts of\nconference talks, in a fully automatic manner,\nand, thus, our approach is much more scalable.\nCollins et al. (2017) also aimed at generating\nlabeled data for scientific paper summarization,\nbased on “highlight statements” that authors can\nprovide in some publication venues.\nUsing external data to create summaries was\n3 https://github.com/levguy/talksumm\nalso proposed in the news domain. Wei and Gao\n(2014, 2015) utilized tweets to decide which sen-\ntences to extract from news article.\nFinally, alignment between different modali-\nties (e.g., presentation, videos) and text was stud-\nied in different domains. Both Kan (2007) and\nBahrani and Kan (2013) studied the problem of\ndocument to presentation alignment for schol-\narly documents. Kan (2007) focused on the the\ndiscovery and crawling of document-presentation\npairs, and a model to align between documents to\ncorresponding presentations. In Bahrani and Kan\n(2013) they extended previous model to include\nalso visual components of the slides. Align-\ning video and text was studied mainly in the\nsetting of enriching videos with textual infor-\nmation (Bojanowski et al., 2015; Malmaud et al.,\n2015; Zhu et al., 2015). Malmaud et al. (2015)\nused HMM to align ASR transcripts of cook-\ning videos and recipes text for enriching videos\nwith instructions. Zhu et al. (2015) utilized books\nto enrich videos with descriptive explanations.\nBojanowski et al. (2015) proposed to align video\nand text by providing a time stamp for every sen-\ntence. The main difference between these works\nand ours is in the alignment being used to gener-\nate textual training data in our case, rather than to\nenrich videos."
+    }, {
+      "heading" : "3 The TALKSUMM Dataset",
+      "text" : ""
+    }, {
+      "heading" : "3.1 Data Collection",
+      "text" : "Recently, many computer science academic asso-\nciations including ACL, ACM, IMLS and more,\nhave started recording talks in different confer-\nences, e.g., ACL, NAACL, EMNLP, and other co-\nlocated workshops. A similar trend occurs in other domains such as Physics4, Biology5, etc.\nIn a conference, each speaker (usually a co-\nauthor) presents their paper given a timeframe of\n15-20 minutes. Thus, the talk must be coherent\nand concentrate on the most important aspects of a\npaper. Hence, the talk can be considered as a sum-\nmary of the paper, as viewed by its authors, and\nis much more comprehensive than the abstract,\nwhich is written by the authors as well.\nIn this work, we focused on NLP and ML\nconferences, and analyzed 1716 video talks from ACL, NAACL, EMNLP, SIGDIAL (2015-2018),\nand ICML (2017-2018). We downloaded the\n4www.cleoconference.org 5 igem.org/Videos/Lecture_Videos\nvideos and extracted the speech data. Then, via a publicly available ASR service6, we extracted\ntranscripts of the speech, and based on the video\nmetadata (e.g., title), we retrieved the correspond-\ning paper (in PDF format). We used ScienceParse7 to extract the text of the paper, and applied a\nsimple processing in order to filter-out some noise\n(e.g. lines starting with the word “Copyright”). At\nthe end of this process, the text of each paper is\nassociated with the transcript of the corresponding\ntalk."
+    }, {
+      "heading" : "3.2 Dataset Generation",
+      "text" : "The transcript itself cannot serve as a good sum-\nmary for the corresponding paper, as it constitutes\nonly one modality of the talk (which also consists\nof slides, for example), and hence cannot stand by\nitself and form a coherent written text. Thus, to\ncreate an extractive paper summary based on the\ntranscript, we model the alignment between spo-\nken words and sentences in the paper, assuming\nthe following generative process: During the talk,\nthe speaker generates words for describing ver-\nbally sentences from the paper, one word at each\ntime step. Thus, at each time step, the speaker\nhas a single sentence from the paper in mind, and\nproduces a word that constitutes a part of its ver-\nbal description. Then, at the next time-step, the\nspeaker either stays with the same sentence, or\nmoves on to describing another sentence, and so\non. Thus, given the transcript, we aim to retrieve\nthose “source” sentences and use them as the sum-\nmary. The number of words uttered to describe\neach sentence can serve as importance score, in-\ndicating the amount of time the speaker spent de-\nscribing the sentence. This enables to control the\nsummary length by considering only the most im-\nportant sentences up to some threshold.\nWe use an HMM to model the assumed genera-\ntive process. The sequence of spoken words is the\noutput sequence. Each hidden state of the HMM\ncorresponds to a single paper sentence. We heuris-\ntically define the HMM’s probabilities as follows.\nDenote by Y (1 : T ) the spoken words, and by S(t) ∈ {1, ...,K} the paper sentence index at time-step t ∈ {1, ..., T}. Similarly to Malmaud et al. (2015), we define the emission\n6 www.ibm.com/watson/services/speech-to-text/ 7 github.com/allenai/science-parse\nprobabilities to be:\np(Y (t) = y|S(t) = k) ∝ max w∈words(k) sim(y,w)\nwhere words(k) is the set of words in the k’th sentence, and sim is a semantic-\nsimilarity measure between words, based on\nword-vector distance. We use pre-trained GloVe\n(Pennington et al., 2014) as the semantic vector\nrepresentations for words.\nAs for the transition probabilities, we must\nmodel the speaker’s behavior and the transitions\nbetween any two sentences in the paper. This\nis unlike the simpler setting in Malmaud et al.\n(2015), where transition is allowed between con-\nsecutive sentences only. To do so, denote the en-\ntries of the transition matrix by T (k, l) = p(S(t+ 1) = l|S(t) = k). We rely on the following assumptions: (1) T (k, k) (the probability of staying in the same sentence at the next time-step) is rel-\natively high. (2) There is an inverse relation be-\ntween T (k, l) and |l − k|, i.e., it is more probable to move to a nearby sentence than jumping to a\nfarther sentence. (3) S(t + 1) > S(t) is more probable than the opposite (i.e., transition to a later\nsentence is more probable than to an earlier one).\nAlthough these assumptions do not perfectly re-\nflect reality, they are a reasonable approximation\nin practice.\nFollowing these assumptions, we define the\nHMM’s transition probability matrix. First, de-\nfine the stay-probability as α = max(δ(1 − K T ), ǫ), where δ, ǫ ∈ (0, 1). This choice of stayprobability is inspired by Malmaud et al. (2015),\nusing δ to fit it to our case where transitions be-\ntween any two sentences are allowed, and ǫ to\nhandle rare cases where K is close to, or even\nlarger than T . Then, for each sentence index\nk ∈ {1, ...,K}, we define:\nT (k, k) = α\nT (k, k + j) = βk · λ j−1, j ≥ 1\nT (k, k − j) = γ · βk · λ j−1, j ≥ 1\nwhere λ, γ, βk ∈ (0, 1), λ and γ are factors reflecting assumptions (2) and (3) respectively, and for all k, βk is normalized s.t. ∑K\nl=1 T (k, l) = 1. The values of λ, γ, δ and ǫ were fixed through-\nout our experiments at λ = 0.75, γ = 0.5, δ = 0.33 and ǫ = 0.1. The average value of α, across all papers, was around 0.3. The values of\nthese parameters were determined based on eval-\nuation over manually-labeled alignments between\nthe transcripts and the sentences of a small set of\npapers.\nFinally, we define the start-probabilities assum-\ning that the first spoken word must be conditioned\non a sentence from the Introduction section, hence\np(S(1)) is defined as a uniform distribution over the Introduction section’s sentences.\nNote that sentences which appear in the Ab-\nstract, Related Work, and Acknowledgments sec-\ntions of each paper are excluded from the HMM’s\nhidden states, as we observed that presenters sel-\ndom refer to them.\nTo estimate the MAP sequence of sentences, we\napply the Viterbi algorithm. The sentences in the\nobtained sequence are the candidates for the pa-\nper’s summary. For each sentence s appearing in this sequence, denote by count(s) the number of time-steps in which this sentence appears. Thus,\ncount(s) models the number of words generated by the speaker conditioned on s, and, hence, can\nbe used as an importance score. Given a desired\nsummary length, one can draw a subset of top-\nranked sentences up to this length."
+    }, {
+      "heading" : "4 Experiments",
+      "text" : ""
+    }, {
+      "heading" : "4.1 Experimental Setup",
+      "text" : "Data For Evaluation We evaluate the quality\nof our dataset generation method by training an\nextractive summarization model, and evaluating\nthis model on a human-generated dataset of sci-\nentific paper summaries. For this, we choose\nthe CL-SciSumm shared task (Jaidka et al., 2016,\n2018), as this is the most established bench-\nmark for scientific paper summarization. In this\ndataset, experts wrote summaries of 150 words\nlength on average, after reading the whole paper.\nThe evaluation is on the same test data used by\nYasunaga et al. (2019), namely 10 examples from\nCL-SciSumm 2016, and 20 examples from CL-\nSciSumm 2018 as validation data.\nTraining Data Using the HMM importance\nscores, we create four training sets, two with\nfixed-length summaries (150 and 250 words), and\ntwo with fixed ratio between summary and paper\nlengths (0.3 and 0.4). We train models on each\ntraining set, and select the model yielding the best\nperformance on the validation set (evaluation is\nalways done with generating a 150-words sum-\nmary).\nSummarization Model We train an extractive\nsummarization model on our TALKSUMM dataset,\nusing the extractive variant of Chen and Bansal\n(2018). We test two summary generation ap-\nproaches, similarly to Yasunaga et al. (2019).\nFirst, for TALKSUMM-ONLY, we generate a 150-\nwords summary out of the top-ranked sentences\nextracted by our trained model (sentences from the\nAcknowledgments section are omitted, in case the\nmodel extracts any). In the second approach, a\n150-words summary is created by augmenting the\nabstract with non-redundant sentences extracted\nby our model, similarly to the “Hybrid 2” ap-\nproach of Yasunaga et al. (2019). We perform\nearly-stopping and hyper-parameters tuning using\nthe validation set.\nBaselines We compare our results to SCISUMM-\nNET (Yasunaga et al., 2019) trained on 1000 sci-\nentific papers summarized by human annotators.\nAs we use the same test set as in Yasunaga et al.\n(2019), we directly compare their reported model\nperformance to ours, including their ABSTRACT\nbaseline which takes the abstract to be the paper’s\nsummary."
+    }, {
+      "heading" : "4.2 Results",
+      "text" : "Automatic Evaluation Table 2 summarizes the\nresults: both GCN CITED TEXT SPANS and\nTALKSUMM-ONLY models, are not able to obtain better performance than ABSTRACT8 . However,\nfor the Hybrid approach, where the abstract is aug-\nmented with sentences from the summaries emit-\nted by the models, our TALKSUMM-HYBRID out-\nperforms both GCN HYBRID 2 and ABSTRACT.\nImportantly, our model, trained on automatically-\ngenerated summaries, performs on par with mod-\nels trained over SCISUMMNET, in which training\ndata was created manually.\n8While the abstract was input to GCN CITED TEXT SPANS, it was excluded from TALKSUMM-ONLY.\nHuman Evaluation We conduct a human eval-\nuation of our approach with support from authors\nwho presented their papers in conferences. As our\ngoal is to test more comprehensive summaries, we\ngenerated summaries composed of 30 sentences (approximately 15% of a long paper). We randomly selected 15 presenters from our corpus and asked them to perform two tasks, given the gen-\nerated summary of their paper: (1) for each sen-\ntence in the summary, we asked them to indicate\nwhether they considered it when preparing the talk\n(yes/no question); (2) we asked them to globally\nevaluate the quality of the summary (1-5 scale,\nranging from very bad to excellent, 3 means good). For the sentence-level task (1), 73% of the sentences were considered while preparing the talk.\nAs for the global task (2), the quality of the sum-\nmaries was 3.73 on average, with standard deviation of 0.725. These results validate the quality of our generation method."
+    }, {
+      "heading" : "5 Conclusion",
+      "text" : "We propose a novel automatic method to gener-\nate training data for scientific papers summariza-\ntion, based on conference talks given by authors.\nWe show that the a model trained on our dataset\nachieves competitive results compared to models\ntrained on human generated summaries, and that\nthe dataset quality satisfies human experts. In the\nfuture, we plan to study the effect of other video\nmodalities on the alignment algorithm. We hope\nour method and dataset will unlock new opportu-\nnities for scientific paper summarization."
+    }, {
+      "heading" : "A A Detailed Example",
+      "text" : "This section elaborates on the example presented\nin Table 1. Table 3 extends Table 1 by showing\nthe manually-labeled alignment between the com-\nplete text of the paper’s Introduction section, and\nthe corresponding transcript. Table 4 shows the\nalignment obtained using the HMM. Each row in\nthis table corresponds to an interval of consecutive\ntime-steps (i.e., a sub-sequence of the transcript)\nin which the same paper sentence was selected\nby the Viterbi algorithm. The first column (Pa-\nper Sentence) shows the selected sentences; The\nsecond column (ASR transcript) shows the tran-\nscript obtained by the ASR system; The third col-\numn (Human transcript) shows the manually cor-\nrected transcript, which is provided for readability\nTitle: Split and Rephrase: Better Evaluation and Stronger Baselines (Aharoni and Goldberg, 2018) Paper: Processing long, complex sentences is challenging. This is true either for humans in various circumstances or in NLP tasks like parsing and machine translation . An automatic system capable of breaking a complex sentence into several simple sentences that convey the same meaning is very appealing . A recent work by Narayan et al. (2017) introduced a dataset, evaluation method and baseline systems for the task, naming it Split-and Rephrase . The dataset includes 1,066,115 instances mapping a single complex sentence to a sequence of sentences that express the same meaning, together with RDF triples that describe their semantics. They considered two system setups: a text-to-text setup that does not use the accompanying RDF information, and a semantics-augmented setup that does. They report a BLEU score of 48.9 for their best text-to-text system, and of 78.7 for the best RDF-aware one. We focus on the text-to-text setup, which we find to be more challenging and more natural. We begin with vanilla SEQ2SEQ models with attention (Bahdanau et al., 2015) and reach an accuracy of 77.5 BLEU, substantially outperforming the text-to-text baseline of Narayan et al. (2017) and approaching their best RDF-aware method. However, manual inspection reveal many cases of unwanted behaviors in the resulting outputs: (1) many resulting sentences are unsupported by the input: they contain correct facts about relevant entities, but these facts were not mentioned in the input sentence; (2) some facts are repeated the same fact is mentioned in multiple output sentences; and (3) some facts are missing mentioned in the input but omitted in the output. The model learned to memorize entity-fact pairs instead of learning to split and rephrase. Indeed, feeding the model with examples containing entities alone without any facts about them causes it to output perfectly phrased but unsupported facts (Table 3). Digging further, we find that 99% of the simple sentences (more than 89% of the unique ones) in the validation and test sets also appear in the training set, which coupled with the good memorization capabilities of SEQ2SEQ models and the relatively small number of distinct simple sentences helps to explain the high BLEU score . To aid further research on the task, we propose a more challenging split of the data . We also establish a stronger baseline by extending the SEQ2SEQ approach with a copy mechanism, which was shown to be helpful in similar tasks (Gu et al., 2016; Merity et al., 2017; See et al., 2017). On the original split, our models outperform the best baseline of Narayan et al. (2017) by up to 8.68 BLEU, without using the RDF triples. On the new split, the vanilla SEQ2SEQ models break completely, while the copy-augmented models perform better. In parallel to our work, an updated version of the dataset was released (v1.0), which is larger and features a train/test split protocol which is similar to our proposal. We report results on this dataset as well. The code and data to reproduce our results are available on Github.1 We encourage future work on the split-and-rephrase task to use our new data split or the v1.0 split instead of the original one. Talk Transcript: Let’s begin with the motivation so processing long complex sentences is a hard task this is true for arguments like children people with reading disabilities second language learners but this is also true for sentence level and NLP systems for example previous work show that dependency parsers degrade performance when they’re introduced with longer and longer sentences in a similar result was shown for neural machine translation where neural machine translation systems introduced with longer sentences starting degrading performance the question rising here is can we automatically break a complex sentence into several simple ones while preserving the meaning or the semantics and this can be a useful component in NLP pipelines . For example the split and rephrase task was introduced in the last EMNLP by Narayan Gardent and Shimarina where they introduced a dataset an evaluation method and baseline models for this task. The task definition can be taking a complex sentence and breaking it into several simple ones with the same meaning . For example if you take the sentence Alan being joined NASA in nineteen sixty three where he became a member of the Apollo twelve mission along with Alfa Worden and his back a pilot and they’ve just got its commander who would like to break the sentence into four sentences which can go as Alan bean serves as a crew member of Apolo twelve Alfa Worden was the back pilot will close it was commanded by David Scott now be was selected by NASA in nineteen sixty three we can see that the task requires first identifying independence semantics units in the source sentence and then rephrasing those units into a single sentences on the target site. In this work we first show the simple neural models seem to perform very well on the original benchmark but this is only due to memorization of the training set we propose a more challenging data split for the task to discourage this memorization and we perform automatic evaluation in error analysis on the new benchmark showing that the task is still very far from being solved.\nTable 3: Alignment example between a paper’s Introduction section and first 2:40 minutes of the talk’s transcript. The different colors show corresponding content between the transcript to the written paper. This is the full-text version of the example shown in Table 1.\n(our model predicted the alignment based on the\nraw ASR output); Finally, the forth column shows\nwhether our model has correctly aligned a paper\nsentence with a sub-sequence of the transcript.\nRows with no values in this column correspond\nto transcript sub-sequences which were not asso-\nciated with any paper sentence in the manually-\nlabeled alignment."
+    } ],
+    "references" : [ {
+      "title" : "Coherent citation-based summarization of scientific papers",
+      "author" : [ "Amjad Abu-Jbara", "Dragomir Radev." ],
+      "venue" : "Proceedings of the 49th Annual Meeting of the Association for Computational Linguistics: Human Language Technologies - Volume 1, HLT ’11,",
+      "citeRegEx" : "Abu.Jbara and Radev.,? 2011",
+      "shortCiteRegEx" : "Abu.Jbara and Radev.",
+      "year" : 2011
+    }, {
+      "title" : "Split and rephrase: Better evaluation and stronger baselines",
+      "author" : [ "Roee Aharoni", "Yoav Goldberg." ],
+      "venue" : "Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers), pages 719–724. Association for",
+      "citeRegEx" : "Aharoni and Goldberg.,? 2018",
+      "shortCiteRegEx" : "Aharoni and Goldberg.",
+      "year" : 2018
+    }, {
+      "title" : "Multimodal alignment of scholarly documents and their presentations",
+      "author" : [ "Bamdad Bahrani", "Min-Yen Kan." ],
+      "venue" : "Proceedings of the 13th ACM/IEEE-CS Joint Conference on Digital Libraries, JCDL ’13, pages 281–284.",
+      "citeRegEx" : "Bahrani and Kan.,? 2013",
+      "shortCiteRegEx" : "Bahrani and Kan.",
+      "year" : 2013
+    }, {
+      "title" : "Weakly-supervised alignment of video with text",
+      "author" : [ "Piotr Bojanowski", "Remi Lajugie", "Edouard Grave", "Francis Bach", "Ivan Laptev", "Jean Ponce", "Cordelia Schmid." ],
+      "venue" : "The IEEE International Conference on Computer Vision (ICCV).",
+      "citeRegEx" : "Bojanowski et al\\.,? 2015",
+      "shortCiteRegEx" : "Bojanowski et al\\.",
+      "year" : 2015
+    }, {
+      "title" : "Fast abstractive summarization with reinforce-selected sentence rewriting",
+      "author" : [ "Yen-Chun Chen", "Mohit Bansal." ],
+      "venue" : "Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), pages 675–686. Association for",
+      "citeRegEx" : "Chen and Bansal.,? 2018",
+      "shortCiteRegEx" : "Chen and Bansal.",
+      "year" : 2018
+    }, {
+      "title" : "Neural summarization by extracting sentences and words",
+      "author" : [ "Jianpeng Cheng", "Mirella Lapata." ],
+      "venue" : "Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), pages 484–494.",
+      "citeRegEx" : "Cheng and Lapata.,? 2016",
+      "shortCiteRegEx" : "Cheng and Lapata.",
+      "year" : 2016
+    }, {
+      "title" : "Scientific document summarization via citation contextualization and scientific discourse",
+      "author" : [ "Arman Cohan", "Nazli Goharian." ],
+      "venue" : "International Journal on Digital Libraries, pages 287–303.",
+      "citeRegEx" : "Cohan and Goharian.,? 2018",
+      "shortCiteRegEx" : "Cohan and Goharian.",
+      "year" : 2018
+    }, {
+      "title" : "A supervised approach to extractive summarisation of scientific papers",
+      "author" : [ "Ed Collins", "Isabelle Augenstein", "Sebastian Riedel." ],
+      "venue" : "Proceedings of the 21st Conference on Computational Natural Language Learning (CoNLL 2017), pages 195–205.",
+      "citeRegEx" : "Collins et al\\.,? 2017",
+      "shortCiteRegEx" : "Collins et al\\.",
+      "year" : 2017
+    }, {
+      "title" : "Overview of the cl-scisumm 2016 shared task",
+      "author" : [ "Kokil Jaidka", "Muthu Kumar Chandrasekaran", "Sajal Rustagi", "Min-Yen Kan." ],
+      "venue" : "In Proceedings of Joint Workshop on Bibliometric-enhanced Information Retrieval and NLP for Digital Libraries",
+      "citeRegEx" : "Jaidka et al\\.,? 2016",
+      "shortCiteRegEx" : "Jaidka et al\\.",
+      "year" : 2016
+    }, {
+      "title" : "The cl-scisumm shared task 2018: Results and key insights",
+      "author" : [ "Kokil Jaidka", "Michihiro Yasunaga", "Muthu Kumar Chandrasekaran", "Dragomir Radev", "Min-Yen Kan." ],
+      "venue" : "Proceedings of the 3rd Joint Workshop on Bibliometric-enhanced Informa-",
+      "citeRegEx" : "Jaidka et al\\.,? 2018",
+      "shortCiteRegEx" : "Jaidka et al\\.",
+      "year" : 2018
+    }, {
+      "title" : "Slideseer: A digital library of aligned document and presentation pairs",
+      "author" : [ "Min-Yen Kan." ],
+      "venue" : "Proceedings of the 7th ACM/IEEE-CS Joint Conference on Digital Libraries, JCDL ’07, pages 81–90.",
+      "citeRegEx" : "Kan.,? 2007",
+      "shortCiteRegEx" : "Kan.",
+      "year" : 2007
+    }, {
+      "title" : "What’s cookin’? interpreting cooking videos using text, speech and vision",
+      "author" : [ "Jonathan Malmaud", "Jonathan Huang", "Vivek Rathod", "Nicholas Johnston", "Andrew Rabinovich", "Kevin Murphy." ],
+      "venue" : "Proceedings of the 2015 Conference of the North Amer-",
+      "citeRegEx" : "Malmaud et al\\.,? 2015",
+      "shortCiteRegEx" : "Malmaud et al\\.",
+      "year" : 2015
+    }, {
+      "title" : "Citances: Citation sentences for semantic analysis of bioscience text",
+      "author" : [ "Preslav I. Nakov", "Ariel S. Schwartz", "Marti A. Hearst." ],
+      "venue" : "In Proceedings of the SIGIR?04 workshop on Search and Discovery in Bioinformatics.",
+      "citeRegEx" : "Nakov et al\\.,? 2004",
+      "shortCiteRegEx" : "Nakov et al\\.",
+      "year" : 2004
+    }, {
+      "title" : "Data-driven summarization of scientific articles",
+      "author" : [ "Michael Pfeiffer Nikola Nikolov", "Richard Hahnloser." ],
+      "venue" : "Proceedings of the Eleventh International Conference on Language Resources and Evaluation (LREC 2018).",
+      "citeRegEx" : "Nikolov and Hahnloser.,? 2018",
+      "shortCiteRegEx" : "Nikolov and Hahnloser.",
+      "year" : 2018
+    }, {
+      "title" : "Glove: Global vectors for word representation",
+      "author" : [ "Jeffrey Pennington", "Richard Socher", "Christopher D. Manning." ],
+      "venue" : "In EMNLP.",
+      "citeRegEx" : "Pennington et al\\.,? 2014",
+      "shortCiteRegEx" : "Pennington et al\\.",
+      "year" : 2014
+    }, {
+      "title" : "Get to the point: Summarization with pointergenerator networks",
+      "author" : [ "Abigail See", "Peter J. Liu", "Christopher D. Manning." ],
+      "venue" : "Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), pages 1073–",
+      "citeRegEx" : "See et al\\.,? 2017",
+      "shortCiteRegEx" : "See et al\\.",
+      "year" : 2017
+    }, {
+      "title" : "Utilizing microblogs for automatic news highlights extraction",
+      "author" : [ "Zhongyu Wei", "Wei Gao." ],
+      "venue" : "Proceedings of COLING 2014, the 25th International Conference on Computational Linguistics: Technical Papers, pages 872–883. Dublin City",
+      "citeRegEx" : "Wei and Gao.,? 2014",
+      "shortCiteRegEx" : "Wei and Gao.",
+      "year" : 2014
+    }, {
+      "title" : "Gibberish, assistant, or master?: Using tweets linking to news for extractive single-document summarization",
+      "author" : [ "Zhongyu Wei", "Wei Gao." ],
+      "venue" : "Proceedings of the 38th International ACM SIGIR Conference on Research and Development in Informa-",
+      "citeRegEx" : "Wei and Gao.,? 2015",
+      "shortCiteRegEx" : "Wei and Gao.",
+      "year" : 2015
+    }, {
+      "title" : "Scisummnet: A large annotated corpus and content-impact models for scientific paper summarization with citation networks",
+      "author" : [ "Michihiro Yasunaga", "Jungo Kasai", "Rui Zhang", "Alexander Fabbri", "Irene Li", "Dan Friedman", "Dragomir Radev." ],
+      "venue" : "Proceed-",
+      "citeRegEx" : "Yasunaga et al\\.,? 2019",
+      "shortCiteRegEx" : "Yasunaga et al\\.",
+      "year" : 2019
+    }, {
+      "title" : "Aligning books and movies: Towards story-like visual explanations by watching movies and reading books",
+      "author" : [ "Yukun Zhu", "Ryan Kiros", "Rich Zemel", "Ruslan Salakhutdinov", "Raquel Urtasun", "Antonio Torralba", "Sanja Fidler." ],
+      "venue" : "The IEEE International Con-",
+      "citeRegEx" : "Zhu et al\\.,? 2015",
+      "shortCiteRegEx" : "Zhu et al\\.",
+      "year" : 2015
+    } ],
+    "referenceMentions" : [ {
+      "referenceID" : 12,
+      "context" : "In general, there are two common approaches to summarizing scientific papers: citations-based, based on a set of citation sentences (Nakov et al., 2004; Abu-Jbara and Radev, 2011; Yasunaga et al., 2019), and content-based, based on the paper itself (Collins et al.",
+      "startOffset" : 132,
+      "endOffset" : 202
+    }, {
+      "referenceID" : 0,
+      "context" : "In general, there are two common approaches to summarizing scientific papers: citations-based, based on a set of citation sentences (Nakov et al., 2004; Abu-Jbara and Radev, 2011; Yasunaga et al., 2019), and content-based, based on the paper itself (Collins et al.",
+      "startOffset" : 132,
+      "endOffset" : 202
+    }, {
+      "referenceID" : 18,
+      "context" : "In general, there are two common approaches to summarizing scientific papers: citations-based, based on a set of citation sentences (Nakov et al., 2004; Abu-Jbara and Radev, 2011; Yasunaga et al., 2019), and content-based, based on the paper itself (Collins et al.",
+      "startOffset" : 132,
+      "endOffset" : 202
+    }, {
+      "referenceID" : 7,
+      "context" : ", 2019), and content-based, based on the paper itself (Collins et al., 2017; Nikola Nikolov and Hahnloser, 2018).",
+      "startOffset" : 54,
+      "endOffset" : 112
+    }, {
+      "referenceID" : 5,
+      "context" : "summarization is studied exhaustively for the news domain (Cheng and Lapata, 2016; See et al., 2017), while summarization of scientific papers is less studied, mainly due to the lack of large-scale training data.",
+      "startOffset" : 58,
+      "endOffset" : 100
+    }, {
+      "referenceID" : 15,
+      "context" : "summarization is studied exhaustively for the news domain (Cheng and Lapata, 2016; See et al., 2017), while summarization of scientific papers is less studied, mainly due to the lack of large-scale training data.",
+      "startOffset" : 58,
+      "endOffset" : 100
+    }, {
+      "referenceID" : 18,
+      "context" : "Several methods were suggested to reduce these efforts (Yasunaga et al., 2019; Collins et al., 2017), still they are not scalable as they require human annotations.",
+      "startOffset" : 55,
+      "endOffset" : 100
+    }, {
+      "referenceID" : 7,
+      "context" : "Several methods were suggested to reduce these efforts (Yasunaga et al., 2019; Collins et al., 2017), still they are not scalable as they require human annotations.",
+      "startOffset" : 55,
+      "endOffset" : 100
+    }, {
+      "referenceID" : 1,
+      "context" : "Title: Split and Rephrase: Better Evaluation and Stronger Baselines (Aharoni and Goldberg, 2018) Paper: Processing long, complex sentences is challenging.",
+      "startOffset" : 68,
+      "endOffset" : 96
+    }, {
+      "referenceID" : 18,
+      "context" : "ing data for scientific paper summarization (Yasunaga et al., 2019; Jaidka et al., 2018; Collins et al., 2017; Cohan and Goharian, 2018).",
+      "startOffset" : 44,
+      "endOffset" : 136
+    }, {
+      "referenceID" : 9,
+      "context" : "ing data for scientific paper summarization (Yasunaga et al., 2019; Jaidka et al., 2018; Collins et al., 2017; Cohan and Goharian, 2018).",
+      "startOffset" : 44,
+      "endOffset" : 136
+    }, {
+      "referenceID" : 7,
+      "context" : "ing data for scientific paper summarization (Yasunaga et al., 2019; Jaidka et al., 2018; Collins et al., 2017; Cohan and Goharian, 2018).",
+      "startOffset" : 44,
+      "endOffset" : 136
+    }, {
+      "referenceID" : 6,
+      "context" : "ing data for scientific paper summarization (Yasunaga et al., 2019; Jaidka et al., 2018; Collins et al., 2017; Cohan and Goharian, 2018).",
+      "startOffset" : 44,
+      "endOffset" : 136
+    }, {
+      "referenceID" : 3,
+      "context" : "ing video and text was studied mainly in the setting of enriching videos with textual information (Bojanowski et al., 2015; Malmaud et al., 2015; Zhu et al., 2015).",
+      "startOffset" : 98,
+      "endOffset" : 163
+    }, {
+      "referenceID" : 11,
+      "context" : "ing video and text was studied mainly in the setting of enriching videos with textual information (Bojanowski et al., 2015; Malmaud et al., 2015; Zhu et al., 2015).",
+      "startOffset" : 98,
+      "endOffset" : 163
+    }, {
+      "referenceID" : 19,
+      "context" : "ing video and text was studied mainly in the setting of enriching videos with textual information (Bojanowski et al., 2015; Malmaud et al., 2015; Zhu et al., 2015).",
+      "startOffset" : 98,
+      "endOffset" : 163
+    }, {
+      "referenceID" : 14,
+      "context" : "We use pre-trained GloVe (Pennington et al., 2014) as the semantic vector representations for words.",
+      "startOffset" : 25,
+      "endOffset" : 50
+    }, {
+      "referenceID" : 18,
+      "context" : "Baselines We compare our results to SCISUMMNET (Yasunaga et al., 2019) trained on 1000 scientific papers summarized by human annotators.",
+      "startOffset" : 47,
+      "endOffset" : 70
+    } ],
+    "year" : 2019,
+    "abstractText" : "Currently, no large-scale training data is available for the task of scientific paper summarization. In this paper, we propose a novel method that automatically generates summaries for scientific papers, by utilizing videos of talks at scientific conferences. We hypothesize that such talks constitute a coherent and concise description of the papers’ content, and can form the basis for good summaries. We collected 1716 papers and their corresponding videos, and created a dataset of paper summaries. A model trained on this dataset achieves similar performance as models trained on a dataset of summaries created manually. In addition, we validated the quality of our summaries by human experts.",
+    "creator" : "LaTeX with hyperref package"
+  }
+}

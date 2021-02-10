@@ -1,0 +1,529 @@
+15:26:21.857 [main] DEBUG com.amazonaws.AmazonWebServiceClient - Internal logging successfully configured to commons logger: true
+15:26:21.925 [main] DEBUG com.amazonaws.metrics.AwsSdkMetrics - Admin mbean registered under com.amazonaws.management:type=AwsSdkMetrics
+15:26:21.997 [main] DEBUG c.a.internal.config.InternalConfig - Configuration override awssdk_config_override.json not found.
+15:26:22.409 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:26:22.409 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loading model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:26:22.410 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:26:22.415 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Creating gazetteer cache at /tmp/gazetteer-v5.json-fa485aef.gazetteerCache.bin
+15:26:33.555 [scala-execution-context-global-12] INFO  o.a.scienceparse.ParserGroundTruth - Read 1609659 papers.
+15:26:47.707 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loaded model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:27:00.124 [scala-execution-context-global-12] INFO  o.a.scienceparse.ExtractReferences - could not load kermit gazetter
+15:27:00.187 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:27:00.187 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:27:00.191 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.RunSP$ - Starting /home/risubaba/LongSumm/pdf/6835-scalable-demand-aware-recommendation.pdf
+{
+  "name" : "/home/risubaba/LongSumm/pdf/6835-scalable-demand-aware-recommendation.pdf",
+  "metadata" : {
+    "source" : "META",
+    "title" : "Scalable Demand-Aware Recommendation",
+    "authors" : [ "Jinfeng Yi", "Cho-Jui Hsieh", "Kush R. Varshney", "Lijun Zhang", "Yao Li" ],
+    "emails" : [ "jinfengyi.ustc@gmail.com,", "chohsieh@ucdavis.edu,", "krvarshn@us.ibm.com,", "zhanglj@lamda.nju.edu.cn,", "yaoli@ucdavis.edu" ],
+    "sections" : [ {
+      "heading" : "1 Introduction",
+      "text" : "E-commerce recommender systems aim to present items with high utility to the consumers [18]. Utility may be decomposed into form utility: the item is desired as it is manifested, and time utility: the item is desired at the given point in time [28]; recommender systems should take both types of utility into account. Economists define items to be either durable goods or nondurable goods based on how long they are intended to last before being replaced [27]. A key characteristic of durable goods is the long duration of time between successive purchases within item categories whereas this duration for nondurable goods is much shorter, or even negligible. Thus, durable and nondurable goods have differing time utility characteristics which lead to differing demand characteristics.\nAlthough we have witnessed great success of collaborative filtering in media recommendation, we should be careful when expanding its application to general e-commerce recommendation involving both durable and nondurable goods due to the following reasons:\n1. Since media such as movies and music are nondurable goods, most users are quite receptive to buying or renting them in rapid succession. However, users only purchase durable goods when the time is right. For instance, most users will not buy televisions the day after they have already bought one. Therefore, recommending an item for which a user has no immediate demand can hurt user experience and waste an opportunity to drive sales.\n∗Now at Tencent AI Lab, Bellevue, WA, USA\n31st Conference on Neural Information Processing Systems (NIPS 2017), Long Beach, CA, USA.\n2. A key assumption made by matrix factorization- and completion-based collaborative filtering algorithms is that the underlying rating matrix is of low-rank since only a few factors typically contribute to an individual’s form utility [5]. However, a user’s demand is not only driven by form utility, but is the combined effect of both form utility and time utility. Hence, even if the underlying form utility matrix is of low-rank, the overall purchase intention matrix is likely to be of high-rank,2 and thus cannot be directly recovered by existing approaches.\nAn additional challenge faced by many real-world recommender systems is the one-sided sampling of implicit feedback [15, 23]. Unlike the Netflix-like setting that provides both positive and negative feedback (high and low ratings), no negative feedback is available in many e-commerce systems. For example, a user might not purchase an item because she does not derive utility from it, or just because she was simply unaware of it or plans to buy it in the future. In this sense, the labeled training data only draws from the positive class, and the unlabeled data is a mixture of positive and negative samples, a problem usually referred to as positive-unlabeled (PU) learning [13]. To address these issues, we study the problem of demand-aware recommendation. Given purchase triplets (user, item, time) and item categories, the objective is to make recommendations based on users’ overall predicted combination of form utility and time utility.\nWe denote purchases by the sparse binary tensor P . To model implicit feedback, we assume that P is obtained by thresholding an underlying real-valued utility tensor to a binary tensor Y and then revealing a subset of Y’s positive entries. The key to demand-aware recommendation is defining an appropriate utility measure for all (user, item, time) triplets. To this end, we quantify purchase intention as a combined effect of form utility and time utility. Specifically, we model a user’s time utility for an item by comparing the time t since her most recent purchase within the item’s category and the item category’s underlying inter-purchase duration d; the larger the value of d− t, the less likely she needs this item. In contrast, d ≤ t may indicate that the item needs to be replaced, and she may be open to related recommendations. Therefore, the function h = max(0, d− t) may be employed to measure the time utility factor for a (user, item) pair. Then the purchase intention for a (user, item, time) triplet is given by x− h, where x denotes the user’s form utility. This observation allows us to cast demand-aware recommendation as the problem of learning users’ form utility tensor X and items’ inter-purchase durations vector d given the binary tensor P . Although the learning problem can be naturally formulated as a tensor nuclear norm minimization problem, the high computational cost significantly limits its application to large-scale recommendation problems. To address this limitation, we first relax the problem to a matrix optimization problem with a label-dependent loss. We note that the problem after relaxation is still non-trivial to solve since it is a highly non-smooth problem with nested hinge losses. More severely, the optimization problem involves mnl entries, where m, n, and l are the number of users, items, and time slots, respectively. Thus a naive optimization algorithm will take at least O(mnl) time, and is intractable for largescale recommendation problems. To overcome this limitation, we develop an efficient alternating minimization algorithm and show that its time complexity is only approximately proportional to the number of nonzero elements in the purchase records tensor P . Since P is usually very sparse, our algorithm is extremely efficient and can solve problems with millions of users and items.\nCompared to existing recommender systems, our work has the following contributions and advantages: (i) to the best of our knowledge, this is the first work that makes demand-aware recommendation by considering inter-purchase durations for durable and nondurable goods; (ii) the proposed algorithm is able to simultaneously infer items’ inter-purchase durations and users’ real-time purchase intentions, which can help e-retailers make more informed decisions on inventory planning and marketing strategy; (iii) by effectively exploiting sparsity, the proposed algorithm is extremely efficient and able to handle large-scale recommendation problems."
+    }, {
+      "heading" : "2 Related Work",
+      "text" : "Our contributions herein relate to three different areas of prior work: consumer modeling from a microeconomics and marketing perspective [6], time-aware recommender systems [4, 29, 8, 19], and PU learning [20, 9, 13, 14, 23, 2]. The extensive consumer modeling literature is concerned with descriptive and analytical models of choice rather than prediction or recommendation, but nonetheless\n2A detailed illustration can be found in the supplementary material\nforms the basis for our modeling approach. A variety of time-aware recommender systems have been proposed to exploit time information, but none of them explicitly consider the notion of time utility derived from inter-purchase durations in item categories. Much of the PU learning literature is focused on the binary classification problem, e.g. [20, 9], whereas we are in the collaborative filtering setting. For the papers that do examine collaborative filtering with PU learning or learning with implicit feedback [14, 23, 2, 32], they mainly focus on media recommendation and overlook users’ demands, thus are not suitable for durable goods recommendation.\nTemporal aspects of the recommendation problem have been examined in a few ways: as part of the cold-start problem [3], to capture dynamics in interests or ratings over time [17], and as part of the context in context-aware recommenders [1]. However, the problem we address in this paper is different from all of those aspects, and in fact could be combined with the other aspects in future solutions. To the best of our knowledge, there is no existing work that tries to take inter-purchase durations into account to better time recommendations as we do herein."
+    }, {
+      "heading" : "3 Positive-Unlabeled Demand-Aware Recommendation",
+      "text" : "Throughout the paper, we use boldface Euler script letters, boldface capital letters, and boldface lower-case letters to denote tensors (e.g., A), matrices (e.g., A) and vectors (e.g., a), respectively. Scalars such as entries of tensors, matrices, and vectors are denoted by lowercase letters, e.g., a. In particular, the (i, j, k) entry of a third-order tensor A is denoted by aijk. Given a set of m users, n items, and l time slots, we construct a third-order binary tensor P ∈ {0, 1}m×n×l to represent the purchase history. Specifically, entry pijk = 1 indicates that user i has purchased item j in time slot k. We denote ‖P‖0 as the number of nonzero entries in tensor P . Since P is usually very sparse, we have ‖P‖0 mnl. Also, we assume that the n items belong to r item categories, with items in each category sharing similar inter-purchase durations.3 We use an n-dimensional vector c ∈ {1, 2, . . . , r}n to represent the category membership of each item. Given P and c, we further generate a tensor T ∈ Rm×r×l where ticjk denotes the number of time slots between user i’s most recent purchase within item category cj until time k. If user i has not purchased within item category cj until time k, ticjk is set to +∞."
+    }, {
+      "heading" : "3.1 Inferring Purchase Intentions from Users’ Purchase Histories",
+      "text" : "In this work, we formulate users’ utility as a combined effect of form utility and time utility. To this end, we use an underlying third-order tensor X ∈ Rm×n×l to quantify form utility. In addition, we employ a non-negative vector d ∈ Rr+ to measure the underlying inter-purchase duration times of the r item categories. It is understood that the inter-purchase durations for durable good categories are large, while for nondurable good categories are small, or even zero. In this study, we focus on items’ inherent properties and assume that the inter-purchase durations are user-independent. The problem of learning personalized durations will be studied in our future work.\nAs discussed above, the demand is mediated by the time elapsed since the last purchase of an item in the same category. Let dcj be the inter-purchase duration time of item j’s category cj , and let ticjk be the time gap of user i’s most recent purchase within item category cj until time k. Then if dcj > ticjk, a previously purchased item in category cj continues to be useful, and thus user i’s utility from item j is weak. Intuitively, the greater the value dcj − ticjk, the weaker the utility. On the other hand, dcj < ticjk indicates that the item is nearing the end of its lifetime and the user may be open to recommendations in category cj . We use a hinge loss max(0, dcj − ticjk) to model such time utility. The overall utility can be obtained by comparing form utility and time utility. In more detail, we model a binary utility indicator tensor Y ∈ {0, 1}m×n×l as being generated by the following thresholding process:\nyijk = 1[xijk −max(0, dcj − ticjk) > τ ], (1)\nwhere 1(·) : R→ {0, 1} is the indicator function, and τ > 0 is a predefined threshold.\n3To meet this requirement, the granularity of categories should be properly selected. For instance, the category “Smart TV” is a better choice than the category “Electrical Equipment”, since the latter category covers a broad range of goods with different durations.\nNote that the positive entries of Y denote high purchase intentions, while the positive entries of P denote actual purchases. Generally speaking, a purchase only happens when the utility is high, but a high utility does not necessarily lead to a purchase. This observation allows us to link the binary tensors P and Y: P is generated by a one-sided sampling process that only reveals a subset of Y’s positive entries. Given this observation, we follow [13] and include a label-dependent loss [26] trading the relative cost of positive and unlabeled samples:\nL(X ,P)= η ∑\nijk: pijk=1\nmax[1− (xijk −max(0, dcj − ticjk)), 0]2 + (1− η) ∑\nijk: pijk=0\nl(xijk, 0),\nwhere l(x, c) = (x− c)2 denotes the squared loss. In addition, the form utility tensor X should be of low-rank to capture temporal dynamics of users’ interests, which are generally believed to be dictated by a small number of latent factors [22].\nBy combining asymmetric sampling and the low-rank property together, we jointly recover the tensor X and the inter-purchase duration vector d by solving the following tensor nuclear norm minimization (TNNM) problem:\nmin X∈Rm×n×l, d∈Rr+\nη ∑\nijk: pijk=1\nmax[1− (xijk −max(0, dcj − ticjk)), 0]2\n+ (1− η) ∑\nijk: pijk=0\nx2ijk + λ ‖X‖∗, (2)\nwhere ‖X‖∗ denotes the tensor nuclear norm, a convex combination of nuclear norms of X ’s unfolded matrices [21]. Given the learned X̂ and d̂, the underlying binary tensor Y can be recovered by (1). We note that although the TNNM problem (2) can be solved by optimization techniques such as block coordinate descent [21] and ADMM [10], they suffer from high computational cost since they need to be solved iteratively with multiple SVDs at each iteration. An alternative way to solve the problem is tensor factorization [16]. However, this also involves iterative singular vector estimation and thus not scalable enough. As a typical example, recovering a rank 20 tensor of size 500× 500× 500 takes the state-of-the-art tensor factorization algorithm TenALS 4 more than 20, 000 seconds on an Intel Xeon 2.40 GHz processor with 32 GB main memory."
+    }, {
+      "heading" : "3.2 A Scalable Relaxation",
+      "text" : "In this subsection, we discuss how to significantly improve the scalability of the proposed demandaware recommendation model. To this end, we assume that an individual’s form utility does not change over time, an assumption widely-used in many collaborative filtering methods [25, 32]. Under this assumption, the tensor X is a repeated copy of its frontal slice x::1, i.e.,\nX = x::1 ◦ e, (3)\nwhere e is an l-dimensional all-one vector and the symbol ◦ represents the outer product operation. In this way, we can relax the problem of learning a third-order tensor X to the problem of learning its frontal slice, which is a second-order tensor (matrix). For notational simplicity, we use a matrix X to denote the frontal slice x::1, and use xij to denote the entry (i, j) of the matrix X.\nSince X is a low-rank tensor, its frontal slice X should be of low-rank as well. Hence, the minimization problem (2) simplifies to:\nmin X∈Rm×n\nd∈Rr\nη ∑\nijk: pijk=1\nmax[1− (xij −max(0, dcj − ticjk)), 0]2\n+ (1− η) ∑\nijk: pijk=0\nx2ij + λ ‖X‖∗ := f(X,d), (4)\nwhere ‖X‖∗ stands for the matrix nuclear norm, the convex surrogate of the matrix rank function. By relaxing the optimization problem (2) to the problem (4), we recover a matrix instead of a tensor to infer users’ purchase intentions.\n4http://web.engr.illinois.edu/~swoh/software/optspace/code.html"
+    }, {
+      "heading" : "4 Optimization",
+      "text" : "Although the learning problem has been relaxed, optimizing (4) is still very challenging for two main reasons: (i) the objective is highly non-smooth with nested hinge losses, and (ii) it contains mnl terms, and a naive optimization algorithm will take at least O(mnl) time.\nTo address these challenges, we adopt an alternating minimization scheme that iteratively fixes one of d and X and minimizes with respect to the other. Specifically, we propose an extremely efficient optimization algorithm by effectively exploring the sparse structure of the tensor P and low-rank structure of the matrix X. We show that (i) the problem (4) can be solved within O(‖P‖0(k + log(‖P‖0)) + (n+m)k2) time, where k is the rank of X, and (ii) the algorithm converges to the critical points of f(X,d). In the following, we provide a sketch of the algorithm. The detailed description can be found in the supplementary material."
+    }, {
+      "heading" : "4.1 Update d",
+      "text" : "When X is fixed, the optimization problem with respect to d can be written as:\nmin d ∑ ijk: pijk=1\n{ max ( 1− (xij −max(0, dcj − ticjk)), 0 )2} := g(d) := ∑ ijk: pijk=1 gijk(dcj ). (5)\nProblem (5) is non-trivial to solve since it involves nested hinge losses. Fortunately, by carefully analyzing the value of each term gijk(dcj ), we can show that\ngijk(dcj ) = { max(1− xij , 0)2, if dcj ≤ ticjk + max(xij − 1, 0) (1− (xij − dcj + ticjk))2, if dcj > ticjk + max(xij − 1, 0).\nFor notational simplicity, we let sijk = ticjk + max(xij − 1, 0) for all triplets (i, j, k) satisfying pijk = 1. Now we can focus on each category κ: for each κ, we collect the set Q = {(i, j, k) | pijk = 1 and cj = κ} and calculate the corresponding sijks. We then sort sijks such that s(i1j1k1) ≤ · · · ≤ s(i|Q|j|Q|k|Q|). For each interval [s(iqjqkq), s(iq+1jq+1kq+1)], the function is quadratic, thus can be solved in a closed form. Therefore, by scanning the solution regions from left to right according to the sorted s values, and maintaining some intermediate computed variables, we are able to find the optimal solution, as summarized by the following lemma: Lemma 1. The subproblem (5) is convex with respect to d and can be solved exactly in O(‖P‖0 log(‖P‖0)), where ‖P‖0 is the number of nonzero elements in tensor P .\nTherefore, we can efficiently update d since P is a very sparse tensor with only a small number of nonzero elements."
+    }, {
+      "heading" : "4.2 Update X",
+      "text" : "By defining\naijk = { 1 + max(0, dcj − ticjk), if pijk = 1 0, otherwise\nthe subproblem with respect to X can be written as\nmin X∈Rm×n\nh(X)+λ‖X‖∗ where h(X) := { η ∑ ijk: pijk=1 max(aijk−xij , 0)2+(1−η) ∑ ijk: pijk=0 x2ij } .\n(6) Since there are O(mnl) terms in the objective function, a naive implementation will take at least O(mnl) time, which is computationally infeasible when the data is large. To address this issue, We use proximal gradient descent to solve the problem. At each iteration, X is updated by\nX← Sλ(X− α∇h(X)), (7) where Sλ(·) is the soft-thresholding operator for singular values.5\n5If X has the singular value decomposition X = UΣVT , then Sλ(X) = U(Σ − λI)+VT where a+ = max(0, a).\nIn order to efficiently compute the top singular vectors of X− α∇h(X), we rewrite it as\nX− α∇h(X) = [1− 2(1− η)l] X + 2(1− η) ∑ ijk: pijk=1 xij − 2η ∑ ijk: pijk=1 max(aijk − xij , 0)  . = fa(X) + fb(X).\nSince fa(X) is of low-rank and fb(X) is sparse, multiplying (X − α∇h(X)) with a skinny m by k matrix can be computed in O(nk2 + mk2 + ‖P‖0k) time. As shown in [12], each iteration of proximal gradient descent for nuclear norm minimization only requires a fixed number of iterations of randomized SVD (or equivalently, power iterations) using the warm start strategy, thus we have the following lemma.\nLemma 2. A proximal gradient descent algorithm can be applied to solve problem (6) within O(nk2T +mk2T + ‖P‖0kT ) time, where T is the number of iterations.\nWe note that the algorithm is guaranteed to converge to the true solution. This is because when we apply a fixed number of iterations to update X via problem (7), it is equivalent to the “inexact gradient descent update” where each gradient is approximately computed and the approximation error is upper bounded by a constant between zero and one. Intuitively speaking, when the gradient converges to 0, the error will also converge to 0 at an even faster rate. See [12] for the detailed explanations."
+    }, {
+      "heading" : "4.3 Overall Algorithm",
+      "text" : "Combining the two subproblems together, the time complexity of each iteration of the proposed algorithm is:\nO(‖P‖0 log(‖P‖0) + nk2T +mk2T + ‖P‖0kT ).\nRemark: Since each user should make at least one purchase and each item should be purchased at least once to be included in P , n and m are smaller than ‖P‖0. Also, since k and T are usually very small, the time complexity to solve problem (4) is dominated by the term ‖P‖0, which is a significant improvement over the naive approach with at least O(mnl) complexity.\nSince our problem has only two blocks d, X and each subproblem is convex, our optimization algorithm is guaranteed to converge to a stationary point [11]. Indeed, it converges very fast in practice. As a concrete example, our experiment shows that it takes only 9 iterations to optimize a problem with 1 million users, 1 million items, and more than 166 million purchase records."
+    }, {
+      "heading" : "5 Experiments",
+      "text" : ""
+    }, {
+      "heading" : "5.1 Experiment with Synthesized Data",
+      "text" : "We first conduct experiments with simulated data to verify that the proposed demand-aware recommendation algorithm is computationally efficient and robust to noise. To this end, we first construct a low-rank matrix X = WHT , where W ∈ Rm×10 and H ∈ Rn×10 are random Gaussian matrices with entries drawn from N (1, 0.5), and then normalize X to the range of [0, 1]. We randomly assign all the n items to r categories, with their inter-purchase durations d equaling [10, 20, . . . , 10r]. We then construct the high purchase intension set Ω = {(i, j, k) | ticjk ≥ dcj and xij ≥ 0.5}, and sample a subset of its entries as the observed purchase records. We let n = m and vary them in the range {10, 000, 20, 000, 30, 000, 40, 000}. We also vary r in the range {10, 20, · · · , 100}. Given the learned durations d∗, we use ‖d− d∗‖2/‖d‖2 to measure the prediction errors.\nAccuracy Figure 1(a) and 1(b) clearly show that the proposed algorithm can perfectly recover the underlying inter-purchase durations with varied numbers of users, items, and categories. To further evaluate the robustness of the proposed algorithm, we randomly flip some entries in tensor P from 0 to 1 to simulate the rare cases of purchasing two items in the same category in close temporal succession. Figure 1(c) shows that when the ratios of noisy entries are not large, the predicted durations d̂ are close enough to the true durations, thus verifying the robustness of the proposed algorithm.\nScalability To verify the scalability of the proposed algorithm, we fix the numbers of users and items to be 1 million, the number of time slots to be 1, 000, and vary the number of purchase records (i.e., ‖P‖0). Table 1 summarizes the CPU time of solving problem (4) on an Intel Xeon 2.40 GHz server with 32 GB main memory. We observe that the proposed algorithm is extremely efficient, e.g., even with 1 million users, 1 million items, and more than 166 million purchase records, the running time of the proposed algorithm is less than 2 hours."
+    }, {
+      "heading" : "5.2 Experiment with Real-World Data",
+      "text" : "In the real-world experiments, we evaluate the proposed demand-aware recommendation algorithm by comparing it with the six state-of the-art recommendation methods: (a) M3F, maximum-margin matrix factorization [24], (b) PMF, probabilistic matrix factorization [25], (c) WR-MF, weighted regularized matrix factorization [14], (d) CP-APR, Candecomp-Parafac alternating Poisson regression [7], (e) Rubik, knowledge-guided tensor factorization and completion method [30], and (f) BPTF, Bayesian probabilistic tensor factorization [31]. Among them, M3F and PMF are widely-used static collaborative filtering algorithms. We include these two algorithms as baselines to justify whether traditional collaborative filtering algorithms are suitable for general e-commerce recommendation involving both durable and nondurable goods. Since they require explicit ratings as inputs, we follow [2] to generate numerical ratings based on the frequencies of (user, item) consumption pairs. WR-MF is essentially the positive-unlabeled version of PMF and has shown to be very effective in modeling implicit feedback data. All the other three baselines, i.e., CP-APR, Rubik, and BPTF, are tensor-based methods that can consider time utility when making recommendations. We refer to the proposed recommendation algorithm as Demand-Aware Recommender for One-Sided Sampling, or DAROSS for short.\nOur testbeds are two real-world datasets Tmall6 and Amazon Review7. Since some of the baseline algorithms are not scalable enough, we first conduct experiments on their subsets and then on the full set of Amazon Review. In order to generate the subsets, we randomly sample 80 item categories for Tmall dataset and select the users who have purchased at least 3 items within these categories, leading to the purchase records of 377 users and 572 items. For Amazon Review dataset, we randomly select 300 users who have provided reviews to at least 5 item categories on Amazon.com. This leads to a total of 5, 111 items belonging to 11 categories. Time information for both datasets is provided in days, and we have 177 and 749 time slots for Tmall and Amazon Review subsets, respectively. The full Amazon Review dataset is significantly larger than its subset. After removing duplicate items, it contains more than 72 million product reviews from 19.8 million users and 7.7 million items that\n6http://ijcai-15.org/index.php/repeat-buyers-prediction-competition 7http://jmcauley.ucsd.edu/data/amazon/\nbelong to 24 item categories. The collected reviews span a long range of time: from May 1996 to July 2014, which leads to 6, 639 time slots in total. Comparing to its subset, the full set is a much more challenging dataset both due to its much larger size and much higher sparsity, i.e., many reviewers only provided a few reviews, and many items were only reviewed a small number of times.\nFor each user, we randomly sample 90% of her purchase records as the training data, and use the remaining 10% as the test data. For each purchase record (u, i, t) in the test set, we evaluate all the algorithms on two tasks: (i) category prediction, and (ii) purchase time prediction. In the first task, we record the highest ranking of items that are within item i’s category among all items at time t. Since a purchase record (u, i, t) may suggest that in time slot t, user u needed an item that share similar functionalities with item i, category prediction essentially checks whether the recommendation algorithms recognize this need. In the second task, we record the number of slots between the true purchase time t and its nearest predicted purchase time within item i’s category. Ideally, good recommendations should have both small category rankings and small time errors. Thus we adopt the average top percentages, i.e., (average category ranking) / n × 100% and (average time error) / l × 100%, as the evaluation metrics of category and purchase time prediction tasks, respectively. The algorithms M3F, PMF, and WR-MF are excluded from the purchase time prediction task since they are static models that do not consider time information.\nFigure 2 displays the predictive performance of the seven recommendation algorithms on Tmall and Amazon Review subsets. As expected, M3F and PMF fail to deliver strong performance since they neither take into account users’ demands, nor consider the positive-unlabeled nature of the data. This is verified by the performance of WR-MF: it significantly outperforms M3F and PMF by considering the PU issue and obtains the second-best item prediction accuracy on both datasets (while being unable to provide a purchase time prediction). By taking into account both issues, our proposed algorithm DAROSS yields the best performance for both datasets and both tasks. Table 2 reports the inter-review durations of Amazon Review subset estimated by our algorithm. Although they may not perfectly reflect the true inter-purchase durations, the estimated durations clearly distinguish between durable good categories, e.g., automotive, musical instruments, and non-durable good categories, e.g., instant video, apps, and food. Indeed, the learned inter-purchase durations can also play an important role in applications more advanced than recommender systems, such as inventory management, operations management, and sales/marketing mechanisms. We do not report the estimated durations of Tmall herein since the item categories are anonymized in the dataset.\nFinally, we conduct experiments on the full Amazon Review dataset. In this study, we replace category prediction with a more strict evaluation metric item prediction [8], which indicates the predicted ranking of item i among all items at time t for each purchase record (u, i, t) in the test set. Since most of our baseline algorithms fail to handle such a large dataset, we only obtain the predictive performance of three algorithms: DAROSS, WR-MF, and PMF. Note that for such a large dataset, prediction time instead of training time becomes the bottleneck: to evaluate average item rankings, we\nneed to compute the scores of all the 7.7 million items, thus is computationally inefficient. Therefore, we only sample a subset of items for each user and estimate the rankings of her purchased items. Using this evaluation method, the average item ranking percentages for DAROSS, WR-MF, and PMF are 16.7%, 27.3%, and 38.4%, respectively. In addition to superior performance, it only takes our algorithm 10 iterations and 1 hour to converge to a good solution. Since WR-MF and PMF are both static models, our algorithm is the only approach evaluated here that considers time utility while being scalable enough to handle the full Amazon Review dataset. Note that this dataset has more users, items, and time slots but fewer purchase records than our largest synthesized dataset, and the running time of the former dataset is lower than the latter one. This clearly verifies that the time complexity of our algorithm is dominated by the number of purchase records instead of the tensor size. Interestingly, we found that some inter-review durations estimated from the full Amazon Review dataset are much smaller than the durations estimated from its subset. This is because the durations may be underestimated when many users reviewed items within a same durable goods category in close temporal succession. On the other hand, this result verifies the effectiveness of the PU formulation – even if the durations are underestimated, our algorithm still outperforms the competitors by a considerable margin. As a final note, we want to point out that Tmall and Amazon Review may not take full advantage of the proposed algorithm, since (i) their categories are relatively coarse and may contain multiple sub-categories with different durations, and (ii) the time stamps of Amazon Review reflect the review time instead of purchase time, and inter-review durations could be different from inter-purchase durations. By choosing a purchase history dataset with a more appropriate category granularity, we may obtain more accurate duration estimations and also a better recommendation performance."
+    }, {
+      "heading" : "6 Conclusion",
+      "text" : "In this paper, we examine the problem of demand-aware recommendation in settings when interpurchase duration within item categories affects users’ purchase intention in combination with intrinsic properties of the items themselves. We formulate it as a tensor nuclear norm minimization problem that seeks to jointly learn the form utility tensor and a vector of inter-purchase durations, and propose a scalable optimization algorithm with a tractable time complexity. Our empirical studies show that the proposed approach can yield perfect recovery of duration vectors in noiseless settings; it is robust to noise and scalable as analyzed theoretically. On two real-world datasets, Tmall and Amazon Review, we show that our algorithm outperforms six state-of-the-art recommendation algorithms on the tasks of category, item, and purchase time predictions."
+    }, {
+      "heading" : "Acknowledgements",
+      "text" : "Cho-Jui Hsieh and Yao Li acknowledge the support of NSF IIS-1719097, TACC and Nvidia."
+    } ],
+    "references" : [ {
+      "title" : "Context-aware recommender systems",
+      "author" : [ "Gediminas Adomavicius", "Alexander Tuzhilin" ],
+      "venue" : "In Recommender Systems Handbook,",
+      "citeRegEx" : "1",
+      "shortCiteRegEx" : "1",
+      "year" : 2011
+    }, {
+      "title" : "Towards time-dependant recommendation based on implicit feedback",
+      "author" : [ "Linas Baltrunas", "Xavier Amatriain" ],
+      "venue" : "In Workshop on context-aware recommender systems,",
+      "citeRegEx" : "2",
+      "shortCiteRegEx" : "2",
+      "year" : 2009
+    }, {
+      "title" : "A collaborative filtering approach to mitigate the new user cold start problem",
+      "author" : [ "Jesús Bobadilla", "Fernando Ortega", "Antonio Hernando", "Jesús Bernal" ],
+      "venue" : "Knowl.-Based Syst.,",
+      "citeRegEx" : "3",
+      "shortCiteRegEx" : "3",
+      "year" : 2012
+    }, {
+      "title" : "Time-aware recommender systems: a comprehensive survey and analysis of existing evaluation protocols",
+      "author" : [ "Pedro G. Campos", "Fernando Díez", "Iván Cantador" ],
+      "venue" : "User Model. User-Adapt. Interact.,",
+      "citeRegEx" : "4",
+      "shortCiteRegEx" : "4",
+      "year" : 2014
+    }, {
+      "title" : "Exact matrix completion via convex optimization",
+      "author" : [ "Emmanuel J. Candès", "Benjamin Recht" ],
+      "venue" : "Foundations of Computational Mathematics,",
+      "citeRegEx" : "5",
+      "shortCiteRegEx" : "5",
+      "year" : 2009
+    }, {
+      "title" : "A consumer purchasing model with erlang inter-purchase times",
+      "author" : [ "Christopher Chatfield", "Gerald J Goodhardt" ],
+      "venue" : "Journal of the American Statistical Association,",
+      "citeRegEx" : "6",
+      "shortCiteRegEx" : "6",
+      "year" : 1973
+    }, {
+      "title" : "On tensors, sparsity, and nonnegative factorizations",
+      "author" : [ "Eric C. Chi", "Tamara G. Kolda" ],
+      "venue" : "SIAM Journal on Matrix Analysis and Applications,",
+      "citeRegEx" : "7",
+      "shortCiteRegEx" : "7",
+      "year" : 2012
+    }, {
+      "title" : "Time-sensitive recommendation from recurrent user activities",
+      "author" : [ "Nan Du", "Yichen Wang", "Niao He", "Jimeng Sun", "Le Song" ],
+      "venue" : "In NIPS,",
+      "citeRegEx" : "8",
+      "shortCiteRegEx" : "8",
+      "year" : 2015
+    }, {
+      "title" : "Analysis of learning from positive and unlabeled data",
+      "author" : [ "Marthinus Christoffel du Plessis", "Gang Niu", "Masashi Sugiyama" ],
+      "venue" : "In NIPS,",
+      "citeRegEx" : "9",
+      "shortCiteRegEx" : "9",
+      "year" : 2014
+    }, {
+      "title" : "Tensor completion and low-n-rank tensor recovery via convex optimization",
+      "author" : [ "Silvia Gandy", "Benjamin Recht", "Isao Yamada" ],
+      "venue" : "Inverse Problems,",
+      "citeRegEx" : "10",
+      "shortCiteRegEx" : "10",
+      "year" : 2011
+    }, {
+      "title" : "On the convergence of the block nonlinear Gauss-Seidel method under convex constraints",
+      "author" : [ "L. Grippo", "M. Sciandrone" ],
+      "venue" : "Operations Research Letters,",
+      "citeRegEx" : "11",
+      "shortCiteRegEx" : "11",
+      "year" : 2000
+    }, {
+      "title" : "Nuclear norm minimization via active subspace selection",
+      "author" : [ "C.-J. Hsieh", "P.A. Olsen" ],
+      "venue" : "In ICML,",
+      "citeRegEx" : "12",
+      "shortCiteRegEx" : "12",
+      "year" : 2014
+    }, {
+      "title" : "PU learning for matrix completion",
+      "author" : [ "Cho-Jui Hsieh", "Nagarajan Natarajan", "Inderjit S. Dhillon" ],
+      "venue" : "In ICML,",
+      "citeRegEx" : "13",
+      "shortCiteRegEx" : "13",
+      "year" : 2015
+    }, {
+      "title" : "Collaborative filtering for implicit feedback datasets",
+      "author" : [ "Y. Hu", "Y. Koren", "C. Volinsky" ],
+      "venue" : "In ICDM,",
+      "citeRegEx" : "14",
+      "shortCiteRegEx" : "14",
+      "year" : 2008
+    }, {
+      "title" : "Collaborative filtering for implicit feedback datasets",
+      "author" : [ "Yifan Hu", "Yehuda Koren", "Chris Volinsky" ],
+      "venue" : "In ICDM,",
+      "citeRegEx" : "15",
+      "shortCiteRegEx" : "15",
+      "year" : 2008
+    }, {
+      "title" : "Provable tensor factorization with missing data",
+      "author" : [ "P. Jain", "S. Oh" ],
+      "venue" : "In NIPS,",
+      "citeRegEx" : "16",
+      "shortCiteRegEx" : "16",
+      "year" : 2014
+    }, {
+      "title" : "Collaborative filtering with temporal dynamics",
+      "author" : [ "Yehuda Koren" ],
+      "venue" : "Commun. ACM,",
+      "citeRegEx" : "17",
+      "shortCiteRegEx" : "17",
+      "year" : 2010
+    }, {
+      "title" : "Impact of recommender systems on sales volume and diversity",
+      "author" : [ "Dokyun Lee", "Kartik Hosanagar" ],
+      "venue" : "In Proc. Int. Conf. Inf. Syst.,",
+      "citeRegEx" : "18",
+      "shortCiteRegEx" : "18",
+      "year" : 2014
+    }, {
+      "title" : "Cross-domain collaborative filtering over time",
+      "author" : [ "Bin Li", "Xingquan Zhu", "Ruijiang Li", "Chengqi Zhang", "Xiangyang Xue", "Xindong Wu" ],
+      "venue" : "In IJCAI,",
+      "citeRegEx" : "19",
+      "shortCiteRegEx" : "19",
+      "year" : 2011
+    }, {
+      "title" : "Building text classifiers using positive and unlabeled examples",
+      "author" : [ "Bing Liu", "Yang Dai", "Xiaoli Li", "Wee Sun Lee", "Philip S. Yu" ],
+      "venue" : "In ICML,",
+      "citeRegEx" : "20",
+      "shortCiteRegEx" : "20",
+      "year" : 2003
+    }, {
+      "title" : "Tensor completion for estimating missing values in visual data",
+      "author" : [ "Ji Liu", "Przemyslaw Musialski", "Peter Wonka", "Jieping Ye" ],
+      "venue" : "IEEE Trans. Pattern Anal. Mach. Intell.,",
+      "citeRegEx" : "21",
+      "shortCiteRegEx" : "21",
+      "year" : 2013
+    }, {
+      "title" : "Tensor factorization using auxiliary information",
+      "author" : [ "Atsuhiro Narita", "Kohei Hayashi", "Ryota Tomioka", "Hisashi Kashima" ],
+      "venue" : "In ECML/PKDD,",
+      "citeRegEx" : "22",
+      "shortCiteRegEx" : "22",
+      "year" : 2011
+    }, {
+      "title" : "BPR: bayesian personalized ranking from implicit feedback",
+      "author" : [ "Steffen Rendle", "Christoph Freudenthaler", "Zeno Gantner", "Lars Schmidt-Thieme" ],
+      "venue" : "In UAI,",
+      "citeRegEx" : "23",
+      "shortCiteRegEx" : "23",
+      "year" : 2009
+    }, {
+      "title" : "Fast maximum margin matrix factorization for collaborative prediction",
+      "author" : [ "Jason D.M. Rennie", "Nathan Srebro" ],
+      "venue" : "In ICML,",
+      "citeRegEx" : "24",
+      "shortCiteRegEx" : "24",
+      "year" : 2005
+    }, {
+      "title" : "Bayesian probabilistic matrix factorization using markov chain monte carlo",
+      "author" : [ "Ruslan Salakhutdinov", "Andriy Mnih" ],
+      "venue" : "In ICML,",
+      "citeRegEx" : "25",
+      "shortCiteRegEx" : "25",
+      "year" : 2008
+    }, {
+      "title" : "Calibrated asymmetric surrogate losses",
+      "author" : [ "Clayton Scott" ],
+      "venue" : "Electronic Journal of Statistics,",
+      "citeRegEx" : "26",
+      "shortCiteRegEx" : "26",
+      "year" : 2012
+    }, {
+      "title" : "Exploring Economics",
+      "author" : [ "Robert L. Sexton" ],
+      "venue" : "Cengage Learning,",
+      "citeRegEx" : "27",
+      "shortCiteRegEx" : "27",
+      "year" : 2013
+    }, {
+      "title" : "The prejudice against marketing",
+      "author" : [ "Robert L. Steiner" ],
+      "venue" : "J. Marketing,",
+      "citeRegEx" : "28",
+      "shortCiteRegEx" : "28",
+      "year" : 1976
+    }, {
+      "title" : "Collaborative Kalman filtering for dynamic matrix factorization",
+      "author" : [ "John Z. Sun", "Dhruv Parthasarathy", "Kush R. Varshney" ],
+      "venue" : "IEEE Trans. Signal Process.,",
+      "citeRegEx" : "29",
+      "shortCiteRegEx" : "29",
+      "year" : 2014
+    }, {
+      "title" : "Rubik: Knowledge guided tensor factorization and completion for health data analytics",
+      "author" : [ "Yichen Wang", "Robert Chen", "Joydeep Ghosh", "Joshua C. Denny", "Abel N. Kho", "You Chen", "Bradley A. Malin", "Jimeng Sun" ],
+      "venue" : "In SIGKDD,",
+      "citeRegEx" : "30",
+      "shortCiteRegEx" : "30",
+      "year" : 2015
+    }, {
+      "title" : "Temporal collaborative filtering with bayesian probabilistic tensor factorization",
+      "author" : [ "X. Liang", "C. Xi", "H. Tzu-Kuo", "S. Jeff G", "C. Jaime G" ],
+      "venue" : "In SDM,",
+      "citeRegEx" : "31",
+      "shortCiteRegEx" : "31",
+      "year" : 2010
+    }, {
+      "title" : "Inferring users’ preferences from crowdsourced pairwise comparisons: A matrix completion approach",
+      "author" : [ "Jinfeng Yi", "Rong Jin", "Shaili Jain", "Anil K. Jain" ],
+      "venue" : "In First AAAI Conference on Human Computation and Crowdsourcing (HCOMP),",
+      "citeRegEx" : "32",
+      "shortCiteRegEx" : "32",
+      "year" : 2013
+    } ],
+    "referenceMentions" : [ {
+      "referenceID" : 17,
+      "context" : "E-commerce recommender systems aim to present items with high utility to the consumers [18].",
+      "startOffset" : 87,
+      "endOffset" : 91
+    }, {
+      "referenceID" : 27,
+      "context" : "Utility may be decomposed into form utility: the item is desired as it is manifested, and time utility: the item is desired at the given point in time [28]; recommender systems should take both types of utility into account.",
+      "startOffset" : 151,
+      "endOffset" : 155
+    }, {
+      "referenceID" : 26,
+      "context" : "Economists define items to be either durable goods or nondurable goods based on how long they are intended to last before being replaced [27].",
+      "startOffset" : 137,
+      "endOffset" : 141
+    }, {
+      "referenceID" : 4,
+      "context" : "A key assumption made by matrix factorization- and completion-based collaborative filtering algorithms is that the underlying rating matrix is of low-rank since only a few factors typically contribute to an individual’s form utility [5].",
+      "startOffset" : 233,
+      "endOffset" : 236
+    }, {
+      "referenceID" : 14,
+      "context" : "An additional challenge faced by many real-world recommender systems is the one-sided sampling of implicit feedback [15, 23].",
+      "startOffset" : 116,
+      "endOffset" : 124
+    }, {
+      "referenceID" : 22,
+      "context" : "An additional challenge faced by many real-world recommender systems is the one-sided sampling of implicit feedback [15, 23].",
+      "startOffset" : 116,
+      "endOffset" : 124
+    }, {
+      "referenceID" : 12,
+      "context" : "In this sense, the labeled training data only draws from the positive class, and the unlabeled data is a mixture of positive and negative samples, a problem usually referred to as positive-unlabeled (PU) learning [13].",
+      "startOffset" : 213,
+      "endOffset" : 217
+    }, {
+      "referenceID" : 5,
+      "context" : "Our contributions herein relate to three different areas of prior work: consumer modeling from a microeconomics and marketing perspective [6], time-aware recommender systems [4, 29, 8, 19], and PU learning [20, 9, 13, 14, 23, 2].",
+      "startOffset" : 138,
+      "endOffset" : 141
+    }, {
+      "referenceID" : 3,
+      "context" : "Our contributions herein relate to three different areas of prior work: consumer modeling from a microeconomics and marketing perspective [6], time-aware recommender systems [4, 29, 8, 19], and PU learning [20, 9, 13, 14, 23, 2].",
+      "startOffset" : 174,
+      "endOffset" : 188
+    }, {
+      "referenceID" : 28,
+      "context" : "Our contributions herein relate to three different areas of prior work: consumer modeling from a microeconomics and marketing perspective [6], time-aware recommender systems [4, 29, 8, 19], and PU learning [20, 9, 13, 14, 23, 2].",
+      "startOffset" : 174,
+      "endOffset" : 188
+    }, {
+      "referenceID" : 7,
+      "context" : "Our contributions herein relate to three different areas of prior work: consumer modeling from a microeconomics and marketing perspective [6], time-aware recommender systems [4, 29, 8, 19], and PU learning [20, 9, 13, 14, 23, 2].",
+      "startOffset" : 174,
+      "endOffset" : 188
+    }, {
+      "referenceID" : 18,
+      "context" : "Our contributions herein relate to three different areas of prior work: consumer modeling from a microeconomics and marketing perspective [6], time-aware recommender systems [4, 29, 8, 19], and PU learning [20, 9, 13, 14, 23, 2].",
+      "startOffset" : 174,
+      "endOffset" : 188
+    }, {
+      "referenceID" : 19,
+      "context" : "Our contributions herein relate to three different areas of prior work: consumer modeling from a microeconomics and marketing perspective [6], time-aware recommender systems [4, 29, 8, 19], and PU learning [20, 9, 13, 14, 23, 2].",
+      "startOffset" : 206,
+      "endOffset" : 228
+    }, {
+      "referenceID" : 8,
+      "context" : "Our contributions herein relate to three different areas of prior work: consumer modeling from a microeconomics and marketing perspective [6], time-aware recommender systems [4, 29, 8, 19], and PU learning [20, 9, 13, 14, 23, 2].",
+      "startOffset" : 206,
+      "endOffset" : 228
+    }, {
+      "referenceID" : 12,
+      "context" : "Our contributions herein relate to three different areas of prior work: consumer modeling from a microeconomics and marketing perspective [6], time-aware recommender systems [4, 29, 8, 19], and PU learning [20, 9, 13, 14, 23, 2].",
+      "startOffset" : 206,
+      "endOffset" : 228
+    }, {
+      "referenceID" : 13,
+      "context" : "Our contributions herein relate to three different areas of prior work: consumer modeling from a microeconomics and marketing perspective [6], time-aware recommender systems [4, 29, 8, 19], and PU learning [20, 9, 13, 14, 23, 2].",
+      "startOffset" : 206,
+      "endOffset" : 228
+    }, {
+      "referenceID" : 22,
+      "context" : "Our contributions herein relate to three different areas of prior work: consumer modeling from a microeconomics and marketing perspective [6], time-aware recommender systems [4, 29, 8, 19], and PU learning [20, 9, 13, 14, 23, 2].",
+      "startOffset" : 206,
+      "endOffset" : 228
+    }, {
+      "referenceID" : 1,
+      "context" : "Our contributions herein relate to three different areas of prior work: consumer modeling from a microeconomics and marketing perspective [6], time-aware recommender systems [4, 29, 8, 19], and PU learning [20, 9, 13, 14, 23, 2].",
+      "startOffset" : 206,
+      "endOffset" : 228
+    }, {
+      "referenceID" : 19,
+      "context" : "[20, 9], whereas we are in the collaborative filtering setting.",
+      "startOffset" : 0,
+      "endOffset" : 7
+    }, {
+      "referenceID" : 8,
+      "context" : "[20, 9], whereas we are in the collaborative filtering setting.",
+      "startOffset" : 0,
+      "endOffset" : 7
+    }, {
+      "referenceID" : 13,
+      "context" : "For the papers that do examine collaborative filtering with PU learning or learning with implicit feedback [14, 23, 2, 32], they mainly focus on media recommendation and overlook users’ demands, thus are not suitable for durable goods recommendation.",
+      "startOffset" : 107,
+      "endOffset" : 122
+    }, {
+      "referenceID" : 22,
+      "context" : "For the papers that do examine collaborative filtering with PU learning or learning with implicit feedback [14, 23, 2, 32], they mainly focus on media recommendation and overlook users’ demands, thus are not suitable for durable goods recommendation.",
+      "startOffset" : 107,
+      "endOffset" : 122
+    }, {
+      "referenceID" : 1,
+      "context" : "For the papers that do examine collaborative filtering with PU learning or learning with implicit feedback [14, 23, 2, 32], they mainly focus on media recommendation and overlook users’ demands, thus are not suitable for durable goods recommendation.",
+      "startOffset" : 107,
+      "endOffset" : 122
+    }, {
+      "referenceID" : 31,
+      "context" : "For the papers that do examine collaborative filtering with PU learning or learning with implicit feedback [14, 23, 2, 32], they mainly focus on media recommendation and overlook users’ demands, thus are not suitable for durable goods recommendation.",
+      "startOffset" : 107,
+      "endOffset" : 122
+    }, {
+      "referenceID" : 2,
+      "context" : "Temporal aspects of the recommendation problem have been examined in a few ways: as part of the cold-start problem [3], to capture dynamics in interests or ratings over time [17], and as part of the context in context-aware recommenders [1].",
+      "startOffset" : 115,
+      "endOffset" : 118
+    }, {
+      "referenceID" : 16,
+      "context" : "Temporal aspects of the recommendation problem have been examined in a few ways: as part of the cold-start problem [3], to capture dynamics in interests or ratings over time [17], and as part of the context in context-aware recommenders [1].",
+      "startOffset" : 174,
+      "endOffset" : 178
+    }, {
+      "referenceID" : 0,
+      "context" : "Temporal aspects of the recommendation problem have been examined in a few ways: as part of the cold-start problem [3], to capture dynamics in interests or ratings over time [17], and as part of the context in context-aware recommenders [1].",
+      "startOffset" : 237,
+      "endOffset" : 240
+    }, {
+      "referenceID" : 12,
+      "context" : "Given this observation, we follow [13] and include a label-dependent loss [26] trading the relative cost of positive and unlabeled samples:",
+      "startOffset" : 34,
+      "endOffset" : 38
+    }, {
+      "referenceID" : 25,
+      "context" : "Given this observation, we follow [13] and include a label-dependent loss [26] trading the relative cost of positive and unlabeled samples:",
+      "startOffset" : 74,
+      "endOffset" : 78
+    }, {
+      "referenceID" : 21,
+      "context" : "In addition, the form utility tensor X should be of low-rank to capture temporal dynamics of users’ interests, which are generally believed to be dictated by a small number of latent factors [22].",
+      "startOffset" : 191,
+      "endOffset" : 195
+    }, {
+      "referenceID" : 20,
+      "context" : "where ‖X‖∗ denotes the tensor nuclear norm, a convex combination of nuclear norms of X ’s unfolded matrices [21].",
+      "startOffset" : 108,
+      "endOffset" : 112
+    }, {
+      "referenceID" : 20,
+      "context" : "We note that although the TNNM problem (2) can be solved by optimization techniques such as block coordinate descent [21] and ADMM [10], they suffer from high computational cost since they need to be solved iteratively with multiple SVDs at each iteration.",
+      "startOffset" : 117,
+      "endOffset" : 121
+    }, {
+      "referenceID" : 9,
+      "context" : "We note that although the TNNM problem (2) can be solved by optimization techniques such as block coordinate descent [21] and ADMM [10], they suffer from high computational cost since they need to be solved iteratively with multiple SVDs at each iteration.",
+      "startOffset" : 131,
+      "endOffset" : 135
+    }, {
+      "referenceID" : 15,
+      "context" : "An alternative way to solve the problem is tensor factorization [16].",
+      "startOffset" : 64,
+      "endOffset" : 68
+    }, {
+      "referenceID" : 24,
+      "context" : "To this end, we assume that an individual’s form utility does not change over time, an assumption widely-used in many collaborative filtering methods [25, 32].",
+      "startOffset" : 150,
+      "endOffset" : 158
+    }, {
+      "referenceID" : 31,
+      "context" : "To this end, we assume that an individual’s form utility does not change over time, an assumption widely-used in many collaborative filtering methods [25, 32].",
+      "startOffset" : 150,
+      "endOffset" : 158
+    }, {
+      "referenceID" : 11,
+      "context" : "As shown in [12], each iteration of proximal gradient descent for nuclear norm minimization only requires a fixed number of iterations of randomized SVD (or equivalently, power iterations) using the warm start strategy, thus we have the following lemma.",
+      "startOffset" : 12,
+      "endOffset" : 16
+    }, {
+      "referenceID" : 11,
+      "context" : "See [12] for the detailed explanations.",
+      "startOffset" : 4,
+      "endOffset" : 8
+    }, {
+      "referenceID" : 10,
+      "context" : "Since our problem has only two blocks d, X and each subproblem is convex, our optimization algorithm is guaranteed to converge to a stationary point [11].",
+      "startOffset" : 149,
+      "endOffset" : 153
+    }, {
+      "referenceID" : 23,
+      "context" : "In the real-world experiments, we evaluate the proposed demand-aware recommendation algorithm by comparing it with the six state-of the-art recommendation methods: (a) M(3)F, maximum-margin matrix factorization [24], (b) PMF, probabilistic matrix factorization [25], (c) WR-MF, weighted regularized matrix factorization [14], (d) CP-APR, Candecomp-Parafac alternating Poisson regression [7], (e) Rubik, knowledge-guided tensor factorization and completion method [30], and (f) BPTF, Bayesian probabilistic tensor factorization [31].",
+      "startOffset" : 211,
+      "endOffset" : 215
+    }, {
+      "referenceID" : 24,
+      "context" : "In the real-world experiments, we evaluate the proposed demand-aware recommendation algorithm by comparing it with the six state-of the-art recommendation methods: (a) M(3)F, maximum-margin matrix factorization [24], (b) PMF, probabilistic matrix factorization [25], (c) WR-MF, weighted regularized matrix factorization [14], (d) CP-APR, Candecomp-Parafac alternating Poisson regression [7], (e) Rubik, knowledge-guided tensor factorization and completion method [30], and (f) BPTF, Bayesian probabilistic tensor factorization [31].",
+      "startOffset" : 261,
+      "endOffset" : 265
+    }, {
+      "referenceID" : 13,
+      "context" : "In the real-world experiments, we evaluate the proposed demand-aware recommendation algorithm by comparing it with the six state-of the-art recommendation methods: (a) M(3)F, maximum-margin matrix factorization [24], (b) PMF, probabilistic matrix factorization [25], (c) WR-MF, weighted regularized matrix factorization [14], (d) CP-APR, Candecomp-Parafac alternating Poisson regression [7], (e) Rubik, knowledge-guided tensor factorization and completion method [30], and (f) BPTF, Bayesian probabilistic tensor factorization [31].",
+      "startOffset" : 320,
+      "endOffset" : 324
+    }, {
+      "referenceID" : 6,
+      "context" : "In the real-world experiments, we evaluate the proposed demand-aware recommendation algorithm by comparing it with the six state-of the-art recommendation methods: (a) M(3)F, maximum-margin matrix factorization [24], (b) PMF, probabilistic matrix factorization [25], (c) WR-MF, weighted regularized matrix factorization [14], (d) CP-APR, Candecomp-Parafac alternating Poisson regression [7], (e) Rubik, knowledge-guided tensor factorization and completion method [30], and (f) BPTF, Bayesian probabilistic tensor factorization [31].",
+      "startOffset" : 387,
+      "endOffset" : 390
+    }, {
+      "referenceID" : 29,
+      "context" : "In the real-world experiments, we evaluate the proposed demand-aware recommendation algorithm by comparing it with the six state-of the-art recommendation methods: (a) M(3)F, maximum-margin matrix factorization [24], (b) PMF, probabilistic matrix factorization [25], (c) WR-MF, weighted regularized matrix factorization [14], (d) CP-APR, Candecomp-Parafac alternating Poisson regression [7], (e) Rubik, knowledge-guided tensor factorization and completion method [30], and (f) BPTF, Bayesian probabilistic tensor factorization [31].",
+      "startOffset" : 463,
+      "endOffset" : 467
+    }, {
+      "referenceID" : 30,
+      "context" : "In the real-world experiments, we evaluate the proposed demand-aware recommendation algorithm by comparing it with the six state-of the-art recommendation methods: (a) M(3)F, maximum-margin matrix factorization [24], (b) PMF, probabilistic matrix factorization [25], (c) WR-MF, weighted regularized matrix factorization [14], (d) CP-APR, Candecomp-Parafac alternating Poisson regression [7], (e) Rubik, knowledge-guided tensor factorization and completion method [30], and (f) BPTF, Bayesian probabilistic tensor factorization [31].",
+      "startOffset" : 527,
+      "endOffset" : 531
+    }, {
+      "referenceID" : 1,
+      "context" : "Since they require explicit ratings as inputs, we follow [2] to generate numerical ratings based on the frequencies of (user, item) consumption pairs.",
+      "startOffset" : 57,
+      "endOffset" : 60
+    }, {
+      "referenceID" : 7,
+      "context" : "In this study, we replace category prediction with a more strict evaluation metric item prediction [8], which indicates the predicted ranking of item i among all items at time t for each purchase record (u, i, t) in the test set.",
+      "startOffset" : 99,
+      "endOffset" : 102
+    } ],
+    "year" : 2017,
+    "abstractText" : "Recommendation for e-commerce with a mix of durable and nondurable goods has characteristics that distinguish it from the well-studied media recommendation problem. The demand for items is a combined effect of form utility and time utility, i.e., a product must both be intrinsically appealing to a consumer and the time must be right for purchase. In particular for durable goods, time utility is a function of inter-purchase duration within product category because consumers are unlikely to purchase two items in the same category in close temporal succession. Moreover, purchase data, in contrast to rating data, is implicit with non-purchases not necessarily indicating dislike. Together, these issues give rise to the positive-unlabeled demand-aware recommendation problem that we pose via joint low-rank tensor completion and product category inter-purchase duration vector estimation. We further relax this problem and propose a highly scalable alternating minimization approach with which we can solve problems with millions of users and millions of items in a single thread. We also show superior prediction accuracies on multiple real-world datasets.",
+    "creator" : null
+  }
+}

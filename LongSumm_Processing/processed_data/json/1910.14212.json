@@ -1,0 +1,585 @@
+15:21:07.182 [main] DEBUG com.amazonaws.AmazonWebServiceClient - Internal logging successfully configured to commons logger: true
+15:21:07.229 [main] DEBUG com.amazonaws.metrics.AwsSdkMetrics - Admin mbean registered under com.amazonaws.management:type=AwsSdkMetrics
+15:21:07.279 [main] DEBUG c.a.internal.config.InternalConfig - Configuration override awssdk_config_override.json not found.
+15:21:07.578 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:21:07.578 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loading model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:21:07.579 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:21:07.583 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Creating gazetteer cache at /tmp/gazetteer-v5.json-fa485aef.gazetteerCache.bin
+15:21:19.308 [scala-execution-context-global-12] INFO  o.a.scienceparse.ParserGroundTruth - Read 1609659 papers.
+15:21:33.589 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loaded model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:21:45.899 [scala-execution-context-global-12] INFO  o.a.scienceparse.ExtractReferences - could not load kermit gazetter
+15:21:45.956 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:21:45.956 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:21:45.960 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.RunSP$ - Starting /home/risubaba/LongSumm/pdf/1910.14212.pdf
+{
+  "name" : "/home/risubaba/LongSumm/pdf/1910.14212.pdf",
+  "metadata" : {
+    "source" : "CRF",
+    "title" : "Sobolev Independence Criterion",
+    "authors" : [ "Youssef Mroueh", "Tom Sercu", "Mattia Rigotti", "Inkit Padhi", "Cicero Dos Santos" ],
+    "emails" : [ ],
+    "sections" : [ {
+      "heading" : "1 Introduction",
+      "text" : "Feature Selection is an important problem in statistics and machine learning for interpretable predictive modeling and scientific discoveries. Our goal in this paper is to design a dependency measure that is interpretable and can be reliably used to control the False Discovery Rate in feature selection. The mutual information between two random variables X and Y is the most commonly used dependency measure. The mutual information I(X;Y ) is defined as the Kullback-Leibler divergence between the joint distribution pxy of X,Y and the product of their marginals pxpy, I(X;Y ) = KL(pxy, pxpy). Mutual information is however challenging to estimate from samples, which motivated the introduction of dependency measures based on other f -divergences or Integral Probability Metrics [1] than the KL divergence. For instance, the Hilbert-Schmidt Independence Criterion (HSIC) [2] uses the Maximum Mean Discrepancy (MMD) [3] to assess the dependency between two variables, i.e. HSIC(X,Y ) = MMD(pxy, pxpy), which can be easily estimated from samples via Kernel mean embeddings in a Reproducing Kernel Hilbert Space (RKHS) [4]. In this paper we introduce the Sobolev Independence Criterion (SIC), a form of gradient regularized Integral Probability Metric (IPM) [5–7] between the joint distribution and the product of marginals. SIC relies on the statistics of the gradient of a witness function, or critic, for both (1) defining the IPM constraint and (2) finding the features that discriminate between the joint and the marginals. Intuitively, the magnitude of the average gradient with respect to a feature gives an importance score for each feature. Hence, promoting its sparsity is a natural constraint for feature selection.\nThe paper is organized as follows: we show in Section 2 how sparsity-inducing gradient penalties can be used to define an interpretable dependency measure that we name Sobolev Independence Criterion\n∗Tom Sercu is now with Facebook AI Research, and Cicero Dos Santos with Amazon AWS AI. The work was done when they were at IBM Research.\n33rd Conference on Neural Information Processing Systems (NeurIPS 2019), Vancouver, Canada.\nar X\niv :1\n91 0.\n14 21\n2v 1\n[ cs\n.L G\n] 3\n1 O\nct 2\n01 9\n(SIC). We devise an equivalent computational-friendly formulation of SIC in Section 3, that gives rise to additional auxiliary variables ηj . These naturally define normalized feature importance scores that can be used for feature selection. In Section 4 we study the case where the SIC witness function f is restricted to an RKHS and show that it leads to an optimization problem that is jointly convex in f and the importance scores η. We show that in this case SIC decomposes into the sum of feature scores, which is ideal for feature selection. In Section 5 we introduce a Neural version of SIC, which we show preserves the advantages in terms of interpretability when the witness function is parameterized as a homogeneous neural network, and which we show can be optimized using stochastic Block Coordinate Descent. In Section 6 we show how SIC and conditional Generative models can be used to control the False Discovery Rate using the recently introduced Holdout Randomization Test [8] and Knockoffs [9]. We validate SIC and its FDR control on synthetic and real datasets in Section 8."
+    }, {
+      "heading" : "2 Sobolev Independence Criterion: Interpretable Dependency Measure",
+      "text" : "Motivation: Feature Selection. We start by motivating gradient-sparsity regularization in SIC as a mean of selecting the features that maintain maximum dependency between two randoms variable X (the input) and Y (the response) defined on two spaces X ⊂ Rdx and Y ⊂ Rdy (in the simplest case dy = 1). Let pxy be the joint distribution of (X,Y ) and px, py be the marginals of X and Y resp. Let D be an Integral Probability Metric associated with a function space F , i.e for two distributions p, q:\nD(p, q) = sup f∈F\nEx∼pf(x)− Ex∼qf(x).\nWith p = pxy and q = pxpy this becomes a generalized definition of Mutual Information. Instead of the usual KL divergence, the metric D with its witness function, or critic, f(x, y) measures the distance between the joint pxy and the product of marginals pxpy . With this generalized definition of mutual information, the feature selection problem can be formalized as finding a sparse selector or gate w ∈ Rdx such thatD(pw x,y, pw xpy) is maximal [10–13] , i.e. supw,‖w‖`0≤sD(pw x,y, pw xpy), where is a pointwise multiplication and ‖w‖`0 = #{j|wj 6= 0}. This problem can be written in the following penalized form:\n(P) : sup w sup f∈F Epxyf(w x, y)− Epxpyf(w x, y)− λ||w||`0 .\nWe can relabel f̃(x, y) = f(w x, y) and write (P) as: supf̃∈F̃ Epxy f̃(x, y)−Epxpy f̃(x, y), where F̃ = {f̃ |f̃(x, y) = f(w x, y)|f ∈ F , ‖w‖`0 ≤ s}. Observe that we have: ∂f̃ ∂xj = wj ∂f(w x,y) ∂xj . Since wj is sparse the gradient of f̃ is sparse on the support of pxy and pxpy. Hence, we can reformulate the problem (P) as follows:\n(SIC): sup f∈F Epxyf(x, y)− Epxpyf(x, y)− λPS(f),\nwhere PS(f) is a penalty that controls the sparsity of the gradient of the witness function f on the support of the measures. Controlling the nonlinear sparsity of the witness function in (SIC) via its gradients is more general and powerful than the linear sparsity control suggested in the initial form (P), since it takes into account the nonlinear interactions with other variables. In the following Section we formalize this intuition by theoretically examining sparsity-inducing gradient penalties [14].\nSparsity Inducing Gradient Penalties. Gradient penalties have a long history in machine learning and signal processing. In image processing the total variation norm is used for instance as a regularizer to induce smoothness. Splines in Sobolev spaces [15], and manifold learning exploit gradient regularization to promote smoothness and regularity of the estimator. In the context of neural networks, gradient penalties were made possible through double back-propagation introduced in [16] and were shown to promote robustness and better generalization. Such smoothness penalties became popular in deep learning partly following the introduction of WGAN-GP [17], and were used as regularizer for distance measures between distributions in connection to optimal transport theory [5–7]. Let µ be a dominant measure of pxy and pxpy the most commonly used gradient penalties is\nΩL2(f) = E(x,y)∼µ ‖∇xf(x, y)‖ 2 .\nWhile this penalty promotes smoothness, it does not control the desired sparsity as discussed in the previous section. We therefore elect to instead use the nonlinear sparsity penalty introduced in [14] :\nΩ`0(f) = #{j|E(x,y)∼µ ∣∣∣∂f(x,y)∂xj ∣∣∣2 = 0}, and its relaxation :\nΩS(f) = dx∑ j=1\n√ E(x,y)∼µ ∣∣∣∣∂f(x, y)∂xj ∣∣∣∣2.\nAs discussed in [14], E(x,y)∼µ ∣∣∣∂f(x,y)∂xj ∣∣∣2 = 0 implies that f is constant with respect to variable xj , if the function f is continuously differentiable and the support of µ is connected. These considerations motivate the following definition of the Sobolev Independence Criterion (SIC):\nSIC(L1)2(pxy, pxpy) = sup f∈F\nEpxyf(x, y)− Epxpyf(x, y)− λ\n2 (ΩS(f)) 2 − ρ 2 Eµf2(x, y).\nNote that we add a `1-like penalty (ΩS(f) ) to ensure sparsity and an `2-like penalty (Eµf2(x, y)) to ensure stability. This is similar to practices with linear models such as Elastic net.\nHere we will consider µ = pxpy (although we could also use µ = 12 (pxy + pxpy)). Then, given samples {(xi, yi), i = 1, . . . , N} from the joint probability distribution pxy and iid samples {(xi, ỹi), i = 1, . . . , N} from pxpy , SIC can be estimated as follows:\nŜIC(L1)2(pxy, pxpy) = sup f∈F\n1\nN N∑ i=1 f(xi, yi)− 1 N N∑ i=1 f(xi, ỹi)− λ 2 ( Ω̂S(f) )2 −ρ 2 1 N N∑ i=1 f2(xi, ỹi),\nwhere Ω̂S(f) = ∑dx j=1 √ 1 N ∑N i=1 ∣∣∣∂f(xi,ỹi)∂xj ∣∣∣2. Remark 1. Throughout this paper we consider feature selection only on x since y is thought of as the response. Nevertheless, in many other problems one can perform feature selection on x and y jointly, which can be simply achieved by also controlling the sparsity of∇yf(x, y) in a similar way."
+    }, {
+      "heading" : "3 Equivalent Forms of SIC with η-trick",
+      "text" : "As it was just presented, the SIC objective is a difficult function to optimize in practice. First of all, the expectation appears after the square root in the gradient penalties, resulting in a non-smooth term (since the derivative of square root is not continuous at 0). Moreover, the fact that the expectation is inside the nonlinearity introduces a gradient estimation bias when the optimization of the SIC objective is performed using stochastic gradient descent (i.e. using mini-batches). We alleviate these problems (non-smoothness and biased expectation estimation) by making the expectation linear in the objective thanks to the introduction of auxiliary variables ηj that will end up playing an important role in this work. This is achieved thanks to a variational form of the square root that is derived from the following Lemma (which was used for a similar purpose as ours when alleviating the non-smoothness of mixed norms encountered in multiple kernel learning and group sparsity norms):\nLemma 1 ([18],[19]). Let aj , j = 1 . . . d, aj > 0 we have: (∑d\nj=1\n√ aj )2 = inf{ ∑d j=1 aj ηj :\nη, ηj > 0 ∑d j=1 ηj = 1}, optimum achieved at ηj = √ aj/ ∑ j √ aj .\nWe alleviate first the issue of non smoothness of the square root by adding an ε ∈ (0, 1), and we define: ΩS,ε = ∑dx j=1 √ E(x,y)∼µ ∣∣∣∂f(x,y)∂xj ∣∣∣2 + ε. Using Lemma 1 the nonlinear sparsity inducing gradient penalty can be written as :\n(ΩS,ε(f)) 2 = inf{ dx∑ j=1 Epxpy ∣∣∣∂f(x,y)∂xj ∣∣∣2 + ε ηj : η, ηj > 0, dx∑ j=1 ηj = 1},\nwhere the optimum is achieved for : η∗j,ε = βj∑dx k=1 βk , where β2j = Epxpy ∣∣∣∂f(x,y)∂xj ∣∣∣2 + ε. We refer to η∗j,ε as the normalized importance score of feature j. Note that ηj is a distribution over the features and gives a natural ranking between the features. Hence, substituting Ω(S)(f) with ΩS,ε(f) in its equivalent form we obtain the ε perturbed SIC:\nSIC(L1)2,ε(pxy, pxpy) = − inf{Lε(f, η) : f ∈ F , ηj , ηj > 0, dx∑ j=1 ηj = 1}\nwhere Lε(f, η) = −∆(f, pxy, pxpy) + λ2 ∑dx j=1 Epxpy ∣∣∣ ∂f(x,y)∂xj ∣∣∣2+ε ηj + ρ2Epxpyf 2(x, y), and ∆(f, pxy, pxpy) = Epxyf(x, y)− Epxpyf(x, y). Finally, SIC can be empirically estimated as\nŜIC(L1)2,ε(pxy, pxpy) = − inf{L̂ε(f, η) : f ∈ F , ηj , ηj > 0, dx∑ j=1 ηj = 1}\nwhere L̂ε(f, η) = −∆̂(f, pxy, pxpy) + λ2 ∑dx j=1 1 N ∑N i=1 ∣∣∣ ∂f(xi,ỹi)∂xj ∣∣∣2+ε ηj + ρ2 1 N ∑N i=1 f 2(xi, ỹi), and\nmain the objective ∆̂(f, pxy, pxpy) = 1N ∑N i=1 f(xi, yi)− 1 N ∑N i=1 f(xi, ỹi). Remark 2 (Group Sparsity). We can define similarly nonlinear group sparsity, if we would like our critic to depends on subsets of coordinates. Let Gk, k = 1, . . . ,K be an overlapping or non\noverlapping group : ΩgS(f) = ∑K k=1 √∑ j∈Gk Epxpy ∣∣∣∂f(x,y)∂xj ∣∣∣2. The η-trick applies naturally."
+    }, {
+      "heading" : "4 Convex Sobolev Independence Criterion in Fixed Feature Spaces",
+      "text" : "We will now specify the function space F in SIC and consider in this Section critics of the form:\nF = {f |f(x, y) = 〈u,Φω(x, y)〉 , ‖u‖2 ≤ γ}, where Φω : X × Y → Rm is a fixed finite dimensional feature map. We define the mean embeddings of the joint distribution pxy and product of marginals pxpy as follow: µ(pxy) = Epxy [Φω(x, y)], µ(pxpy) = Epxpy [Φω(x, y)] ∈ Rm. Define the covariance embedding of pxpy as C(pxpy) = Epxpy [Φω(x, y) ⊗ Φω(x, y)] ∈ Rm×m and finally define the Gramian of derivatives embedding for coordinate j as Dj(pxpy) = Epxpy [ ∂Φω(x,y) ∂xj ⊗ ∂Φω(x,y)∂xj ] ∈ R m×m. We can write the constraint ‖u‖2 ≤ γ as the penalty term −τ ‖u‖ 2. Define Lε(u, η) = 〈u, µ(pxpy)− µ(pxy)〉+ 1 2 〈 u, ( λ ∑dx j=1 Dj(pxpy)+ε ηj + ρC(pxpy) + τIm ) u 〉 . Observe that :\nSIC(L1)2,ε(pxy, pxpy) = − inf{Lε(u, η) : u ∈ Rm, ηj , ηj > 0, dx∑ j=1 ηj = 1}.\nWe start by remarking that SIC is a form of gradient regularized maximum mean discrepancy [3]. Previous MMD work comparing joint and product of marginals did not use the concept of nonlinear sparsity. For example the Hilbert-Schmidt Independence Criterion (HSIC) [2] uses Φω(x, y) = φ(x)⊗ ψ(y) with a constraint ||u||2 ≤ 1. CCA and related kernel measures of dependence [20, 21] use L22 constraints L 2 2(px) and L 2 2(py) on each function space separately.\nOptimization Properties of Convex SIC We analyze in this Section the Optimization properties of SIC. Theorem 1 shows that the SIC(L1)2,ε loss function is jointly strictly convex in (u, η) and hence admits a unique solution that solves a fixed point problem. Theorem 1 (Existence of a solution, Uniqueness, Convexity and Continuity). Note that L(u, η) = Lε=0(u, η). The following properties hold for the SIC loss:\n1) L(u, η) is differentiable and jointly convex in (u, η). L(u, η) is not continuous for η, such that ηj = 0 for some j.\n2) Smoothing, Perturbed SIC: For ε ∈ (0, 1), Lε(u, η) = L(u, η) + λ2 ∑dx j=1 ε ηj\nis jointly strictly convex and has compact level sets on the probability simplex, and admits a unique minimizer (u∗ε, η ∗ ε ).\n3) The unique minimizer of Lε(u, η) is a solution of the following fixed point problem: u∗ε = ( λ ∑dx j=1 Dj(pxpy) η∗j + ρC(pxpy) + τIm )−1 (µ(pxy) − µ(pxpy)), and η∗j,ε =√ 〈u∗ε ,Dj(pxpy)u∗ε〉+ε∑dx k=1 √ 〈u∗ε ,Dk(pxpy)u∗ε〉+ε .\nThe following Theorem shows that a solution of the unperturbed SIC problem can be obtained from the smoothed SIC(L1)2,ε in the limit ε→ 0:\nTheorem 2 (From Perturbed SIC to SIC). Consider a sequence ε`, ε` → 0 as `→∞ , and consider a sequence of minimizers (u∗ε` , η ∗ ` ) of Lε`(u, η), and let (u\n∗, η∗) be the limit of this sequence, then (u∗, η∗) is a minimizer of L(u, η).\nInterpretability of SIC. The following corollary shows that SIC can be written in terms of the importance scores of the features, since at optimum the main objective is proportional to the constraint term. It is to the best of our knowledge the first dependency criterion that decomposes in the sum of contributions of each coordinate, and hence it is an interpretable dependency measure. Moreover, η∗j are normalized importance scores of each feature j, and their ranking can be used to assess feature importance. Corollary 1 (Interpretability of Convex SIC ). Let (u∗, η∗) be the limit defined in Theorem 2. Define f∗(x, y) = 〈u∗,Φω(x, y)〉, and ‖f∗‖F = ‖u∗‖. We have that\nSIC(L1)2(pxy, pxpy) = 1\n2\n( Epxyf∗(x, y)− Epxpyf∗(x, y) ) = λ\n2  dx∑ j=1 √ Epxpy | ∂f∗(x, y) ∂xj |2 2 + ρ 2 Epxpyf∗,2(x, y) + τ 2 ||f∗||2F .\nMoreover, √ Epxpy | ∂f∗(x,y) ∂xj |2 = η∗jΩS,L1(f∗) and ∑dx j=1 ηj = 1. The terms η ∗ j can be seen as quantifying how much dependency as measured by SIC can be explained by a coordinate j. Ranking of η∗j can be used to rank influence of coordinates.\nThanks to the joint convexity and the smoothness of the perturbed SIC, we can solve convex empirical SIC using alternating minimization on u and η or block coordinate descent using first order methods such as gradient descent on u and mirror descent [22] on η that are known to be globally convergent in this case (see Appendix A for more details)."
+    }, {
+      "heading" : "5 Non Convex Neural SIC with Deep ReLU Networks",
+      "text" : "While Convex SIC enjoys a lot of theoretical properties, a crucial short-coming is the need to choose a feature map Φω that essentially goes back to the choice of a kernel in classical kernel methods. As an alternative, we propose to learn the feature map as a deep neural network. The architecture of the network can be problem dependent, but we focus here on a particular architecture: Deep ReLU Networks with biases removed. As we show below, using our sparsity inducing gradient penalties with such networks, results in input sparsity at the level of the witness function f of SIC. This is desirable since it allows for an interpretable model, similar to the effect of Lasso with Linear models, our sparsity inducing gradient penalties result in a nonlinear self-explainable witness function f [23], with explicit sparse dependency on the inputs.\nDeep ReLU Networks with no biases, homogeneity and Input Sparsity via Gradient Penalties. We start by invoking the Euler Theorem for homogeneous functions: Theorem 3 (Euler Theorem for Homogeneous Functions). A continuously differentiable function f is defined as homogeneous of degree k if f(λx) = λkf(x),∀λ ∈ R. The Theorem states that f is homogeneous of degree k if and only if kf(x) = 〈∇xf(x), x〉 = ∑dx j=1 ∂f(x) ∂xj xj . Now consider deep ReLU networks with biases removed for any number of layers L: FReLu = {f |f(x, y) = 〈u,Φω(x)〉 , where Φω(x, y) = σ(WL . . . σ(W2σ(W1[x, y]))), u ∈ Rm,Φω : Rdx+dy → Rm}, where σ(t) = max(t, 0),Wj are linear weights. Any f ∈ FReLU is clearly homogeneous of degree 1. As an immediate consequence of Euler Theorem we then have: f(x, y) = 〈∇xf(x, y), x〉 + 〈∇yf(x, y), y〉. The first term is similar to a linear term in a linear model, the second term can be seen as a bias. Using our sparsity-inducing gradient penalties with such networks guarantees that on average on the support of a dominant measure the gradients with respect to x are sparse. Intuitively, the gradients wrt x act like the weight in linear models, and our sparsity inducing gradient penalty act like the `1 regularization of Lasso. The main advantage compared to Lasso is that we have a highly nonlinear decision function, that has better capacity of capturing dependencies between X and Y .\nNon-convex SIC with Stochastic Block Coordinate Descent (BCD). We define the empirical non convex SIC(L1)2 using this function space FReLu as follows:\nŜIC(L1)2(pxy, pxpy) = − inf{L̂(fθ, η) : fθ ∈ FReLU , ηj , ηj > 0, dx∑ j=1 ηj = 1},\nwhere θ = (vec(W1) . . . vec(WL), u) are the network parameters. Algorithm 3 in Appendix B summarizes our stochastic BCD algorithm for training the Neural SIC. The algorithm consists of SGD updates to θ and mirror descent updates to η.\nBoosted SIC. When training Neural SIC, we can obtain different critics f` and importance scores η`, by varying random seeds or hyper-parameters (architecture, batch size etc). Inspired by importance scores in random forest, we define Boosted SIC as the arithmetic mean or the geometric mean of η`."
+    }, {
+      "heading" : "6 FDR Control and the Holdout Randomization Test/ Knockoffs.",
+      "text" : "Controlling the False Discovery Rate (FDR) in Feature Selection is an important problem for reproducible discoveries. In a nutshell, for a feature selection problem given the ground-truth set of features S , and a feature selection method such as SIC that gives a candidate set Ŝ, our goal is to maximize the TPR (True Positive Rate) or the power, and to keep the False Discovery Rate (FDR) under Control. TPR and FDR are defined as follows:\nTPR := E\n[ #{i : i ∈ Ŝ ∩ S}\n#{i : i ∈ S}\n] FDR := E [ #{i : i ∈ Ŝ\\S}\n#{i : i ∈ Ŝ}\n] . (1)\nWe explore in this paper two methods that provably control the FDR: 1) The Holdout Randomization Test (HRT) introduced in [8], that we specialize for SIC in Algorithm 4; 2) Knockoffs introduced in [9] that can be used with any basic feature selection method such as Neural SIC, and guarantees provable FDR control.\nHRT-SIC. We are interested in measuring the conditional dependency between a feature xj and the response variable y conditionally on the other features noted x−j . Hence we have the following null hypothesis: H0 : xj |= y |x−j ⇐⇒ pxy = pxj |x−jpy|x−jpx−j . In order to simulate the null hypothesis, we propose to use generative models for sampling from xj |x−j (See Appendix D). The principle in HRT [8] that we specify here for SIC in Algorithm 4 (given in Appendix B) is the following: instead of refitting SIC under H0, we evaluate the mean of the witness function of SIC on a holdout set sampled under H0 (using conditional generators for R rounds). The deviation of the mean of the witness function under H0 from its mean on a holdout from the real distribution gives us p-values. We use the Benjamini-Hochberg [24] procedure on those p-values to achieve a target FDR. We apply HRT-SIC on a shortlist of pre-selected features per their ranking of ηj .\nKnockoffs-SIC. Knockoffs [25] work by finding control variables called knockoffs x̃ that mimic the behavior of the real features x and provably control the FDR [9]. We use here Gaussian knockoffs [9] and train SIC on the concatenation of [x, x̃], i.e we train SIC([X; X̃], Y ) and obtain η that has now twice the dimension dx, i.e for each real feature j, there is the real importance score ηj and the knockoff importance score ηj+dx . knockoffs-SIC consists in using the statistics Wj = ηj − ηj+dx and the knockoff filter [9] to select features based on the sign of Wj (See Alg. 5 in Appendix)."
+    }, {
+      "heading" : "7 Relation to Previous Work",
+      "text" : "Kernel/Neural Measure of Dependencies. As discussed earlier SIC can be seen as a sparse gradient regularized MMD [3, 7] and relates to the Sobolev Discrepancy of [5, 6]. Feature selection with MMD was introduced in [10] and is based on backward elimination of features by recomputing MMD on the ablated vectors. SIC has the advantage of fitting one critic that has interpretable feature scores. Related to the MMD is the Hilbert Schmidt Independence Criterion (HSIC) and other variants of kernel dependency measures introduced in [2, 21]. None of those criteria has a nonparametric sparsity constraint on its witness function that allows for explainability and feature selection. Other Neural measures of dependencies such as MINE [26] estimate the KL divergence using neural networks, or that of [27] that estimates a proxy to the Wasserstein distance using Neural Networks.\nInterpretability, Sparsity, Saliency and Sensitivity Analysis. Lasso and elastic net [28] are interpretable linear models that exploit sparsity, but are limited to linear relationships. Random forests\n[29] have a heuristic for determining feature importance and are successful in practice as they can capture nonlinear relationships similar to SIC. We believe SIC can potentially leverage the deep learning toolkit for going beyond tabular data where random forests excel, to more structured data such as time series or graph data. Finally, SIC relates to saliency based post-hoc interpretation of deep models such as [30–32]. While those method use the gradient information for a post-hoc analysis, SIC incorporates this information to guide the learning towards the important features. As discussed in Section 2.1 many recent works introduce deep networks with input sparsity control through a learned gate or a penalty on the weights of the network [11–13]. SIC exploits a stronger notion of sparsity that leverages the relationship between the different covariates."
+    }, {
+      "heading" : "8 Experiments",
+      "text" : "Synthetic Data Validation. We first validate our methods and compare them to baseline models in simulation studies on synthetic datasets where the ground truth is available by construction. For this we generate the data according to a model y = f(x) + where the model f(·) and the noise define the specific synthetic dataset (see Appendix F.1). In particular, the value of y only depends on a subset of features xi, i = 1, . . . , p through f(·), and performance is quantified in terms of TPR and FDR in discovering them among the irrelevant features. We experiment with two datasets: A) Complex multivariate synthetic data (SinExp), which is generated from a complex multivariate model proposed in [33] Sec 5.3, where 6 ground truth features xi out of 50 generate the output y through a non-linearity involving the product and composition of the cos, sin and exp functions (see Appendix F.1). We therefore dub this dataset SinExp. To increase the difficulty even further, we introduce a pairwise correlation between all features of 0.5. In Fig. 1 we show results for datasets of 125 and 500 samples repeated 100 times comparing performance of our models with the one of two baselines: Elastic Net (EN) and Random Forest (RF). B) Liang Dataset. We show results on the benchmark dataset proposed by [34], specifically the generalized Liang dataset matching most of the setup from [8] Sec 5.1. We provide dataset details and results in Appendix F.1 (Results in Figure 2).\nTPR top 6 FDR top 6\nTPR HRT FDR HRT\nTPR top 6 FDR top 6\nTPR HRT FDR HRT\n0.0\n0.2\n0.4\n0.6\n0.8\n1.0\nPo we\nr a nd\nF DR\nElastic Net Random Forest\nTPR top 6 FDR top 6\nTPR HRT FDR HRT\nTPR top 6 FDR top 6\nTPR HRT FDR HRT\n0.0\n0.2\n0.4\n0.6\n0.8\n1.0\nMSE + Sobolev Penalty SIC\nDataset SINEXP, n=125 samples\nDataset SINEXP, n=500 samples\nFeature Selection on Drug Response dataset. We consider as a real-world application the Cancer Cell Line Encyclopedia (CCLE) dataset [36], described in Appendix F.2. We study the result of using the normalized importance scores ηj from SIC for (heuristic) feature selection, against features selected by Elastic Net. Table 1 shows the heldout MSE of a predictor trained on selected features, averaged over 100 runs (each run: new randomized 90%/10% data split, NN initialization). The goal here is to quantify the predictiveness of features selected by SIC on its own, without the full randomized testing machinery. The SIC critic and regressor NN were respectively the big_critic and regressor_NN described with training details in Appendix F.3, while the random forest is trained with default hyper parameters from scikit-learn [37]. We can see that, with just ηj , informative features are selected for the downstream regression task, with performance comparable to those selected by ElasticNet, which was trained explicitly for this task. The features selected with high ηj values and their overlap with the features selected by ElasticNet are listed in Appendix F.2 Table 3.\nHIV-1 Drug Resistance with Knockoffs-SIC. The second real-world dataset that we analyze is the HIV-1 Drug Resistance[38], which consists in detecting mutations associated with resistance to a drug type. For our experiments we use all the three classes of drugs: Protease Inhibitors (PIs), Nucleoside Reverse Transcriptase Inhibitors (NRTIs), and Non-nucleoside Reverse Transcriptase Inhibitors (NNRTIs). We use the pre-processing of each dataset (<drug-class, drug-type>) of the knockoff tutorial [39] made available by the authors. Concretely, we construct a dataset (X, X̃) of the concatenation of the real data and Gaussian knockoffs [9], and fit SIC([X, X̃], Y ). As explained in Section 6, we use in the knockoff filter the statistics Wj = ηj − ηj+dx , i.e. the difference of SIC importance scores between each feature and its corresponding knockoff. For SIC experiments, we use small_critic architecture (See Appendix F.3 for training details). We use Boosted SIC, by varying the batch sizes in N ∈ {10, 30, 50}, and computing the geometric mean of η produced by those three setups as the feature importance needed for Knockoffs. Results are summarized in Table 2."
+    }, {
+      "heading" : "9 Conclusion",
+      "text" : "We introduced in this paper the Sobolev Independence Criterion (SIC), a dependency measure that gives rise to feature importance which can be used for feature selection and interpretable decision making. We laid down the theoretical foundations of SIC and showed how it can be used in conjunction with the Holdout Randomization Test and Knockoffs to control the FDR, enabling reliable discoveries. We demonstrated the merits of SIC for feature selection in extensive synthetic and real-world experiments with controlled FDR."
+    }, {
+      "heading" : "A Algorithms for Convex SIC",
+      "text" : "Algorithms and Empirical Convex SIC from Samples. Given samples from the joint and the marginals, it is easy to see that the empirical loss L̂ε can be written in the same way with empirical feature mean embeddings µ̂(pxy) = 1N ∑N i=1 Φω(xi, yi) and µ̂(pxpy) = 1 N ∑N i=1 Φω(xi, ỹi),\ncovariances Ĉ(pxpy) = 1N ∑N i=1 Φω(xi, ỹi)⊗ Φω(xi, ỹi) and derivatives grammians D̂j(pxpy) = 1 N ∑N i=1 ∂Φω(xi,ỹi) ∂xj\n⊗ ∂Φω(x,y)∂xj . Given the strict convexity of L̂ε jointly in u and η, alternating optimization as given in Algorithm 1 in Appendix is known to be convergent to a global optima (Theorem 4.1 in [40]). Similarly Block Coordinate Descent (BCD) using first order methods as given in Algorithms 3 and 2 (in Appendix): gradient descent on u and mirror descent on η (in order to satisfy the simplex constraint [22]) are also known to be globally convergent (Theo 2 in [41].)\nAlgorithm 1 Alternating Optimization Inputs: ε,λ, τ , ρ , Φω Initialize η̂j = 1dx ,∀j, δ̂ = µ̂(pxy)− µ̂(pxpy) for i = 1 . . .Maxiter do û←( λ ∑dx j=1 D̂j(pxpy) η̂j + ρĈ(pxpy) + τIm )−1 δ̂\nη̂j ← √ 〈û,D̂j(pxpy)û〉+ε∑dx\nk=1\n√ 〈û,D̂k(pxpy)û〉+ε\nend for Output: û, η̂\nAlgorithm 2 Block Coordinate Descent Inputs: ε,λ, τ , ρ, α, αη (learning rates),Φω Initialize η̂j = 1dx ,∀j , Softmax(z) = ez/ ∑dx j=1 e zj\nfor i = 1 . . .Maxiter do Gradient step u: û← û− α∂L̂ε(û,η̂)∂u Mirror Descent η : logit← log(η̂)− αη ∂L̂ε(û,η̂)∂η η̂ ← Softmax(logit) {stable implementation of softmax} end for Output: û, η̂"
+    }, {
+      "heading" : "B Algorithms for Neural SIC, HRT-SIC and Model-X Knockoff SIC",
+      "text" : "Algorithm 3 (non convex) Neural SIC(X,Y ) (Stochastic BCD )\nInputs: X,Y dataset X ∈ RN×dx , Y ∈ RN×dy , such that (xi = Xi,., yi = Yi,.) ∼ pxy Hyperparameters: ε,λ, τ , ρ, αθ, αη (learning rates) Initialize ηj = 1dx ,∀j , Softmax(z) = ez/ ∑dx j=1 e zj for iter = 1 . . .Maxiter do Fetch a minibatch of size N (xi, yi) ∼ pxy Fetch a minibatch of size N (xi, ỹi) ∼ pxpy {ỹi obtained by permuting rows of Y } Stochastic Gradient step on θ: θ ← θ − αθ ∂L̂(fθ,η)∂θ {We use ADAM} Mirror Descent η : logit← log(η)− αη ∂L̂(fθ,η)∂η η ← Softmax(logit) {stable implementation of softmax} end for Output: fθ, η\nAlgorithm 4 HRT With SIC (X,Y )\nInputs: Dtrain = (Xtr, Ytr) , a Heldout set DHoldout = (X,Y ), features Cutoff K SIC: (fθ∗ , η∗) = SIC(Dtrain) {Alg. 3} Score of witness on Hold out : S∗ = MEAN(fθ∗(X,Y )) Conditional Generators Pre-trained conditional Generator : G(x−j , j) predicts Xj |X−j Shortlist : I = INDEXTOPK(η) {p-values for j ∈ I; randomizations tests} for j ∈ I do\nfor r = 1 . . . R do Construct X̃ , X̃.,k = X.,k∀k 6= j and X̃.,j = G(X−j , j) {Simulate Null Hyp.} Sj,r = MEAN(fθ∗(X̃, Y )) {Score of witness function on the Null} end for pj = 1 R+1 ( 1 + ∑R r=1 1Srj≥S∗\n) end for discoveries =BH(p,targetFDR) {BenjaminiHochberg Procedure} Output: discoveries\nAlgorithm 5 Model-X Knockoffs FDR control with SIC\nInputs: Dtrain = (Xtr, Ytr) , Model-X knockoff features X̃ ∼ ModelX(Xtr), target FDR q Train SIC: (fθ∗ , η) = SIC([Xtr, X̃], Y ), {Alg. 3} where [Xtr, X̃] is the concatenation of Xtr and knockoffs X̃ for j = 1, . . . , dX do\nCompute importance score of j feature: Wj = ηj − ηj+dx , where ηj+dX is the η of feature knockoff X̃j\nend for Compute threshold τ > 0 by setting τ = min { t > 0 :\n#{j:Wj≤−t} #{j:Wj≥t} ≤ q } Output: discoveries {j : Wj > τ}"
+    }, {
+      "heading" : "C Proofs",
+      "text" : "Proof of Theorem 1. 1) Let δ = µ(pxy)− µ(pxpy). We have\nL(u, η) = −〈u, δ〉+ 1 2 〈u, (ρC(pxpy) + τIm)u〉+ λ 2 ∑ j 〈u,Dj(pxpy)u〉 ηj , u ∈ Rm and η ∈ ∆dx\nwhere ∆dx is the probability simplex. L is the sum of a linear tem and quadratic terms (convex in u) and a function of the form\nf(u, η) = 1\n2 dx∑ j=1 u>Aju ηj\nwhere Aj are PSD matrices, and η is in the probability simplex (convex). Hence it is enough to show that f is jointly convex. Let g(w, η) = w\n>Aw η , η > 0. The Hessian of g(w, η), Hg has the following\nform:\nHg(w, η) =\n[ ∂2L\n∂w⊗∂w ∂2L ∂w∂η\n∂2L ∂η∂w\n∂2L ∂η2\n] = [ A η − Aw η2\n−w >A η2 w>Aw η3 ] Let us prove that for all (w, η), ηj >,∀j0:\n(w′, η′)>Hg(w, η)(w′, η′) ≥ 0,∀(w′, η′), η′j > 0,∀j\nWe have :\n(w′, η′)>Hg(w, η)(w′, η′) = 〈w′, Aw′〉 η − 2η′ 〈w ′, Aw〉 η2 + η′2 w>Aw η3\n= 1\nη\n( 〈w′, Aw′〉 − 2η ′\nη 〈w′, Aw〉+ η\n′2\nη2 w>Aw ) = 1\nη ∥∥∥∥A 12w′ − η′η A 12w ∥∥∥∥2\n2\n≥ 0 for η > 0\nNow back to f it is easy to see that :\n(w′, η′)>Hf(w, η)(w′, η′) = dx∑ j=1 1 ηj ∥∥∥∥A 12j w′ − η′jηjA 12j w ∥∥∥∥2 2 ≥ 0 for η ∈ ∆dxj , ηj > 0.\nHence the loss L is jointly convex in (u, η). Due to discontinuity at ηj = 0 the loss is not continuous .\n2) It is easy to see that the hessian becomes definite:\n(w′, η′)>HLε(w, η)(w ′, η′) = dx∑ j=1 1 ηj (∥∥∥∥A 12j w′ − η′jηjA 12j w ∥∥∥∥2 2 + ε( η′j ηj )2 ) > 0 for η ∈ ∆dxj , ηj , η ′ j > 0,\nandLε(u, η) is jointly strictly convex, u is unconstrained and η belongs to a convex set (the probability simplex) and hence admits a unique minimizer.\n3) The unique minimizer satisfies first order optimality conditions for the following Lagragian:\nL (u, η, ξ) = Lε(u, η) + ξ( ∑ j ηj − 1)\n∂L (u, η, ξ)\n∂u = −δ + λ dx∑ j=1 Dj(pxpy) ηj + ρC(pxpy) + τIm u = 0 and\n∂L (u, η, ξ) ∂ηj = −λ 2 〈u,Dj(pxpy)u〉+ ε η2j + ξ = 0\nand ∂L (u, η, ξ) ∂ξ = ∑ j ηj − 1 = 0\nHence:\nu∗ε = λ dx∑ j=1 Dj(pxpy) η∗j + ρC(pxpy) + τIm −1 (µ(pxy)− µ(pxpy)) and :\nη∗j,ε = √ 〈u∗ε, Dj(pxpy)u∗ε〉+ ε∑dx\nk=1 √ 〈u∗ε, Dk(pxpy)u∗ε〉+ ε .\nProof of Theorem 2. The proof follows similar proof in Argryou 2008.\nSε(u) = L(uε, η(uε)) = −〈u, δ〉+ 1\n2 〈u, (ρC(pxpy) + τIm)u〉+\nλ\n2 ∑ j √ 〈u,Dj(pxpy)u〉+ ε 2\nLet {(u`n , η`n(u`n)), n ∈ N} be a limiting subsequence of minimizers of Lε`n (., .) and let (u ∗, η∗) be its limit as n→∞. From the definition of Sε(u), we see that minu Sε(u) decreases as ε decreases to zero, and admits a limit S̄ = minu S0(u). Hence Sε`n → S̄. Note that Sε(u) is continuous in both ε and u and we have finally S0(u∗) = S̄, and u∗ is a minimizer of S0.\nProof of Corollary 1 . The optimum (u∗ε, η ∗ ε ) satisfies:\n−δ + λ dx∑ j=1 Dj(pxpy) ηj + ρC(pxpy) + τIm u∗ε = 0\nLet f∗(x) = 〈u,Φω(x, y)〉 and define ||f∗ε ||F = ‖u∗ε‖2. It follows that η∗j =√ Epxpy ∣∣∣ ∂f∗ε (x,y)∂xj ∣∣∣2+ε∑ k √ Epxpy\n∣∣∣ ∂f∗ε (x,y)∂xk ∣∣∣2+ε Note that we have Epxyf∗ε (x, y)− Epxpyf∗ε (x, y)\n= 〈δ, u∗ε〉\n=\n〈 u∗ε, λ dx∑ j=1 Dj(pxpy) η∗j,ε + ρC(pxpy) + τIm u∗ε 〉\n= λ  dx∑ j=1 √ Epxpy | ∂f∗ε (x, y) ∂xj |2 + ε 2 + ρEpxpyf∗,2ε (x, y) + τ ||f∗ε ||2F\nSIC(L1)2,ε = Epxyf∗ε (x, y)− Epxpyf∗ε (x, y)− 1\n2 (λ  dx∑ j=1 √ Epxpy | ∂f∗ε (x, y) ∂xj |2 + ε 2 + ρEpxpyf∗,2ε (x, y) + τ ||f∗ε ||2F )\n= λ\n2  dx∑ j=1 √ Epxpy | ∂f∗ε (x, y) ∂xj |2 + ε 2 + ρ 2 Epxpyf∗,2ε (x, y) + τ 2 ||f∗ε ||2F\n= 1\n2\n( Epxyf∗ε (x, y)− Epxpyf∗ε (x, y) ) We conclude by taking ε→ 0."
+    }, {
+      "heading" : "D FDR Control with HRT and Conditional Generative Models",
+      "text" : "The Holdout Randomization Test (HRT) is a principled method to produce valid p-values for each feature, that enables the control over the false discovery of a predictive model [8]. The p-value associated to each feature xj essentially quantifies the result of a conditional independence test with the null hypothesis stating that xj is independent of the output y, conditioned on all the remaining features x−j = (x1, . . . , xj−1, xj+1, . . . , xp). This in practice requires the availability of an estimate of the complete conditional of each feature xj , i.e. of P (xj |x−j). HRT then samples the values of xj from this conditional distribution to obtain the p-value associated to it. Taking inspiration from neural network models for conditional generation (see e.g. [42]) we train a neural network to act as a generator of a features xj given the remaining features x−j as inputs, as a replacement for the conditional distributions P (xj |x−j). In all of our tasks, one three-layer neural network with 200 ReLU units and Conditional Batch Normalization (BCN) [43] applied to all hidden layers serves as generator for all features j = 1, . . . , p. A sample from P (xj |x−j) is generated by giving as input to the network an index j indicating the feature to generate, and a sample x−j ∼ P (x−j), represented as a sample from the full joint distribution x ∼ P (x1, . . . , xp), with feature j being masked out. In practice, the index j and x ∼ P (x1, . . . , xp) are given as inputs to the generator, and the neural network model does the masking, and sends the index j to the CBN modules which normalize their inputs using j-dependent centering and normalization parameters. The output of the generator is a nbins-dimensional softmax over bins tessellating the range of the distribution of xj , such that the bins are uniform quantiles of the inverse CDF of the distribution of xj estimated over the training set. In all simulations we used a number of bins nbins = 100.\nGenerators are trained randomly sampling an index j = 1, . . . , p for each sample x in the training set, and minimizing the cross-entropy loss between the output of the generator neural network Gen(j,x) and xj using mini-batch SGD. In particular, we used the Adam optimizer [44] with the default pytorch [45] parameters and learning rate λ = 0.003 which is halved every 20 epochs, and batch size of 128."
+    }, {
+      "heading" : "E Discussion of SIC: Consistency, Computational Complexity and FDR Control",
+      "text" : "SIC consistency. In order to recover the correct conditional independence we elected to use FDR control techniques to perform those dependent hypotheses testing (btw coordinates). By combining SIC with HRT and knockoffs we can guarantee that the correct dependency is recovered while the FDR is under control. For the consistency of SIC in the classical sense, one needs to analyze the solution of SIC, when the critic is not constrained to belonging to an RKHS. This can be done by studying the solution of the equivalent PDE corresponding to this problem (which is challenging, but we think can also be managed through the η- trick). Then one would proceed by finding 1) conditions under which this solution exists in the RKHS, 2) generalization bounds from samples to the population solution in the RKHS. We leave this analysis for future work.\nComputational Complexity of Neural SIC. The cost of training SIC with SGD and mirror descent has the same scaling in the size of the problem as training the base regressor neural network via back-propagation. The only additional overhead is the gradient penalty, where the cost is that of double back-propagation. In our experiments, this added computational cost is not an issue when training is performed on GPU.\nSIC-HRT versus SIC-Knockoffs. For a comparison between HRT and knockoffs, we refer the reader to [8], which shows similar performance for either method in terms of controlling FDR. Each method has its advantages. In HRT most of the computation is in 1) training the generative models, and 2) performing the randomization test, i.e. forwarding the data through the critic and computing p-values for each coordinate for R runs. On the other hand, if knockoff features can be modelled as a multivariate Gaussian, controlling FDR with knockoffs can be done very cheaply, since it does not require randomization tests. If instead knockoff features have to be generated through nonlinear models, knockoffs can be computationally expensive as well (see for example [46])."
+    }, {
+      "heading" : "F Experimental details",
+      "text" : "F.1 Synthetic Datasets\nF.1.1 Complex Multivariate Synthetic Dataset (SinExp)\nThe SinExp dataset is generated from a complex multivariate model proposed in [33] Sec 5.3, where 6 features xi out of 50 generate the output y through a non-linearity involving the product and composition of the cos, sin and exp functions, as follows:\ny = sin(x1(x1 + x2)) cos(x3 + x4x5) sin(e x5 + ex6 − x2).\nWe increase the difficulty even further by introducing a pairwise correlation between all features of 0.5. We perform experiments using datasets of 125 and 500 samples. For each sample size, 100 independent datasets are generated.\nF.1.2 Liang Dataset\nLiang Dataset is a variant of the synthetic dataset proposed by [34]. The dataset prescribes a regression model with 500-dimensional correlated input features x, where the 1-D regression target y depends on the first 40 features only (the last 460 correlated features are ignored). In the original dataset proposed by [34], y depends on 4 features only, this more complex version of the dataset that uses 40 features was proposed by [8]. The target y is computed as follows:\ny = 9∑ j=0 [w4jx4j + w4j+1x4j+1 + tanh(w4j+2x4j+2 + w4j+3x4j+3)] + σ , (2)\nwith σ = 0.5 and ∼ N (0, 1). As in [8], the 500 features are generated to have 0.5 correlation coefficient with each other,\nxj = (ρ+ zj)/2 , j = 1, . . . , 500 , (3)\nwhere ρ and zj are independently generated from N (0, 1).\nOur experimental results are the average over 100 generated datasets, each consisting of 500 train and 500 heldout samples.\nF.2 CCLE Dataset\nThe Cancer Cell Line Encyclopedia (CCLE) dataset [36] provides data about of anti-cancer drug response in cancer cell lines. The dataset contains the phenotypic response measured as the area under the dose-response curve (AUC) for a variety of drugs that were tested against hundreds of cell lines. [36] analyzed each cell to obtain gene mutation and expression features. The total number of data points (cells) is 479. We followed the preprocessing steps by [8] and first screened the genomic features to filter out features with less than 0.1 magnitude Pearson correlation to the AUC. This resulted in a final set of about 7K features. The main goal in this task is to discover the genomic features associated with drug response. Following [8], we perform experiments for the drug PLX4720. Table 3 presents the top-10 genomic features selected by SIC according to ηj values. In Sec. 8, we also present quantitative results that show the effectiveness of these features when used to train regression models.\nF.3 SIC Neural Network descriptions and training details\nThe first critic network used in the experiments (with SinExp and HIV-1 datasets) is a standard three-layer ReLU dropout network with no biases, i.e. small_critic. When using this network, the\ninputs X and Y are first concatenated then given as input to the network. The two first layers have size 100, while the last layer has size 1. We train the network using Adam optimizer with β1 = 0.5, β2 = 0.999, weight_decay=1e-4 learning rate αη = 1e-3 and αη = 0.1, and perform 4000 training iterations/updates, computed with batches of size 100. All NNs used in our experiments were implemented using PyTorch [45].\nsmall_critic( (branchxy): Sequential(\n(0): Linear(in_features=51, out_features=100, bias=False) (1): ReLU() (2): Dropout(p=0.3) (3): Linear(in_features=100, out_features=100, bias=False) (4): ReLU() (5): Dropout(p=0.3) (6): Linear(in_features=100, out_features=1, bias=False)\n) )\nThe critic network used in the experiments with Liang and CCLE datasets contains two different branches that separately process the inputs X (branchx) and Y (branchy), then the output of these two branches are concatenated and processed by a final branch that contains three-layer LeakyReLU network (branchxy). We name this network big_critic (see figure bellow for details about layer sizes). This network is trained with the same Adam settings as above for 4000 updates (Liang) and 8000 updates (CCLE).\nbig_critic( (branchx): Sequential(\n(0): Linear(in_features=500, out_features=100, bias=True) (1): LeakyReLU(negative_slope=0.01) (2): Linear(in_features=100, out_features=100, bias=True) (3): LeakyReLU(negative_slope=0.01)\n) (branchy): Sequential(\n(0): Linear(in_features=1, out_features=100, bias=True) (1): LeakyReLU(negative_slope=0.01) (2): Linear(in_features=100, out_features=100, bias=True) (3): LeakyReLU(negative_slope=0.01)\n) (branchxy): Sequential(\n(0): Linear(in_features=200, out_features=100, bias=True) (1): LeakyReLU(negative_slope=0.01) (2): Linear(in_features=100, out_features=100, bias=True) (3): LeakyReLU(negative_slope=0.01) (4): Linear(in_features=100, out_features=1, bias=True)\n) )\nThe regressor NN used for the downstream regression task in Section 8 is a standard three-layer ReLU dropout network. This regressor NN was trained with the same Adam settings as above for 1000 updates with a batchSize of 16. We did not perform any hyperparameter tuning or model selection on heldout MSE performance.\nregressor_NN( (net): Sequential(\n(0): Linear(in_features=7251, out_features=100, bias=True) (1): ReLU() (2): Dropout(p=0.3) (3): Linear(in_features=100, out_features=100, bias=True) (4): ReLU() (5): Dropout(p=0.3)\n(6): Linear(in_features=100, out_features=1, bias=True) )\n)"
+    } ],
+    "references" : [ {
+      "title" : "On integral probability metrics, φ-divergences and binary classification",
+      "author" : [ "Bharath K. Sriperumbudur", "Kenji Fukumizu", "Arthur Gretton", "Bernhard Scholkopf", "Gert R.G. Lanckriet" ],
+      "venue" : null,
+      "citeRegEx" : "1",
+      "shortCiteRegEx" : "1",
+      "year" : 2009
+    }, {
+      "title" : "A kernel statistical test of independence",
+      "author" : [ "A. Gretton", "K. Fukumizu", "CH. Teo", "L. Song", "B. Schölkopf", "AJ. Smola" ],
+      "venue" : "In Advances in neural information processing systems",
+      "citeRegEx" : "2",
+      "shortCiteRegEx" : "2",
+      "year" : 2008
+    }, {
+      "title" : "A kernel two-sample test",
+      "author" : [ "Arthur Gretton", "Karsten M. Borgwardt", "Malte J. Rasch", "Bernhard Schölkopf", "Alexander Smola" ],
+      "venue" : null,
+      "citeRegEx" : "3",
+      "shortCiteRegEx" : "3",
+      "year" : 2012
+    }, {
+      "title" : "Kernel mean embedding of distributions: A review and beyond",
+      "author" : [ "Krikamol Muandet", "Kenji Fukumizu", "Bharath Sriperumbudur", "Bernhard Schölkopf" ],
+      "venue" : null,
+      "citeRegEx" : "4",
+      "shortCiteRegEx" : "4",
+      "year" : 2017
+    }, {
+      "title" : "On gradient regularizers for mmd gans",
+      "author" : [ "Michael Arbel", "Dougal J. Sutherland", "Mikolaj Binkowski", "Arthur Gretton" ],
+      "venue" : "NeurIPS,",
+      "citeRegEx" : "7",
+      "shortCiteRegEx" : "7",
+      "year" : 2018
+    }, {
+      "title" : "The holdout randomization test: Principled and easy black box feature selection",
+      "author" : [ "W. Tansey", "V. Veitch", "H. Zhang", "R. Rabadan", "D.M. Blei" ],
+      "venue" : "arXiv preprint arXiv:1811.00645,",
+      "citeRegEx" : "8",
+      "shortCiteRegEx" : "8",
+      "year" : 2018
+    }, {
+      "title" : "Panning for gold: model-x knockoffs for high dimensional controlled variable selection",
+      "author" : [ "Emmanuel Candes", "Yingying Fan", "Lucas Janson", "Jinchi Lv" ],
+      "venue" : null,
+      "citeRegEx" : "9",
+      "shortCiteRegEx" : "9",
+      "year" : 2018
+    }, {
+      "title" : "Feature selection via dependence maximization",
+      "author" : [ "Le Song", "Alex Smola", "Arthur Gretton", "Justin Bedo", "Karsten Borgwardt" ],
+      "venue" : "J. Mach. Learn. Res.,",
+      "citeRegEx" : "10",
+      "shortCiteRegEx" : "10",
+      "year" : 2012
+    }, {
+      "title" : "Sparse-input neural networks for high-dimensional nonparametric regression and classification",
+      "author" : [ "Jean Feng", "Noah Simon" ],
+      "venue" : null,
+      "citeRegEx" : "11",
+      "shortCiteRegEx" : "11",
+      "year" : 2017
+    }, {
+      "title" : "Variable selection via penalized neural network: a drop-out-one loss approach",
+      "author" : [ "Mao Ye", "Yan Sun" ],
+      "venue" : "In Proceedings of the 35th International Conference on Machine Learning,",
+      "citeRegEx" : "12",
+      "shortCiteRegEx" : "12",
+      "year" : 2018
+    }, {
+      "title" : "Deep supervised feature selection using stochastic gates",
+      "author" : [ "Yutaro Yamada", "Ofir Lindenbaum", "Sahand Negahban", "Yuval Kluger" ],
+      "venue" : null,
+      "citeRegEx" : "13",
+      "shortCiteRegEx" : "13",
+      "year" : 2018
+    }, {
+      "title" : "Nonparametric sparsity and regularization",
+      "author" : [ "Lorenzo Rosasco", "Silvia Villa", "Sofia Mosci", "Matteo Santoro", "Alessandro Verri" ],
+      "venue" : "J. Mach. Learn. Res.,",
+      "citeRegEx" : "14",
+      "shortCiteRegEx" : "14",
+      "year" : 2013
+    }, {
+      "title" : "Smoothing noisy data with spline functions",
+      "author" : [ "Grace Wahba" ],
+      "venue" : "Numerische mathematik,",
+      "citeRegEx" : "15",
+      "shortCiteRegEx" : "15",
+      "year" : 1975
+    }, {
+      "title" : "Improving generalization performance using double backpropagation",
+      "author" : [ "Harris Drucker", "Yann LeCun" ],
+      "venue" : "IEEE Transactions on Neural Networks,",
+      "citeRegEx" : "16",
+      "shortCiteRegEx" : "16",
+      "year" : 1992
+    }, {
+      "title" : "Improved training of wasserstein gans",
+      "author" : [ "Ishaan Gulrajani", "Faruk Ahmed", "Martin Arjovsky", "Vincent Dumoulin", "Aaron Courville" ],
+      "venue" : null,
+      "citeRegEx" : "17",
+      "shortCiteRegEx" : "17",
+      "year" : 2017
+    }, {
+      "title" : "Convex multi-task feature learning",
+      "author" : [ "Andreas Argyriou", "Theodoros Evgeniou", "Massimiliano Pontil" ],
+      "venue" : "Mach. Learn.,",
+      "citeRegEx" : "18",
+      "shortCiteRegEx" : "18",
+      "year" : 2008
+    }, {
+      "title" : "Optimization with Sparsity-Inducing Penalties (Foundations and Trends(R) in Machine Learning)",
+      "author" : [ "Francis Bach", "Rodolphe Jenatton", "Julien Mairal" ],
+      "venue" : "Now Publishers Inc.,",
+      "citeRegEx" : "19",
+      "shortCiteRegEx" : "19",
+      "year" : 2011
+    }, {
+      "title" : "Canonical ridge and econometrics of joint production",
+      "author" : [ "H.D. Vinod" ],
+      "venue" : "Journal of Econometrics,",
+      "citeRegEx" : "20",
+      "shortCiteRegEx" : "20",
+      "year" : 1976
+    }, {
+      "title" : "Kernel measures of conditional dependence",
+      "author" : [ "Kenji Fukumizu", "Arthur Gretton", "Xiaohai Sun", "Bernhard Schölkopf" ],
+      "venue" : "In Advances in Neural Information Processing Systems",
+      "citeRegEx" : "21",
+      "shortCiteRegEx" : "21",
+      "year" : 2008
+    }, {
+      "title" : "Mirror descent and nonlinear projected subgradient methods for convex optimization",
+      "author" : [ "Amir Beck", "Marc Teboulle" ],
+      "venue" : "Oper. Res. Lett.,",
+      "citeRegEx" : "22",
+      "shortCiteRegEx" : "22",
+      "year" : 2003
+    }, {
+      "title" : "Towards robust interpretability with self-explaining neural networks",
+      "author" : [ "David Alvarez Melis", "Tommi Jaakkola" ],
+      "venue" : "In Advances in Neural Information Processing Systems",
+      "citeRegEx" : "23",
+      "shortCiteRegEx" : "23",
+      "year" : 2018
+    }, {
+      "title" : "Controlling the false discovery rate: A Practical and powerful approach to multiple testing",
+      "author" : [ "Y. Benjamini", "Y. Hochberg" ],
+      "venue" : "J. Roy. Statist. Soc.,",
+      "citeRegEx" : "24",
+      "shortCiteRegEx" : "24",
+      "year" : 1995
+    }, {
+      "title" : "Controlling the false discovery rate via knockoffs",
+      "author" : [ "Rina Foygel Barber", "Emmanuel J Candès" ],
+      "venue" : "The Annals of Statistics,",
+      "citeRegEx" : "25",
+      "shortCiteRegEx" : "25",
+      "year" : 2015
+    }, {
+      "title" : "Mine: Mutual information neural estimation, 2018",
+      "author" : [ "Mohamed Ishmael Belghazi", "Aristide Baratin", "Sai Rajeswar", "Sherjil Ozair", "Yoshua Bengio", "Aaron Courville", "R Devon Hjelm" ],
+      "venue" : null,
+      "citeRegEx" : "26",
+      "shortCiteRegEx" : "26",
+      "year" : 2018
+    }, {
+      "title" : "Wasserstein dependency measure for representation learning, 2019",
+      "author" : [ "Sherjil Ozair", "Corey Lynch", "Yoshua Bengio", "Aaron van den Oord", "Sergey Levine", "Pierre Sermanet" ],
+      "venue" : null,
+      "citeRegEx" : "27",
+      "shortCiteRegEx" : "27",
+      "year" : 2019
+    }, {
+      "title" : "The Elements of Statistical Learning",
+      "author" : [ "Trevor Hastie", "Robert Tibshirani", "Jerome Friedman" ],
+      "venue" : null,
+      "citeRegEx" : "28",
+      "shortCiteRegEx" : "28",
+      "year" : 2001
+    }, {
+      "title" : "Learning important features through propagating activation differences",
+      "author" : [ "Avanti Shrikumar", "Peyton Greenside", "Anshul Kundaje" ],
+      "venue" : "In Proceedings of the 34th International Conference on Machine Learning,",
+      "citeRegEx" : "30",
+      "shortCiteRegEx" : "30",
+      "year" : 2017
+    }, {
+      "title" : "Deep inside convolutional networks: Visualising image classification models and saliency",
+      "author" : [ "Karen Simonyan", "Andrea Vedaldi", "Andrew Zisserman" ],
+      "venue" : "maps. International Conference on Learning Representations (Workshop Track).,",
+      "citeRegEx" : "31",
+      "shortCiteRegEx" : "31",
+      "year" : 2014
+    }, {
+      "title" : "On pixel-wise explanations for non-linear classifier decisions by layer-wise relevance propagation",
+      "author" : [ "Sebastian Bach", "Alexander Binder", "Grégoire Montavon", "Frederick Klauschen", "Klaus-Robert Müller", "Wojciech Samek" ],
+      "venue" : "PLoS ONE,",
+      "citeRegEx" : "32",
+      "shortCiteRegEx" : "32",
+      "year" : 2015
+    }, {
+      "title" : "Sparse-input neural networks for high-dimensional nonparametric regression and classification",
+      "author" : [ "Jean Feng", "Noah Simon" ],
+      "venue" : "arXiv preprint arXiv:1711.07592,",
+      "citeRegEx" : "33",
+      "shortCiteRegEx" : "33",
+      "year" : 2017
+    }, {
+      "title" : "Bayesian neural networks for selection of drug sensitive genes",
+      "author" : [ "Faming Liang", "Qizhai Li", "Lei Zhou" ],
+      "venue" : "Journal of the American Statistical Association,",
+      "citeRegEx" : "34",
+      "shortCiteRegEx" : "34",
+      "year" : 2018
+    }, {
+      "title" : "The cancer cell line encyclopedia enables predictive modelling of anticancer drug sensitivity",
+      "author" : [ "Jordi Barretina", "Giordano Caponigro", "Nicolas Stransky", "Kavitha Venkatesan", "Adam A Margolin", "Sungjoon Kim", "Christopher J Wilson", "Joseph Lehár", "Gregory V Kryukov", "Dmitriy Sonkin" ],
+      "venue" : null,
+      "citeRegEx" : "36",
+      "shortCiteRegEx" : "36",
+      "year" : 2012
+    }, {
+      "title" : "Scikitlearn: Machine learning in python",
+      "author" : [ "Fabian Pedregosa", "Gaël Varoquaux", "Alexandre Gramfort", "Vincent Michel", "Bertrand Thirion", "Olivier Grisel", "Mathieu Blondel", "Peter Prettenhofer", "Ron Weiss", "Vincent Dubourg" ],
+      "venue" : "Journal of machine learning research,",
+      "citeRegEx" : "37",
+      "shortCiteRegEx" : "37",
+      "year" : 2011
+    }, {
+      "title" : "Genotypic predictors of human immunodeficiency virus type 1 drug resistance",
+      "author" : [ "Soo-Yon Rhee", "Jonathan Taylor", "Gauhar Wadhera", "Asa Ben-Hur", "Douglas L Brutlag", "Robert W Shafer" ],
+      "venue" : "Proceedings of the National Academy of Sciences,",
+      "citeRegEx" : "38",
+      "shortCiteRegEx" : "38",
+      "year" : 2006
+    }, {
+      "title" : "R tutorial for knockoffs - 4. https://web.stanford.edu/ group/candes/knockoffs/software/knockoffs/tutorial-4-r.html, 2017",
+      "author" : [ "Matteo Sesia", "Evan Patterson" ],
+      "venue" : null,
+      "citeRegEx" : "39",
+      "shortCiteRegEx" : "39",
+      "year" : 2017
+    }, {
+      "title" : "Convergence of a block coordinate descent method for nondifferentiable minimization",
+      "author" : [ "P. Tseng" ],
+      "venue" : "J. Optim. Theory Appl.,",
+      "citeRegEx" : "40",
+      "shortCiteRegEx" : "40",
+      "year" : 2001
+    }, {
+      "title" : "A unified convergence analysis of block successive minimization methods for nonsmooth optimization",
+      "author" : [ "Meisam Razaviyayn", "Mingyi Hong", "Zhi-Quan Luo" ],
+      "venue" : "SIAM Journal on Optimization,",
+      "citeRegEx" : "41",
+      "shortCiteRegEx" : "41",
+      "year" : 2013
+    }, {
+      "title" : "Conditional image generation with pixelcnn decoders",
+      "author" : [ "Aaron Van den Oord", "Nal Kalchbrenner", "Lasse Espeholt", "Oriol Vinyals", "Alex Graves" ],
+      "venue" : "In Advances in neural information processing systems,",
+      "citeRegEx" : "42",
+      "shortCiteRegEx" : "42",
+      "year" : 2016
+    }, {
+      "title" : "Learning visual reasoning without strong priors",
+      "author" : [ "Ethan Perez", "Harm de Vries", "Florian Strub", "Vincent Dumoulin", "Aaron Courville" ],
+      "venue" : "arXiv preprint arXiv:1707.03017,",
+      "citeRegEx" : "43",
+      "shortCiteRegEx" : "43",
+      "year" : 2017
+    }, {
+      "title" : "Adam: A method for stochastic optimization",
+      "author" : [ "Diederik Kingma", "Jimmy Ba" ],
+      "venue" : "In ICLR,",
+      "citeRegEx" : "44",
+      "shortCiteRegEx" : "44",
+      "year" : 2015
+    }, {
+      "title" : "Automatic differentiation in pytorch",
+      "author" : [ "Adam Paszke", "Sam Gross", "Soumith Chintala", "Gregory Chanan", "Edward Yang", "Zachary DeVito", "Zeming Lin", "Alban Desmaison", "Luca Antiga", "Adam Lerer" ],
+      "venue" : "NIPS-W,",
+      "citeRegEx" : "45",
+      "shortCiteRegEx" : "45",
+      "year" : 2017
+    } ],
+    "referenceMentions" : [ {
+      "referenceID" : 0,
+      "context" : "Mutual information is however challenging to estimate from samples, which motivated the introduction of dependency measures based on other f -divergences or Integral Probability Metrics [1] than the KL divergence.",
+      "startOffset" : 186,
+      "endOffset" : 189
+    }, {
+      "referenceID" : 1,
+      "context" : "For instance, the Hilbert-Schmidt Independence Criterion (HSIC) [2] uses the Maximum Mean Discrepancy (MMD) [3] to assess the dependency between two variables, i.",
+      "startOffset" : 64,
+      "endOffset" : 67
+    }, {
+      "referenceID" : 2,
+      "context" : "For instance, the Hilbert-Schmidt Independence Criterion (HSIC) [2] uses the Maximum Mean Discrepancy (MMD) [3] to assess the dependency between two variables, i.",
+      "startOffset" : 108,
+      "endOffset" : 111
+    }, {
+      "referenceID" : 3,
+      "context" : "HSIC(X,Y ) = MMD(pxy, pxpy), which can be easily estimated from samples via Kernel mean embeddings in a Reproducing Kernel Hilbert Space (RKHS) [4].",
+      "startOffset" : 144,
+      "endOffset" : 147
+    }, {
+      "referenceID" : 5,
+      "context" : "In Section 6 we show how SIC and conditional Generative models can be used to control the False Discovery Rate using the recently introduced Holdout Randomization Test [8] and Knockoffs [9].",
+      "startOffset" : 168,
+      "endOffset" : 171
+    }, {
+      "referenceID" : 6,
+      "context" : "In Section 6 we show how SIC and conditional Generative models can be used to control the False Discovery Rate using the recently introduced Holdout Randomization Test [8] and Knockoffs [9].",
+      "startOffset" : 186,
+      "endOffset" : 189
+    }, {
+      "referenceID" : 11,
+      "context" : "In the following Section we formalize this intuition by theoretically examining sparsity-inducing gradient penalties [14].",
+      "startOffset" : 117,
+      "endOffset" : 121
+    }, {
+      "referenceID" : 12,
+      "context" : "Splines in Sobolev spaces [15], and manifold learning exploit gradient regularization to promote smoothness and regularity of the estimator.",
+      "startOffset" : 26,
+      "endOffset" : 30
+    }, {
+      "referenceID" : 13,
+      "context" : "In the context of neural networks, gradient penalties were made possible through double back-propagation introduced in [16] and were shown to promote robustness and better generalization.",
+      "startOffset" : 119,
+      "endOffset" : 123
+    }, {
+      "referenceID" : 14,
+      "context" : "Such smoothness penalties became popular in deep learning partly following the introduction of WGAN-GP [17], and were used as regularizer for distance measures between distributions in connection to optimal transport theory [5–7].",
+      "startOffset" : 103,
+      "endOffset" : 107
+    }, {
+      "referenceID" : 11,
+      "context" : "We therefore elect to instead use the nonlinear sparsity penalty introduced in [14] :",
+      "startOffset" : 79,
+      "endOffset" : 83
+    }, {
+      "referenceID" : 11,
+      "context" : "As discussed in [14], E(x,y)∼μ ∣∣∣∂f(x,y) ∂xj ∣∣∣2 = 0 implies that f is constant with respect to variable xj , if the function f is continuously differentiable and the support of μ is connected.",
+      "startOffset" : 16,
+      "endOffset" : 20
+    }, {
+      "referenceID" : 15,
+      "context" : "This is achieved thanks to a variational form of the square root that is derived from the following Lemma (which was used for a similar purpose as ours when alleviating the non-smoothness of mixed norms encountered in multiple kernel learning and group sparsity norms): Lemma 1 ([18],[19]).",
+      "startOffset" : 279,
+      "endOffset" : 283
+    }, {
+      "referenceID" : 16,
+      "context" : "This is achieved thanks to a variational form of the square root that is derived from the following Lemma (which was used for a similar purpose as ours when alleviating the non-smoothness of mixed norms encountered in multiple kernel learning and group sparsity norms): Lemma 1 ([18],[19]).",
+      "startOffset" : 284,
+      "endOffset" : 288
+    }, {
+      "referenceID" : 2,
+      "context" : "We start by remarking that SIC is a form of gradient regularized maximum mean discrepancy [3].",
+      "startOffset" : 90,
+      "endOffset" : 93
+    }, {
+      "referenceID" : 1,
+      "context" : "For example the Hilbert-Schmidt Independence Criterion (HSIC) [2] uses Φω(x, y) = φ(x)⊗ ψ(y) with a constraint ||u||2 ≤ 1.",
+      "startOffset" : 62,
+      "endOffset" : 65
+    }, {
+      "referenceID" : 17,
+      "context" : "CCA and related kernel measures of dependence [20, 21] use L(2)2 constraints L 2 2(px) and L 2 2(py) on each function space separately.",
+      "startOffset" : 46,
+      "endOffset" : 54
+    }, {
+      "referenceID" : 18,
+      "context" : "CCA and related kernel measures of dependence [20, 21] use L(2)2 constraints L 2 2(px) and L 2 2(py) on each function space separately.",
+      "startOffset" : 46,
+      "endOffset" : 54
+    }, {
+      "referenceID" : 19,
+      "context" : "Thanks to the joint convexity and the smoothness of the perturbed SIC, we can solve convex empirical SIC using alternating minimization on u and η or block coordinate descent using first order methods such as gradient descent on u and mirror descent [22] on η that are known to be globally convergent in this case (see Appendix A for more details).",
+      "startOffset" : 250,
+      "endOffset" : 254
+    }, {
+      "referenceID" : 20,
+      "context" : "This is desirable since it allows for an interpretable model, similar to the effect of Lasso with Linear models, our sparsity inducing gradient penalties result in a nonlinear self-explainable witness function f [23], with explicit sparse dependency on the inputs.",
+      "startOffset" : 212,
+      "endOffset" : 216
+    }, {
+      "referenceID" : 5,
+      "context" : "We explore in this paper two methods that provably control the FDR: 1) The Holdout Randomization Test (HRT) introduced in [8], that we specialize for SIC in Algorithm 4; 2) Knockoffs introduced in [9] that can be used with any basic feature selection method such as Neural SIC, and guarantees provable FDR control.",
+      "startOffset" : 122,
+      "endOffset" : 125
+    }, {
+      "referenceID" : 6,
+      "context" : "We explore in this paper two methods that provably control the FDR: 1) The Holdout Randomization Test (HRT) introduced in [8], that we specialize for SIC in Algorithm 4; 2) Knockoffs introduced in [9] that can be used with any basic feature selection method such as Neural SIC, and guarantees provable FDR control.",
+      "startOffset" : 197,
+      "endOffset" : 200
+    }, {
+      "referenceID" : 5,
+      "context" : "The principle in HRT [8] that we specify here for SIC in Algorithm 4 (given in Appendix B) is the following: instead of refitting SIC under H0, we evaluate the mean of the witness function of SIC on a holdout set sampled under H0 (using conditional generators for R rounds).",
+      "startOffset" : 21,
+      "endOffset" : 24
+    }, {
+      "referenceID" : 21,
+      "context" : "We use the Benjamini-Hochberg [24] procedure on those p-values to achieve a target FDR.",
+      "startOffset" : 30,
+      "endOffset" : 34
+    }, {
+      "referenceID" : 22,
+      "context" : "Knockoffs [25] work by finding control variables called knockoffs x̃ that mimic the behavior of the real features x and provably control the FDR [9].",
+      "startOffset" : 10,
+      "endOffset" : 14
+    }, {
+      "referenceID" : 6,
+      "context" : "Knockoffs [25] work by finding control variables called knockoffs x̃ that mimic the behavior of the real features x and provably control the FDR [9].",
+      "startOffset" : 145,
+      "endOffset" : 148
+    }, {
+      "referenceID" : 6,
+      "context" : "We use here Gaussian knockoffs [9] and train SIC on the concatenation of [x, x̃], i.",
+      "startOffset" : 31,
+      "endOffset" : 34
+    }, {
+      "referenceID" : 6,
+      "context" : "knockoffs-SIC consists in using the statistics Wj = ηj − ηj+dx and the knockoff filter [9] to select features based on the sign of Wj (See Alg.",
+      "startOffset" : 87,
+      "endOffset" : 90
+    }, {
+      "referenceID" : 2,
+      "context" : "As discussed earlier SIC can be seen as a sparse gradient regularized MMD [3, 7] and relates to the Sobolev Discrepancy of [5, 6].",
+      "startOffset" : 74,
+      "endOffset" : 80
+    }, {
+      "referenceID" : 4,
+      "context" : "As discussed earlier SIC can be seen as a sparse gradient regularized MMD [3, 7] and relates to the Sobolev Discrepancy of [5, 6].",
+      "startOffset" : 74,
+      "endOffset" : 80
+    }, {
+      "referenceID" : 7,
+      "context" : "Feature selection with MMD was introduced in [10] and is based on backward elimination of features by recomputing MMD on the ablated vectors.",
+      "startOffset" : 45,
+      "endOffset" : 49
+    }, {
+      "referenceID" : 1,
+      "context" : "Related to the MMD is the Hilbert Schmidt Independence Criterion (HSIC) and other variants of kernel dependency measures introduced in [2, 21].",
+      "startOffset" : 135,
+      "endOffset" : 142
+    }, {
+      "referenceID" : 18,
+      "context" : "Related to the MMD is the Hilbert Schmidt Independence Criterion (HSIC) and other variants of kernel dependency measures introduced in [2, 21].",
+      "startOffset" : 135,
+      "endOffset" : 142
+    }, {
+      "referenceID" : 23,
+      "context" : "Other Neural measures of dependencies such as MINE [26] estimate the KL divergence using neural networks, or that of [27] that estimates a proxy to the Wasserstein distance using Neural Networks.",
+      "startOffset" : 51,
+      "endOffset" : 55
+    }, {
+      "referenceID" : 24,
+      "context" : "Other Neural measures of dependencies such as MINE [26] estimate the KL divergence using neural networks, or that of [27] that estimates a proxy to the Wasserstein distance using Neural Networks.",
+      "startOffset" : 117,
+      "endOffset" : 121
+    }, {
+      "referenceID" : 25,
+      "context" : "Lasso and elastic net [28] are interpretable linear models that exploit sparsity, but are limited to linear relationships.",
+      "startOffset" : 22,
+      "endOffset" : 26
+    }, {
+      "referenceID" : 29,
+      "context" : "We experiment with two datasets: A) Complex multivariate synthetic data (SinExp), which is generated from a complex multivariate model proposed in [33] Sec 5.",
+      "startOffset" : 147,
+      "endOffset" : 151
+    }, {
+      "referenceID" : 30,
+      "context" : "We show results on the benchmark dataset proposed by [34], specifically the generalized Liang dataset matching most of the setup from [8] Sec 5.",
+      "startOffset" : 53,
+      "endOffset" : 57
+    }, {
+      "referenceID" : 5,
+      "context" : "We show results on the benchmark dataset proposed by [34], specifically the generalized Liang dataset matching most of the setup from [8] Sec 5.",
+      "startOffset" : 134,
+      "endOffset" : 137
+    }, {
+      "referenceID" : 5,
+      "context" : "We therefore also compute FDR and TPR after selecting features using the HRT method of [8] among the top 20 features.",
+      "startOffset" : 87,
+      "endOffset" : 90
+    }, {
+      "referenceID" : 31,
+      "context" : "We consider as a real-world application the Cancer Cell Line Encyclopedia (CCLE) dataset [36], described in Appendix F.",
+      "startOffset" : 89,
+      "endOffset" : 93
+    }, {
+      "referenceID" : 32,
+      "context" : "3, while the random forest is trained with default hyper parameters from scikit-learn [37].",
+      "startOffset" : 86,
+      "endOffset" : 90
+    }, {
+      "referenceID" : 33,
+      "context" : "The second real-world dataset that we analyze is the HIV-1 Drug Resistance[38], which consists in detecting mutations associated with resistance to a drug type.",
+      "startOffset" : 74,
+      "endOffset" : 78
+    }, {
+      "referenceID" : 34,
+      "context" : "We use the pre-processing of each dataset (<drug-class, drug-type>) of the knockoff tutorial [39] made available by the authors.",
+      "startOffset" : 93,
+      "endOffset" : 97
+    }, {
+      "referenceID" : 6,
+      "context" : "Concretely, we construct a dataset (X, X̃) of the concatenation of the real data and Gaussian knockoffs [9], and fit SIC([X, X̃], Y ).",
+      "startOffset" : 104,
+      "endOffset" : 107
+    } ],
+    "year" : 2019,
+    "abstractText" : "We propose the Sobolev Independence Criterion (SIC), an interpretable dependency measure between a high dimensional random variable X and a response variable Y . SIC decomposes to the sum of feature importance scores and hence can be used for nonlinear feature selection. SIC can be seen as a gradient regularized Integral Probability Metric (IPM) between the joint distribution of the two random variables and the product of their marginals. We use sparsity inducing gradient penalties to promote input sparsity of the critic of the IPM. In the kernel version we show that SIC can be cast as a convex optimization problem by introducing auxiliary variables that play an important role in feature selection as they are normalized feature importance scores. We then present a neural version of SIC where the critic is parameterized as a homogeneous neural network, improving its representation power as well as its interpretability. We conduct experiments validating SIC for feature selection in synthetic and real-world experiments. We show that SIC enables reliable and interpretable discoveries, when used in conjunction with the holdout randomization test and knockoffs to control the False Discovery Rate. Code is available at http://github.com/ibm/sic.",
+    "creator" : "LaTeX with hyperref package"
+  }
+}

@@ -1,0 +1,21 @@
+listofdic -> List of dictionaries
+listofdic entry -> {
+                "title" : text,
+                "references" : list of dictionaries,
+                "sections" : list of dictionaries,
+                "abstractText" : text
+                }
+
+references entry -> {
+    'title': text,
+    'author': text,
+    'venue': text,
+    'citeRegEx': text,
+    'shortCiteRegEx': text,
+    'year': int
+}
+
+sections entry -> {
+    "heading" : text,
+    "text" : text
+}

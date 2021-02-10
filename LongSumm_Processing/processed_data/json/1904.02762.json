@@ -1,0 +1,1463 @@
+14:56:59.513 [main] DEBUG com.amazonaws.AmazonWebServiceClient - Internal logging successfully configured to commons logger: true
+14:56:59.550 [main] DEBUG com.amazonaws.metrics.AwsSdkMetrics - Admin mbean registered under com.amazonaws.management:type=AwsSdkMetrics
+14:56:59.588 [main] DEBUG c.a.internal.config.InternalConfig - Configuration override awssdk_config_override.json not found.
+14:57:12.005 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 1.00 MB read.
+14:57:13.130 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 5.00 MB read.
+14:57:14.376 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 10.0 MB read.
+14:57:15.521 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 15.0 MB read.
+14:57:16.603 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 19.0 MB read.
+14:57:17.697 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 23.0 MB read.
+14:57:18.700 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 27.0 MB read.
+14:57:19.730 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 31.0 MB read.
+14:57:21.005 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 35.0 MB read.
+14:57:22.076 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 38.0 MB read.
+14:57:23.339 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 41.0 MB read.
+14:57:24.526 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 44.0 MB read.
+14:57:25.567 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 46.0 MB read.
+14:57:26.650 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 48.0 MB read.
+14:57:28.099 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 51.0 MB read.
+14:57:29.489 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 54.0 MB read.
+14:57:30.918 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 57.0 MB read.
+14:57:32.292 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 60.0 MB read.
+14:57:33.637 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 63.0 MB read.
+14:57:34.992 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 66.0 MB read.
+14:57:36.801 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 69.0 MB read.
+14:57:38.308 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 71.0 MB read.
+14:57:39.395 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 72.0 MB read.
+14:57:40.612 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 73.0 MB read.
+14:57:41.929 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 74.0 MB read.
+14:57:43.472 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 75.0 MB read.
+14:57:45.079 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 76.0 MB read.
+14:57:46.481 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 77.0 MB read.
+14:57:47.890 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 78.0 MB read.
+14:57:49.234 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 79.0 MB read.
+14:57:50.407 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 80.0 MB read.
+14:57:51.480 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 81.0 MB read.
+14:57:53.172 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 83.0 MB read.
+14:57:54.351 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 85.0 MB read.
+14:57:55.536 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 87.0 MB read.
+14:57:56.749 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 89.0 MB read.
+14:57:57.810 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 91.0 MB read.
+14:57:59.283 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 94.0 MB read.
+14:58:00.721 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 97.0 MB read.
+14:58:01.760 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 99.0 MB read.
+14:58:03.240 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 102 MB read.
+14:58:04.650 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 105 MB read.
+14:58:06.042 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 108 MB read.
+14:58:07.356 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 111 MB read.
+14:58:08.548 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 114 MB read.
+14:58:09.628 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 117 MB read.
+14:58:10.887 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 121 MB read.
+14:58:11.931 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 125 MB read.
+14:58:12.947 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 128 MB read.
+14:58:14.267 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 131 MB read.
+14:58:15.557 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 134 MB read.
+14:58:16.778 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 137 MB read.
+14:58:18.000 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 140 MB read.
+14:58:19.260 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 143 MB read.
+14:58:20.441 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 146 MB read.
+14:58:21.619 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 149 MB read.
+14:58:22.857 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 152 MB read.
+14:58:24.069 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 155 MB read.
+14:58:25.189 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 158 MB read.
+14:58:26.622 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 162 MB read.
+14:58:28.092 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 165 MB read.
+14:58:29.185 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 167 MB read.
+14:58:30.233 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 169 MB read.
+14:58:31.729 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 172 MB read.
+14:58:33.184 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 175 MB read.
+14:58:34.448 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 177 MB read.
+14:58:35.875 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 179 MB read.
+14:58:37.331 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 181 MB read.
+14:58:38.788 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 183 MB read.
+14:58:40.204 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 185 MB read.
+14:58:41.941 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 187 MB read.
+14:58:43.474 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 189 MB read.
+14:58:44.978 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 191 MB read.
+14:58:46.375 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 193 MB read.
+14:58:47.815 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 195 MB read.
+14:58:49.211 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 197 MB read.
+14:58:50.610 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 199 MB read.
+14:58:51.849 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 201 MB read.
+14:58:53.040 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 203 MB read.
+14:58:54.049 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 205 MB read.
+14:58:55.422 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 208 MB read.
+14:58:56.579 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 211 MB read.
+14:58:57.781 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 214 MB read.
+14:58:58.982 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 216 MB read.
+14:59:00.260 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 219 MB read.
+14:59:01.679 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 222 MB read.
+14:59:03.024 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 225 MB read.
+14:59:04.430 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 228 MB read.
+14:59:05.743 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 231 MB read.
+14:59:07.354 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 234 MB read.
+14:59:08.493 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 236 MB read.
+14:59:09.819 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 238 MB read.
+14:59:11.056 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 240 MB read.
+14:59:12.427 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 243 MB read.
+14:59:13.474 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 245 MB read.
+14:59:15.647 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 246 MB read.
+14:59:17.136 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 248 MB read.
+14:59:18.881 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 249 MB read.
+14:59:20.899 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 250 MB read.
+14:59:22.538 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 252 MB read.
+14:59:23.841 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 253 MB read.
+14:59:25.753 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 256 MB read.
+14:59:27.444 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 257 MB read.
+14:59:29.136 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 258 MB read.
+14:59:31.794 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 260 MB read.
+14:59:33.164 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 263 MB read.
+14:59:34.239 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 265 MB read.
+14:59:36.368 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 267 MB read.
+14:59:38.525 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 268 MB read.
+14:59:40.458 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 270 MB read.
+14:59:41.757 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 271 MB read.
+14:59:42.979 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 272 MB read.
+14:59:43.979 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 274 MB read.
+14:59:45.068 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 276 MB read.
+14:59:46.201 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 278 MB read.
+14:59:47.224 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 280 MB read.
+14:59:48.480 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 282 MB read.
+14:59:49.772 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 284 MB read.
+14:59:51.427 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 286 MB read.
+14:59:52.547 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 287 MB read.
+14:59:53.566 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 288 MB read.
+14:59:54.625 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 289 MB read.
+14:59:56.574 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 291 MB read.
+14:59:58.543 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 293 MB read.
+15:00:00.307 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 295 MB read.
+15:00:01.838 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 297 MB read.
+15:00:03.132 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 299 MB read.
+15:00:04.171 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 301 MB read.
+15:00:05.382 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 304 MB read.
+15:00:06.467 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 307 MB read.
+15:00:07.632 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 311 MB read.
+15:00:08.802 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 316 MB read.
+15:00:09.926 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 321 MB read.
+15:00:11.080 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 326 MB read.
+15:00:12.194 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 331 MB read.
+15:00:13.311 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 336 MB read.
+15:00:14.372 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 341 MB read.
+15:00:15.378 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 345 MB read.
+15:00:16.578 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 350 MB read.
+15:00:17.739 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 355 MB read.
+15:00:18.888 [main] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 360 MB read.
+15:00:19.319 [main] INFO  org.allenai.datastore.Datastore - Downloaded org.allenai.scienceparse/gazetteer-v5.json from the public datastore. 362 MB read.
+15:00:19.354 [scala-execution-context-global-13] INFO  org.allenai.scienceparse.Parser - Loading gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:00:19.355 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loading model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:00:19.358 [scala-execution-context-global-13] INFO  org.allenai.scienceparse.Parser - Loading bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:00:19.360 [scala-execution-context-global-13] INFO  org.allenai.scienceparse.Parser - Creating gazetteer cache at /tmp/gazetteer-v5.json-fa485aef.gazetteerCache.bin
+15:00:29.028 [scala-execution-context-global-13] INFO  o.a.scienceparse.ParserGroundTruth - Read 1609659 papers.
+15:00:48.547 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.00 MB read.
+15:00:49.709 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 4.00 MB read.
+15:00:50.960 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 8.00 MB read.
+15:00:52.119 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 13.0 MB read.
+15:00:53.357 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 18.0 MB read.
+15:00:54.454 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 23.0 MB read.
+15:00:55.462 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 27.0 MB read.
+15:00:56.216 [scala-execution-context-global-13] INFO  o.a.scienceparse.ExtractReferences - could not load kermit gazetter
+15:00:56.688 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 32.0 MB read.
+15:00:57.221 [scala-execution-context-global-13] INFO  org.allenai.datastore.Datastore - Starting to wait for /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/Word2VecModel-v1.bin.lock
+15:00:57.881 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 36.0 MB read.
+15:00:59.208 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 40.0 MB read.
+15:01:00.506 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 44.0 MB read.
+15:01:01.804 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 48.0 MB read.
+15:01:03.055 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 52.0 MB read.
+15:01:04.249 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 56.0 MB read.
+15:01:05.512 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 60.0 MB read.
+15:01:06.735 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 64.0 MB read.
+15:01:10.426 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 68.0 MB read.
+15:01:11.638 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 74.0 MB read.
+15:01:12.759 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 77.0 MB read.
+15:01:13.781 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 80.0 MB read.
+15:01:15.024 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 84.0 MB read.
+15:01:17.073 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 86.0 MB read.
+15:01:18.258 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 89.0 MB read.
+15:01:19.462 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 92.0 MB read.
+15:01:20.831 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 95.0 MB read.
+15:01:21.919 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 97.0 MB read.
+15:01:23.159 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 100 MB read.
+15:01:24.525 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 103 MB read.
+15:01:25.871 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 106 MB read.
+15:01:27.119 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 109 MB read.
+15:01:28.430 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 112 MB read.
+15:01:29.579 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 115 MB read.
+15:01:30.980 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 118 MB read.
+15:01:32.334 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 121 MB read.
+15:01:33.558 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 124 MB read.
+15:01:34.713 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 127 MB read.
+15:01:35.859 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 130 MB read.
+15:01:37.099 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 133 MB read.
+15:01:38.227 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 136 MB read.
+15:01:39.385 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 139 MB read.
+15:01:40.493 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 142 MB read.
+15:01:41.664 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 145 MB read.
+15:01:42.701 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 147 MB read.
+15:01:43.896 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 150 MB read.
+15:01:45.144 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 153 MB read.
+15:01:46.269 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 156 MB read.
+15:01:47.574 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 159 MB read.
+15:01:49.019 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 162 MB read.
+15:01:50.349 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 165 MB read.
+15:01:51.631 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 168 MB read.
+15:01:52.911 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 171 MB read.
+15:01:54.214 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 174 MB read.
+15:01:55.463 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 177 MB read.
+15:01:56.732 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 180 MB read.
+15:01:57.907 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 183 MB read.
+15:01:59.030 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 186 MB read.
+15:02:00.096 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 189 MB read.
+15:02:01.147 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 192 MB read.
+15:02:02.354 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 195 MB read.
+15:02:03.443 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 198 MB read.
+15:02:04.746 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 202 MB read.
+15:02:06.048 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 206 MB read.
+15:02:07.331 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 209 MB read.
+15:02:08.530 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 212 MB read.
+15:02:09.668 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 215 MB read.
+15:02:10.786 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 218 MB read.
+15:02:11.907 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 221 MB read.
+15:02:13.033 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 224 MB read.
+15:02:14.140 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 227 MB read.
+15:02:15.245 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 230 MB read.
+15:02:16.338 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 233 MB read.
+15:02:17.378 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 236 MB read.
+15:02:18.709 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 240 MB read.
+15:02:19.910 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 244 MB read.
+15:02:20.989 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 248 MB read.
+15:02:22.168 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 253 MB read.
+15:02:23.258 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 258 MB read.
+15:02:24.364 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 263 MB read.
+15:02:25.568 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 268 MB read.
+15:02:26.614 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 273 MB read.
+15:02:27.628 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 278 MB read.
+15:02:28.810 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 284 MB read.
+15:02:29.950 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 290 MB read.
+15:02:31.073 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 296 MB read.
+15:02:32.250 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 302 MB read.
+15:02:33.347 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 308 MB read.
+15:02:34.487 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 314 MB read.
+15:02:35.606 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 320 MB read.
+15:02:36.730 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 326 MB read.
+15:02:37.823 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 332 MB read.
+15:02:38.853 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 337 MB read.
+15:02:39.862 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 340 MB read.
+15:02:41.051 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 345 MB read.
+15:02:42.208 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 349 MB read.
+15:02:43.280 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 353 MB read.
+15:02:44.377 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 357 MB read.
+15:02:45.397 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 361 MB read.
+15:02:46.731 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 365 MB read.
+15:02:48.182 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 369 MB read.
+15:02:49.184 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 372 MB read.
+15:02:50.370 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 375 MB read.
+15:02:51.487 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 378 MB read.
+15:02:52.565 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 381 MB read.
+15:02:53.674 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 384 MB read.
+15:02:54.759 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 387 MB read.
+15:02:55.841 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 390 MB read.
+15:02:56.963 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 393 MB read.
+15:02:58.333 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 396 MB read.
+15:02:59.518 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 399 MB read.
+15:03:00.638 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 402 MB read.
+15:03:01.735 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 405 MB read.
+15:03:02.797 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 408 MB read.
+15:03:03.862 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 411 MB read.
+15:03:04.986 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 414 MB read.
+15:03:06.348 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 417 MB read.
+15:03:07.519 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 420 MB read.
+15:03:08.649 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 423 MB read.
+15:03:09.965 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 426 MB read.
+15:03:11.346 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 429 MB read.
+15:03:12.664 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 432 MB read.
+15:03:14.200 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 435 MB read.
+15:03:15.462 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 437 MB read.
+15:03:16.676 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 439 MB read.
+15:03:18.000 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 441 MB read.
+15:03:19.270 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 443 MB read.
+15:03:20.522 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 445 MB read.
+15:03:21.783 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 447 MB read.
+15:03:22.994 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 449 MB read.
+15:03:24.259 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 451 MB read.
+15:03:25.414 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 453 MB read.
+15:03:26.496 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 455 MB read.
+15:03:27.904 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 458 MB read.
+15:03:29.399 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 461 MB read.
+15:03:31.100 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 463 MB read.
+15:03:32.335 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 464 MB read.
+15:03:33.898 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 465 MB read.
+15:03:35.460 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 466 MB read.
+15:03:36.898 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 467 MB read.
+15:03:38.380 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 468 MB read.
+15:03:39.762 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 469 MB read.
+15:03:41.076 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 470 MB read.
+15:03:42.175 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 471 MB read.
+15:03:43.401 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 472 MB read.
+15:03:44.631 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 473 MB read.
+15:03:45.692 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 474 MB read.
+15:03:47.625 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 476 MB read.
+15:03:49.561 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 478 MB read.
+15:03:50.579 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 479 MB read.
+15:03:52.340 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 481 MB read.
+15:03:53.929 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 483 MB read.
+15:03:55.262 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 485 MB read.
+15:03:56.312 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 487 MB read.
+15:03:57.568 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 490 MB read.
+15:03:58.606 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 493 MB read.
+15:03:59.701 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 497 MB read.
+15:04:00.825 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 502 MB read.
+15:04:01.965 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 508 MB read.
+15:04:03.073 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 513 MB read.
+15:04:04.204 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 518 MB read.
+15:04:05.216 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 521 MB read.
+15:04:06.300 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 524 MB read.
+15:04:07.312 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 527 MB read.
+15:04:08.345 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 530 MB read.
+15:04:09.601 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 534 MB read.
+15:04:10.897 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 538 MB read.
+15:04:12.208 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 542 MB read.
+15:04:13.466 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 546 MB read.
+15:04:14.764 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 550 MB read.
+15:04:16.017 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 554 MB read.
+15:04:17.180 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 558 MB read.
+15:04:18.289 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 562 MB read.
+15:04:19.339 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 566 MB read.
+15:04:20.461 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 570 MB read.
+15:04:21.659 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 574 MB read.
+15:04:22.733 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 578 MB read.
+15:04:23.760 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 582 MB read.
+15:04:24.967 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 587 MB read.
+15:04:25.990 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 591 MB read.
+15:04:27.171 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 596 MB read.
+15:04:28.469 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 601 MB read.
+15:04:29.691 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 605 MB read.
+15:04:30.817 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 609 MB read.
+15:04:31.868 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 613 MB read.
+15:04:32.881 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 617 MB read.
+15:04:34.089 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 622 MB read.
+15:04:35.303 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 627 MB read.
+15:04:36.481 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 632 MB read.
+15:04:37.670 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 637 MB read.
+15:04:38.860 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 642 MB read.
+15:04:40.017 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 647 MB read.
+15:04:41.186 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 652 MB read.
+15:04:42.312 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 657 MB read.
+15:04:43.409 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 662 MB read.
+15:04:44.444 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 667 MB read.
+15:04:45.618 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 672 MB read.
+15:04:46.809 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 678 MB read.
+15:04:47.925 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 683 MB read.
+15:04:48.975 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 688 MB read.
+15:04:50.175 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 694 MB read.
+15:04:51.326 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 700 MB read.
+15:04:52.488 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 706 MB read.
+15:04:53.563 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 710 MB read.
+15:04:54.582 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 715 MB read.
+15:04:55.760 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 720 MB read.
+15:04:56.911 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 725 MB read.
+15:04:58.045 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 730 MB read.
+15:04:59.140 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 735 MB read.
+15:05:00.236 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 740 MB read.
+15:05:01.330 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 745 MB read.
+15:05:02.386 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 750 MB read.
+15:05:03.516 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 755 MB read.
+15:05:04.616 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 760 MB read.
+15:05:05.681 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 765 MB read.
+15:05:06.742 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 770 MB read.
+15:05:07.742 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 775 MB read.
+15:05:08.862 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 781 MB read.
+15:05:09.944 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 787 MB read.
+15:05:10.995 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 792 MB read.
+15:05:12.257 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 796 MB read.
+15:05:13.473 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 800 MB read.
+15:05:14.622 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 804 MB read.
+15:05:15.748 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 808 MB read.
+15:05:16.867 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 812 MB read.
+15:05:17.959 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 816 MB read.
+15:05:19.047 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 820 MB read.
+15:05:20.118 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 824 MB read.
+15:05:21.225 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 828 MB read.
+15:05:22.279 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 832 MB read.
+15:05:23.297 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 836 MB read.
+15:05:24.311 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 840 MB read.
+15:05:25.465 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 845 MB read.
+15:05:26.562 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 850 MB read.
+15:05:27.585 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 855 MB read.
+15:05:28.702 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 861 MB read.
+15:05:30.031 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 867 MB read.
+15:05:31.311 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 871 MB read.
+15:05:32.411 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 874 MB read.
+15:05:33.556 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 877 MB read.
+15:05:34.618 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 880 MB read.
+15:05:35.753 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 883 MB read.
+15:05:36.803 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 885 MB read.
+15:05:37.915 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 887 MB read.
+15:05:39.078 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 889 MB read.
+15:05:40.177 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 891 MB read.
+15:05:41.278 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 893 MB read.
+15:05:42.385 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 895 MB read.
+15:05:43.425 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 897 MB read.
+15:05:44.484 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 899 MB read.
+15:05:45.563 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 901 MB read.
+15:05:46.635 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 903 MB read.
+15:05:48.108 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 906 MB read.
+15:05:49.400 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 909 MB read.
+15:05:50.521 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 912 MB read.
+15:05:51.777 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 916 MB read.
+15:05:52.869 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 920 MB read.
+15:05:54.045 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 925 MB read.
+15:05:55.138 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 930 MB read.
+15:05:56.488 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 936 MB read.
+15:05:57.613 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 940 MB read.
+15:05:58.894 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 944 MB read.
+15:06:00.005 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 947 MB read.
+15:06:01.117 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 950 MB read.
+15:06:02.164 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 953 MB read.
+15:06:03.216 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 956 MB read.
+15:06:04.568 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 960 MB read.
+15:06:05.906 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 964 MB read.
+15:06:06.908 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 967 MB read.
+15:06:08.221 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 971 MB read.
+15:06:09.495 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 975 MB read.
+15:06:10.739 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 979 MB read.
+15:06:11.861 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 983 MB read.
+15:06:12.965 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 987 MB read.
+15:06:14.162 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 992 MB read.
+15:06:15.413 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 997 MB read.
+15:06:16.507 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1001 MB read.
+15:06:17.514 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1005 MB read.
+15:06:18.651 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1009 MB read.
+15:06:19.666 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1013 MB read.
+15:06:20.786 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1018 MB read.
+15:06:22.004 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1023 MB read.
+15:06:23.113 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.00 GB read.
+15:06:24.162 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.01 GB read.
+15:06:25.468 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.01 GB read.
+15:06:26.547 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.02 GB read.
+15:06:27.738 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.02 GB read.
+15:06:28.826 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.02 GB read.
+15:06:29.892 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.03 GB read.
+15:06:30.929 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.03 GB read.
+15:06:31.985 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.03 GB read.
+15:06:33.076 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.03 GB read.
+15:06:34.319 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.04 GB read.
+15:06:35.369 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.04 GB read.
+15:06:36.692 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.04 GB read.
+15:06:38.006 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.05 GB read.
+15:06:39.202 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.05 GB read.
+15:06:40.376 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.05 GB read.
+15:06:41.447 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.06 GB read.
+15:06:42.893 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.06 GB read.
+15:06:44.356 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.06 GB read.
+15:06:45.500 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.07 GB read.
+15:06:46.597 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.07 GB read.
+15:06:47.693 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.07 GB read.
+15:06:48.776 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.08 GB read.
+15:06:49.919 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.08 GB read.
+15:06:53.192 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.08 GB read.
+15:06:54.277 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.08 GB read.
+15:06:55.566 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.08 GB read.
+15:06:57.181 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.08 GB read.
+15:06:58.429 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.09 GB read.
+15:07:00.113 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.09 GB read.
+15:07:02.284 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.09 GB read.
+15:07:04.277 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.09 GB read.
+15:07:09.037 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.09 GB read.
+15:07:10.543 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.09 GB read.
+15:07:12.771 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.09 GB read.
+15:07:14.435 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.10 GB read.
+15:07:15.591 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.10 GB read.
+15:07:17.663 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.10 GB read.
+15:07:18.999 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.10 GB read.
+15:07:20.599 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.10 GB read.
+15:07:22.057 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.10 GB read.
+15:07:25.564 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.11 GB read.
+15:07:26.636 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.11 GB read.
+15:07:27.817 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.11 GB read.
+15:07:29.948 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.11 GB read.
+15:07:31.489 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.11 GB read.
+15:07:32.696 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.12 GB read.
+15:07:33.812 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.12 GB read.
+15:07:34.904 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.12 GB read.
+15:07:36.002 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.12 GB read.
+15:07:37.075 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.12 GB read.
+15:07:38.420 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.13 GB read.
+15:07:39.648 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.13 GB read.
+15:07:40.772 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.13 GB read.
+15:07:41.870 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.13 GB read.
+15:07:42.960 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.13 GB read.
+15:07:44.002 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.13 GB read.
+15:07:45.289 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.14 GB read.
+15:07:47.002 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.14 GB read.
+15:07:48.693 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.14 GB read.
+15:07:50.292 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.14 GB read.
+15:07:51.843 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.14 GB read.
+15:07:53.562 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.15 GB read.
+15:07:54.576 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.15 GB read.
+15:07:56.276 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.15 GB read.
+15:07:57.827 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.15 GB read.
+15:07:59.368 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.15 GB read.
+15:08:00.920 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.16 GB read.
+15:08:02.427 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.16 GB read.
+15:08:03.853 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.16 GB read.
+15:08:05.080 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.16 GB read.
+15:08:06.193 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.16 GB read.
+15:08:07.551 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.17 GB read.
+15:08:08.640 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.17 GB read.
+15:08:09.817 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.17 GB read.
+15:08:11.054 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.18 GB read.
+15:08:12.300 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.18 GB read.
+15:08:13.369 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.19 GB read.
+15:08:14.558 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.19 GB read.
+15:08:15.669 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.20 GB read.
+15:08:16.787 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.20 GB read.
+15:08:17.947 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.20 GB read.
+15:08:19.164 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.21 GB read.
+15:08:20.215 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.21 GB read.
+15:08:21.328 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.21 GB read.
+15:08:22.345 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.21 GB read.
+15:08:23.443 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.22 GB read.
+15:08:24.508 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.22 GB read.
+15:08:25.962 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.22 GB read.
+15:08:27.343 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.22 GB read.
+15:08:28.595 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.23 GB read.
+15:08:29.749 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.23 GB read.
+15:08:30.922 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.23 GB read.
+15:08:32.086 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.23 GB read.
+15:08:33.209 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.23 GB read.
+15:08:34.338 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.24 GB read.
+15:08:35.412 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.24 GB read.
+15:08:36.449 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.24 GB read.
+15:08:37.458 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.24 GB read.
+15:08:38.692 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.25 GB read.
+15:08:39.834 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.25 GB read.
+15:08:41.104 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.25 GB read.
+15:08:42.154 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.26 GB read.
+15:08:43.318 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.26 GB read.
+15:08:44.660 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.27 GB read.
+15:08:45.689 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.27 GB read.
+15:08:46.702 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.28 GB read.
+15:08:47.923 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.28 GB read.
+15:08:49.115 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.28 GB read.
+15:08:50.500 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.29 GB read.
+15:08:51.846 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.29 GB read.
+15:08:53.052 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.29 GB read.
+15:08:54.610 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.30 GB read.
+15:08:55.841 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.30 GB read.
+15:08:57.246 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.30 GB read.
+15:08:58.584 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.30 GB read.
+15:08:59.815 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.31 GB read.
+15:09:01.137 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.31 GB read.
+15:09:02.268 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.31 GB read.
+15:09:03.673 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.32 GB read.
+15:09:05.006 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.32 GB read.
+15:09:06.198 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.32 GB read.
+15:09:07.443 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.32 GB read.
+15:09:08.684 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.33 GB read.
+15:09:09.907 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.33 GB read.
+15:09:11.133 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.33 GB read.
+15:09:12.415 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.34 GB read.
+15:09:13.568 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.34 GB read.
+15:09:14.643 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.34 GB read.
+15:09:15.774 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.34 GB read.
+15:09:17.282 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.35 GB read.
+15:09:19.157 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.35 GB read.
+15:09:20.403 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.35 GB read.
+15:09:21.827 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.35 GB read.
+15:09:23.036 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.35 GB read.
+15:09:24.342 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.35 GB read.
+15:09:25.460 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.35 GB read.
+15:09:26.696 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.35 GB read.
+15:09:27.886 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.35 GB read.
+15:09:28.944 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.36 GB read.
+15:09:30.745 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.36 GB read.
+15:09:32.156 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.36 GB read.
+15:09:33.298 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.36 GB read.
+15:09:34.520 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.36 GB read.
+15:09:35.597 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.37 GB read.
+15:09:36.703 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.37 GB read.
+15:09:38.211 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.37 GB read.
+15:09:39.575 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.38 GB read.
+15:09:40.727 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.38 GB read.
+15:09:41.822 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.38 GB read.
+15:09:42.877 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.39 GB read.
+15:09:43.958 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.39 GB read.
+15:09:45.065 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.39 GB read.
+15:09:46.150 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.40 GB read.
+15:09:47.197 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.40 GB read.
+15:09:48.234 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.40 GB read.
+15:09:49.275 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.40 GB read.
+15:09:50.584 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.41 GB read.
+15:09:51.779 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.41 GB read.
+15:09:52.779 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.42 GB read.
+15:09:53.981 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.42 GB read.
+15:09:55.002 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.42 GB read.
+15:09:56.189 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.43 GB read.
+15:09:57.353 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.43 GB read.
+15:09:58.470 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.43 GB read.
+15:09:59.546 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.44 GB read.
+15:10:00.591 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.44 GB read.
+15:10:01.951 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.45 GB read.
+15:10:03.049 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.45 GB read.
+15:10:04.315 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.45 GB read.
+15:10:05.548 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.46 GB read.
+15:10:06.698 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.46 GB read.
+15:10:07.840 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.46 GB read.
+15:10:08.935 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.47 GB read.
+15:10:10.032 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.47 GB read.
+15:10:11.151 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.48 GB read.
+15:10:12.340 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.48 GB read.
+15:10:13.616 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.48 GB read.
+15:10:14.699 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.49 GB read.
+15:10:15.778 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.49 GB read.
+15:10:16.832 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.50 GB read.
+15:10:17.967 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.50 GB read.
+15:10:19.008 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.51 GB read.
+15:10:20.160 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.51 GB read.
+15:10:21.296 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.52 GB read.
+15:10:22.413 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.52 GB read.
+15:10:23.672 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.53 GB read.
+15:10:24.886 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.53 GB read.
+15:10:25.916 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.54 GB read.
+15:10:27.152 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.54 GB read.
+15:10:28.404 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.54 GB read.
+15:10:29.583 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.55 GB read.
+15:10:30.664 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.55 GB read.
+15:10:31.921 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.55 GB read.
+15:10:32.989 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.56 GB read.
+15:10:34.030 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.56 GB read.
+15:10:35.039 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.56 GB read.
+15:10:36.067 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.57 GB read.
+15:10:37.367 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.57 GB read.
+15:10:38.370 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.57 GB read.
+15:10:39.692 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.58 GB read.
+15:10:40.953 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloading org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.58 GB read.
+15:10:41.081 [ModelLoaderThread] INFO  org.allenai.datastore.Datastore - Downloaded org.allenai.scienceparse/Word2VecModel-v1.bin from the public datastore. 1.58 GB read.
+15:11:31.204 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loaded model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:11:31.260 [scala-execution-context-global-13] INFO  org.allenai.scienceparse.Parser - Loaded gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:11:31.260 [scala-execution-context-global-13] INFO  org.allenai.scienceparse.Parser - Loaded bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:11:31.264 [scala-execution-context-global-13] INFO  org.allenai.scienceparse.RunSP$ - Starting /home/risubaba/LongSumm/pdf/1904.02762.pdf
+{
+  "name" : "/home/risubaba/LongSumm/pdf/1904.02762.pdf",
+  "metadata" : {
+    "source" : "CRF",
+    "title" : "Learning Implicit Generative Models by Matching Perceptual Features",
+    "authors" : [ "Cicero Nogueira dos Santos", "Youssef Mroueh", "Inkit Padhi", "Pierre Dognin" ],
+    "emails" : [ "cicerons@us.ibm.com,", "mroueh@us.ibm.com,", "pdognin@us.ibm.com,", "inkit.padhi@ibm.com" ],
+    "sections" : [ {
+      "heading" : "1. Introduction",
+      "text" : "The use of features from deep convolutional neural networks (DCNNs) pretrained on ImageNet [35] has led to important advances in computer vision. DCNN features, usually called perceptual features (PFs), have been used in tasks such as transfer learning [40, 16], style transfer [9] and super-resolution [17]. While there have been previous works on the use of PFs in the context of image generation and transformation [7, 17], exploration of PFs as key source of information for learning generative models is not well studied. Particularly, the efficacy of PFs for implicit generative models trained through moment matching is an open question.\nMoment matching approaches for generative modeling are based on the assumption that one can learn the data distribution by matching the moments of the model distribution to the empirical data distribution. Two representative meth-\n∗ Equal contribution.\nods of this family are based on maximum mean discrepancy (MMD) [11, 12, 22] and the method of moments (MoM) [33]. While MoM based methods embed a probability distribution into a finite-dimensional vector (i.e., matching of a finite number of moments), MMD based methods embed a distribution into an infinite-dimensional vector [33]. A challenge for MMD methods is to define a kernel function that is statistically efficient and can be used with small minibatch sizes [21]. A solution comes by using adversarial learning for the online training of kernel functions [21, 3]. However, this solution inherits the problematic min/max game of adversarial learning. The main challenges of using MoM for training deep generative networks consist in defining millions of sufficiently distinct moments and specifying an objective function to learn the desirable moments. Ravuri et al. [33] addressed these two issues by defining the moments as features and derivatives from a moment network that is trained online (together with the generator) by using a specially designed objective function.\nIn this work we demonstrate that, by using PFs to perform moment matching, one can overcome some of the difficulties found in current moment matching approaches. More specifically, we propose a simple but effective moment matching method that: (1) breaks away from the problematic min/max game completely; (2) does not use online learning of kernel functions; and (3) is very efficient with regard to both number of used moments and required minibatch size. Our proposed approach, named Generative Feature Matching Networks (GFMN), learns implicit generative models by performing mean and covariance matching of features extracted from all convolutional layers of pretrained deep ConvNets. Some interesting properties of GFMNs include: (a) the loss function is directly correlated to the generated image quality; (b) mode collapsing is not an issue; and (c) the same pretrained feature extractor can be used across different datasets.\nWe perform an extensive number of experiments with different challenging datasets: CIFAR10, STL10, CelebA and LSUN. We demonstrate that our approach can achieve state-of-the-art results for challenging benchmarks such as CIFAR10 and STL10. Moreover, we show that the same\n1\nar X\niv :1\n90 4.\n02 76\n2v 1\n[ cs\n.C V\n] 4\nA pr\n2 01\n9\nfeature extractor is effective across different datasets. The main contributions of this work can be summarized as follows: (1) We propose a new effective moment matchingbased approach to train implicit generative models that does not use adversarial or online learning of kernel functions, provides stable training, and achieves state-of-the-art results; (2) We show theoretical results that demonstrate GFMN convergence under the assumption of the universality of perceptual features; (3) We propose an ADAM-based moving average method that allows effective training with small minibatches; (4) Our extensive quantitative and qualitative experimental results demonstrate that pretrained autoencoders and DCNN classifiers can be effectively used as (cross-domain) feature extractors for GFMN training."
+    }, {
+      "heading" : "2. Generative Feature Matching Networks",
+      "text" : ""
+    }, {
+      "heading" : "2.1. The method",
+      "text" : "Let G be the generator implemented as a neural network with parameters θ, and let E be a pretrained neural network with L hidden layers. Our proposed approach consists in training G by minimizing the following loss function:\nmin θ\nM∑\nj=1\n||µjpdata − µjpG(θ)||2 + ||σjpdata − σjpG(θ)||2 (1)\nwhere:\nµjpdata = Ex∼pdataEj(x) ∈ Rdj\nµjpG(θ) = Ez∼N (0,Inz )Ej(G(z; θ)) ∈ R dj σjpdata,` = Ex∼pdataEj,`(x) 2 − [µj,`pdata ]2, ` = 1 . . . dj\nσjpG,`(θ) = Ez∼N (0,Inz )Ej,`(G(z; θ)) 2−[µj,`pG ]2, `=1 . . . dj\nand ||.||2 is the L2 loss; x is a real data point sampled from the data generating distribution pdata; z ∈ Rnz is a noise vector sampled from the normal distribution N (0, Inz ); Ej(x), denotes the output vector/feature map of the hidden layer j from E; M ≤ L is the number of hidden layers used to perform feature matching. Note that σ2pdata and σ 2 pG denote the variances of the features from real data and generated data, respectively. We use diagonal covariance matrices as computing full covariance matrices is impractical for large numbers of features.\nIn practice, we train G by first precomputing estimates of µjpdata and σ j pdata\non the training data, then running multiple training iterations where we sample a minibatch of generated (fake) data and optimize the parameters θ using stochastic gradient descent (SGD) with backpropagation. The network E is used for the purpose of feature extraction only and is kept fixed during the training of G. Fig. 1 presents GFMN training pipeline. Autoencoder Features: A natural choice of unsupervised method to train a feature extractor is the autoencoder (AE) framework. The decoder part of an AE consists exactly of an image generator that uses features extracted by the encoder. Therefore, by design, the encoder network should be a good feature extractor for the purpose of generation. Classifier Features: We experiment with different DCNN architectures pretrained on ImageNet to play the role of the feature extractor E. Our hypothesis is that ImageNet-based PFs are informative enough to allow the training of (crossdomain) generators by feature matching."
+    }, {
+      "heading" : "2.2. Matching Feat. with ADAM Moving Average",
+      "text" : "From feature matching loss to moving averages. In order to train with a mean and covariance feature matching loss, one needs large minibatches to obtain good mean and covariance estimates. With images larger than 32×32, DCNNs produce millions of features, resulting easily in memory issues. We propose to alleviate this problem by using moving averages of the difference of means (covariances) of real and generated data. Instead of computing the (memory) expensive feature matching loss in Eq. 1, we keep moving averages vj of the difference of feature means (covariances) at layer j between real and generated data. We detail our moving average strategy for the mean features only, but the same approach applies for the covariances. The mean features from the first term of Eq. 1, ||µjpdata−Ez∼N (0,Inz )Ej(G(z; θ))||2 can be approximated by:\nv>j ( µjpdata − 1\nN\nN∑\nk=1\nEj(G(zk; θ))\n) ,\nwhere N is the minibatch size and vj is a moving average on ∆j , the difference of the means of the features extracted\nby the j-th layer of E:\n∆j = µ j pdata − 1 N\nN∑\nk=1\nEj(G(zk; θ)). (2)\nUsing these moving averages we replace the first term of the loss given in Eq. 1 by\nmin θ\nM∑\nj=1\nv>j ( µjpdata− 1\nN\nN∑\nk=1\nEj(G(zk; θ))\n) . (3)\nThe moving average formulation of features matching above has a major advantage on the naive formulation of Eq. 1 since we can now rely on vj to get better estimates of the population feature means of real and generated data while using a small minibatch of sizeN . For a similar result using the feature matching loss given in Eq. 1, one would need a minibatch with large size N , which is problematic for large number of features.\nADAM moving average: from SGD to ADAM updates. Note that for a rate α, the moving average vj has the following update:\nvj,new = (1− α) ∗ vj,old + α ∗∆j ,∀j = 1 . . .M\nIt is easy to see that the moving average is a gradient descent update on the following loss:\nmin vj\n1 2 ||vj −∆j ||2. (4)\nHence, writing the gradient update with learning rate α we have equivalently:\nvj,new = vj,old−α∗(vj,old−∆j) = (1−α)∗vj,old+α∗∆j .\nWith this interpretation of the moving average, we propose to get a better moving average estimate by using the ADAM optimizer [18] on the loss of the moving average given in Eq. 4, such that vj,new = vj,old − αADAM(vj,old −∆j). ADAM(x) function is computed as follows:\nmt = β1 ∗mt−1 + (1− β1) ∗ x m̂t = mt/(1− βt1) ut = β2 ∗ ut−1 + (1− β2) ∗ x2 ût = ut/(1− βt2) ADAM(x) = m̂t/( √ ût + ),\nwhere x is the gradient for the loss function in Eq. 4, t is the iteration number,mt and ut are the first and second moment vectors at iteration t, β1 = .9, β2 = .999 and = 10−8 are constants. m0 and u0 are initialized as proposed by [18]. We refer to [18] for a detailed ADAM optimizer description.\nThis moving average formulation, which we call ADAM Moving Average (AMA) promotes stable training when using small minibatches. Although we detail AMA using\nmean feature matching only, we use this approach for both mean and covariance matching. The main advantage of AMA over simple moving average (MA) is in its adaptive first and second order moments that ensure stable estimation of the moving averages vj . In fact, this is a non-stationary estimation since the mean of the generated data changes in the training, and it is well known that ADAM works well for such online non-stationary losses [18].\nIn Section 5.3 we provide experimental results supporting: (1) The memory advantage that the AMA formulation of feature matching offers over the naive implementation; (2) The stability advantage and improved generation results that AMA allows compared to the naive implementation. We discuss in Appendix 2 the advantage of AMA on MA from a regret bounds point of view [34]."
+    }, {
+      "heading" : "3. Universality of PFs and GFMN Convergence",
+      "text" : "Our proposed approach is related to the recent body of work on MMD or MM based generative models [22, 8, 21, 3, 33]. We highlight the main differences between MMD-GANs and GFMN in terms of requirements on the kernel for MMD-GAN and on the feature map (Extractor) for GFMN, that ensure convergence of the generator to the data distribution. See Tab. 1 for a summary.\nGMMN, MMD-GAN Convergence: MMD Matching with Universal Kernels. We start by reviewing known results on MMD. Let Hk be a Reproducing Kernel Hilbert Space (RKHS) defined with a continuous kernel k. Informally, k is universal if any bounded continuous function can be approximated to an arbitrary precision in Hk (formal definition in Appendix ). Theorem 1 [12] shows that the MMD is a well defined metric for universal kernels.\nTheorem 1 ([12]). Given a kernel k, let p, q be two distributions, their MMD is: MMD2(k, p, q) = ||µp − µq||2Hk , where µp = Ex∼pkx is the mean embedding. If k is universal then MMD2(k, p, q) = 0 if and only if p = q.\nGiven a Universal kernel such as a Gaussian Kernel as outlined in GMMN [22, 8], one can learn implicit Generative models Gθ that defines a family of distribution {qθ} by minimizing the MMD distance:\ninf θ MMD(k, pdata, qθ) (5) Assuming pdata is in the family {qθ} (∃θ∗, qθ∗ = pdata), the infimum of MMD minimization for a universal kernel is achieved for qθ = pdata (immediate consequence of Theorem 1). This elegant setup for MMD matching with universal kernels, while avoiding the difficult min/max game in GAN, does not translate into good results in image generation. To remedy that, other discrepancies introduced in [21, 3, 33] compose universal kernels k with a feature map φ ∈ Ψ as follows:\nDMMD(p, q) = supφ∈Ψ MMD(k ◦ φ, p, q). For learning implicit generative models [21] replaces MMD in Eq. (5) by DMMD. Under conditions on the kernel and the learned feature map this discrepancy is continuous in the weak topology (Prop. 2 in [1, 21]). Nevertheless, learning generative models remains challenging with it as it boils down to a min/max game as in original GAN [10].\nGFMN Convergence: MMD Matching with Universal Features. While universality is usually thought on the kernel level, it is not straightforward to define universality for kernels defined by feature maps. Micchelli et al. [26] define universality of feature maps and how it connects to their corresponding kernels. Specifically for a fixed feature set on a space X (space of images) S = {φj , j ∈ I, φj : X → R}, where I is a countable set of indices, define the kernel Kφ(x, y) = ∑ j∈I φj(x)φj(y). Micchelli et al. [26] in Thm. 7 show that this Kernel is universal if the set S is universal. Informally speaking, a feature set S is universal if linear functions in this feature space ( ∑ j∈I ujφj(x)), are dense in the set of continuous bounded functions (formal definition in Appendix 1).\nThis is of interest since GFMN corresponds to MMD matching with a kernel KΦ defined on a fixed feature map Φ(x)={φj(x)}j∈I , where I is finite. We have KΦ(x, y)= 〈Φ(x),Φ(y)〉=∑j∈I φj(x)φj(y) and\nMMD2(KΦ, p, q) = ||Ex∼pΦ(x)− Ex∼qΦ(x)||2 .\nFor MMD2(KΦ, p, q) to be a metric it is enough to have the set features S be universal (by Thm.1 and Thm. 7 in [26]). Prop. 1 gives conditions for GFMN convergence:\nProposition 1. Assume pdata belongs to the family defined by the generator {qθ}θ. GFMN converges to the real distribution by matching in a feature space S = {φj , j ∈ I}, where I is a countable set, if the features set S is universal (informally means that any continuous functions can be written as linear combination in the span of S) .\nProof. S is universal =⇒ kΦ is universal [26]. Hence MMD(kΦ, pdata, qθ) = 0 iff qθ = pdata. GFMN solves\ninfθ MMD2(KΦ, pdata, qθ), and the infimum is achieved for θ such that qθ = pdata ( pdata ∈ {qθ}θ ).\nRemark 1. The analysis covers here mean matching but the same applies to covariance matching considering S = {φj , φjφk, j, k ∈ I}.\nUniversality of Perceptual Features in Computer Vision. From Prop. 1 we see that for GFMN to be convergent with pretrained feature extractors Ej that are perceptual features (such as features from VGG or ResNet pretrained on ImageNet), we need to assume universality of those features in the image domain. We know from transfer learning that features from ImageNet pretrained VGG/ResNet can express any functions for a downstream task by finding a linear weight in their span. Note that this is the definition of universal feature as given in [26]: continuous functions can be approximated in the linear span of those features. Hence, assuming universality of PFs defined by ImageNet pretrained VGG or ResNet, GFMN is guaranteed to converge to the data distribution by Prop. 1. Our results complement the common wisdom on “universality” of PFs in transfer learning and style transfer by showing that they are sufficient for learning implicit generative models."
+    }, {
+      "heading" : "4. Related work",
+      "text" : "GFMN is related to the recent body of work on MMD and moment matching based generative models [22, 8, 21, 3, 33]. The closest to our method is the Generative Moment Matching Network + Autoencoder (GMMN+AE) proposed in [22]. In GMMN+AE, the objective is to train a generator G that maps from a prior uniform distribution to the latent code learned by a pretrained AE, and then uses the frozen pretrained decoder to map back to image space. As discussed in Section 3 one key difference in our approach is that, while GMMN+AE uses a Gaussian kernel to perform moment matching using the AE low dimensional latent code, GFMN performs mean and covariance matching in a PF space induced by a non-linear kernel function (a DCNN) that is orders of magnitude larger than the AE latent code, and that we argued is universal in the image domain.\nLi et al. [21] demonstrate that GMMN+AE is not competitive with GANs for challenging datasets such as CIFAR10. MMD-GANs, discussed in Section 3, demonstrated competitive results with the use of adversarial learning by learning a feature map in conjuction with a Gaussian kernel [21, 3]. Finally, Ravuri et al. [33] recently proposed a method to perform online learning of the moments while training the generator. Our proposed method differs by using fixed pretrained PF extractors for moment matching.\nBojanowski et al. [4] proposed the Generative Latent Optimization (GLO) model that jointly optimizes model parameters and noise input vectors z, while avoiding adversarial training. Our work relates also to plug and play generative models of [30] where a pretrained classifier is used to sample new images, using MCMC sampling methods.\nOur work is also related to AE-based generative models variational AE (VAE) [19], adversarial AE (AAE) [25] and Wasserstein AE (WAE) [38]. However, GFMN is quite distinct from these methods because it uses pretrained AEs to play the role of feature extractors only, while these methods aim to impose a prior distrib. on the latent space of AEs. Another recent line of work that involves the use of AEs in generative models consists in applying AEs to improve GANs stability [42, 39]. Finally, our objective function is related to the McGan loss function [29], where authors match first and second order moments."
+    }, {
+      "heading" : "5. Experiments",
+      "text" : ""
+    }, {
+      "heading" : "5.1. Experimental Setup",
+      "text" : "Datasets: We evaluate our proposed approach on images from CIFAR10 [20] (50k train., 10k test, 10 classes), STL10 [6] (5k train., 8k test, 100k unlabeled, 10 classes), CelebA [24] (200k) and LSUN bedrooms [41] datasets. STL10 images are rescaled to 32×32, while CelebA and LSUN images are rescaled to either 64×64 or 128×128, depending on the experiment. CelebA images are center-cropped to 160×160 before rescaling. GFMN Generator: In most of our experiments the generator G uses a DCGAN-like architecture [32]. For CIFAR10, STL10, LSUN and CelebA64×64, we use two extra layers as commonly used in previous works [28, 13]. For CelebA128×128 and some experiments with CIFAR10 and STL10, we use a ResNet-based generator such as the one in [13]. Architecture details are in the supplementary material. Autoencoder Features: For most AE experiments, we use an encoder network whose architecture is similar to the discriminator in DCGAN (strided convolutions). We use batch normalization and ReLU non-linearity after each convolution. We set the latent code size to 128, 128, and 512 for CIFAR10, STL10 and CelebA, respectively. To perform feature extraction, we get the output of each ReLU in the network. Additionally, we also perform some experiments where the encoder uses a VGG19 architecture. The decoder\nnetwork D uses a network architecture similar to our generator G. More details in the supplementary material. Classifier Features: We perform our experiments on classifier features with VGG19 [37] and Resnet18 networks [14] which we pretrained using the whole ImageNet dataset [35] with 1000 classes. Pretrained ImageNet classifiers details can be found in the supplementary material. GFMN Training: GFMNs are trained with an ADAM optimizer; most hyperparameters are kept fixed across datasets. We use nz = 100 and minibatch of 64. Dataset dependent learning rates are used for updating G (10−4 or 5×10−5) and AMA (5×10−5 or 10−5). We use AMA moving average (Sec. 2.2) in all reported experiments."
+    }, {
+      "heading" : "5.2. Autoencoder Features vs. (Cross-domain) Classifier Features",
+      "text" : "This section presents a comparative study on the use of pretrained autoencoders and cross-domain classifiers as feature extractors in GFMN. Tab. 2 shows the Inception Score (IS) [36] and Fréchet Inception Distance (FID) [15] for GFMN trained on CIFAR10 using different feature extractors E. The two first rows in Tab. 2 correspond to GFMN models that use pretrained encoders asE, while the last four rows use pretrained VGG19/Resnet18 ImageNet classifiers. We can see in Tab. 2 that there is a large boost in performance when ImageNet classifiers are used as feature extractors instead of encoders. Despite the classifiers being trained on a different domain (ImageNet vs. CIFAR10), the classifier features are significantly more effective. While the best IS with encoders is 4.95, the lowest IS with ImageNet classifier is 7.88. Additionally, when using simultaneously VGG19 and Resnet18 as feature extractors (two last rows), which increases the number of features to 832K, we get even better performance. Finally, we achieve the best performance in terms of both IS and FID (last row1) when using a generator architecture that contains residual blocks, similar to the one propose in [13].\nRandom samples from GFMNVGG19+Resnet18 trained with CIFAR10 and STL10 are shown in Figs. 2a and 2b respectively. Fig. 2c shows random samples from GFMNVGG19 trained with LSUN bedrooms dataset (resolution 64×64). Fig. 3 presents samples from GFMNVGG19 trained with CelebA dataset with resolution 128×128, which shows that GFMN can achieve good performance with image resolutions larger than 32×32. These results also demonstrate that: (1) the same classifier (VGG19 trained on ImageNet) can be successfully applied to train GFMN models across different domains; (2) perceptual features from DCNNs encapsulate enough statistics to allow the learning of good generative models through moment matching.\nTab. 3 shows IS and FID for increasing number of layers (i.e. number of features) in our extractor VGG19. We se-\n1Average result of five runs with different random seeds.\nlect up to 16 layers, excluding the output of fully connected layers. Using more layers dramatically improves the performance of the feature extractor, reaching IS and FID peak performance when the maximum number of layers is used. Note that the features are ReLU activation outputs, meaning the encodings may be quite sparse. In Appendix 7 we show qualitative results that corroborate these results.\nTo verify whether the number of features is the main factor for performance, we conducted an experiment where we train an AE with an encoder using a VGG19 architecture. This encoder is pretrained on ImageNet and produces a total of 296K features. The second row in Tab. 2 shows the\nresults for this experiment. Although there is improvement in both IS and FID compared to the DCGAN encoder (first row), the boost is not comparable to the one obtained with a VGG19 classifier. In other words, features from classifiers are significantly more informative than AEs features for the purpose of training generators by feature matching."
+    }, {
+      "heading" : "5.3. AMA and Training Stability",
+      "text" : "This section presents experimental results that evidence the advantage of our proposed ADAM moving average (AMA) over the simple moving average (MA). The main benefit of AMA is the promotion of stable training when using small minibatches. The ability to train with small minibatches is essential due to GFMN’s need for large number of features from DCNNs, which becomes a challenge in\nterms of GPU memory usage. Our Pytorch [31] implementation of GFMN can only handle minibatches of size up to 160 when using VGG19 as a feature extractor and image size 64×64 on a Tesla K40 GPU w/ 12GB of memory. A more optimized implementation minimizing memory overhead could, in principle, handle somewhat larger minibatch sizes (as could a more recent Tesla V100 w/ 16 GB). However, increase image size or feature extractor size and the memory footprint increases quickly. We will always run out of memory when using larger minibatches, regardless of implementation or hardware.\nAll experiments in this section use CelebA training set, and a feature extractor using the encoder from an AE following a DCGAN-like architecture. This feature extractor is smaller than VGG19/Resnet18 allowing for minibatches of size up to 512 for image size 64×64. Fig. 4 shows generated images from GFMN trained with either MA or our proposed AMA. For MA, generated images from GFMN trained with 64 and 512 minibatch size are presented in Figs. 4a and 4b respectively. For AMA, Fig. 4c shows results for minibatch size 64. In MA training, the minibatch size has a tremendous impact on the quality of generated images: with minibatches smaller than 512, almost all images generated are quite distorted. On the other hand, when using AMA, GFMN generates much better images with minibatch size 64 (Fig. 4c). For AMA, increasing the minibatch size from 64 to 512 does not improve the quality of generated images for the given dataset and feature extractor. In the supplementary material, we show a comparison between MA and AMA with VGG19 ImageNet classifier as feature extractor for a minibatch size of 64. AMA also displays a very positive effect on the quality of generated images when a stronger feature extractor is used. An alternative for training with larger minibatches would be the use of multi-GPU, multi-node setups. However, performing large scale experiments is beyond the scope of the current work. Moreover,\nmany practitioners do not have access to a GPU cluster, and the development of methods that can also work on a single GPU with small memory footprint is essential.\nAn important advantage of GFMN over adversarial methods is its training stability. Fig. 5 shows the evolution of the generator loss per epoch and generated examples when using AMA. There is a clear correlation between the quality of generated images and the loss. Moreover, mode collapsing was not observed in our experiments with AMA."
+    }, {
+      "heading" : "5.4. Comparison to the State-of-the-art",
+      "text" : "In Tab. 4, we compare GFMN results with different adversarial and non-adversarial approaches for CIFAR10 and STL10. In the middle part of the table, we report results for recent unsupervised models that use a DCGANlike architecture in the generator. Despite using a frozen cross-domain feature extractor, GFMN outperforms the unsupervised systems in IS and FID for both datasets. The bottom part of Tab. 4 includes results for supervised approaches. Some of these models use a Resnet architecture in the generator as indicated in parenthesis. Note that GANbased methods that perform conditional generation use direct feedback from the labels in the form of log likelihoods\nfrom the discriminator (e.g. using the k+1 trick from [36]). In contrast, our generator is trained with a loss function that only performs feature matching. Our generator is agnostic to the labels and there is no feedback in the form of a log likelihood from the labeled data. Despite that, GFMN produces results that are at the same level of supervised GAN models that use labels from the target dataset.\nWe performed additional experiments with a WGANGP architecture where: (1) the discriminator is a VGG19 or a Resnet18; (2) the discriminator is pretrained on ImageNet. The goal was to evaluate if WGAN-GP can benefit from DCNN classifiers pretrained on ImageNet. Although we tried different hyperparameter combinations, we were not able to successfully train WGAN-GP with VGG19 or Resnet18 discriminators (details in Appendix 8)."
+    }, {
+      "heading" : "6. Discussion & Concluding Remarks",
+      "text" : "We achieve successful non-adversarial training of implicit generative models by introducing different key ingredients: (1) moment matching on perceptual features from all layers of pretrained neural networks; (2) a more robust way to compute the moving average of the mean features by using ADAM optimizer, which allows us to use small minibatches; and (3) the use of perceptual features from multiple neural networks at the same time (VGG19 + Resnet18).\nOur quantitative results in Tab. 4 show that GFMN achieves better or similar results compared to the state-ofthe-art Spectral GAN (SN-GAN) [27] for both CIFAR10 and STL10. This is an impressive result for a nonadversarial feature matching-based approach that uses pretrained cross-domain feature extractors and has stable train-\ning. When compared to MMD approaches [22, 8, 21, 3, 33], GFMN presents important distinctions (some of them already listed in Secs. 3 and 4) which make it an attractive alternative. Compared to GMMN and GMMN+AE [22], we can see in Tab. 4 that GFMN achieves far better results. In the supplementary material, we also show a qualitative comparison between GFMN and GMMN results. Compared to recent adversarial MMD methods (MMD GAN) [21, 3] GFMN also presents significantly better results while avoiding the problematic min/max game. GFMN achieves better results than the Method of Learned Moments (MoLM) [33], while using a much smaller number of features to perform matching. The best performing model from [33], MoLM1536, uses around 42 million moments to train the CIFAR10 generator, while our best GFMN model uses around 850K moments/features only, almost 50x less.\nOne may argue that the best GFMN results are obtained with feature extractors trained with classifiers. However, there are two important points to note: (1) we use a cross domain feature extractor and do not use labels from the target datasets (CIFAR10, STL10, LSUN, CelebA); (2) classifier accuracy does not seem to be the most important factor for generating good features: VGG19 classifier produces features as good as the ones from Resnet18, although the former is less accurate (more details in supplementary material). We are confident that GFMN can achieve state-ofthe-art results with features from classifiers trained with unsupervised methods such as [5].\nIn conclusion, this work presents important theoretical and practical contributions that shed light on the effectiveness of perceptual features for training implicit generative models through moment matching."
+    }, {
+      "heading" : "7. Appendix",
+      "text" : ""
+    }, {
+      "heading" : "7.1. Continuation of Universality of PFs and GFMN",
+      "text" : "Convergence\nWe summarize here the main definitions and theorems from [26] regarding universality of kernels and feature maps.\nUniversal Kernels. The following defines a universal kernel\nDefinition 1 (Universal Kernel). Given a kernel K defined on X × X . Let Z be any compact subset of X . Define the space of kernel sections:\nK(Z) = span{Ky, y ∈ Z},\nwhere Ky : X → R, Ky(x) = K(x, y). Let C(Z) be the space of all continuous real valued functions defined on Z . A kernel is said universal if for any choice of Z (compact subset of X ) K(Z) is dense in C(Z).\nIn other words a kernel is universal if C(Z) = K(Z). Meaning if any continuous function can be expressed in the span of Ky .\nUniversal Feature Maps.We turn now for kernels defined by feature maps and how to characterize their universality. Consider a continuous feature map Φ : X → W , where (W, 〈, 〉W) is a Hilbert space; the kernel K has the following form:\nK(x, y) = 〈Φ(x),Φ(y)〉W . (6)\nLet Y be an orthonormal basis of W define the following continuous function Fy ∈ C(Z) defined at x ∈ Z:\nFy(x) = 〈Φ(x), y〉W ,\nand let: Φ(Y) = span{Fy, y ∈ Y}\nDefinition 2 (Universal feature Map). A feature map is universal if Φ(Y) is dense in C(Z), for all Z compact subsets of X .i.e A feature map is universal if Φ(Y) = C(Z).\nThe following Theorem shows the relation between universality of a kernel defined by feature map and the universality of the feature map:\nTheorem 2 ([26], Thm 4, Relation between K(Z) and Φ(Y) ). For kernel defined by feature maps in (6) we have K(Z) = Φ(Y). A kernel of form (6) is universal if and only if its feature map is universal.\nHence the following Theorem 7 from [26]:\nTheorem 3 ([26]). Let S = {φj , j ∈ I}, where I is a countable set and φj : X → R continuous function. Define the following kernel\nK(x, y) = ∑\nj∈I φj(x)φj(y)."
+    }, {
+      "heading" : "K is universal if and only if the set of features S is universal.",
+      "text" : ""
+    }, {
+      "heading" : "7.2. Discussion of AMA versus MA",
+      "text" : "As we already discussed the moving average of v of the difference of features means\n∆t = 1\nN\nN∑\ni=1\nE(xi)− 1\nN\nN∑\ni=1\nE(G(zi, θt))\nbetween real and generated data at each time step t in the gradient descent up to time T , can be seen as a gradient descent in an online setting on the following cost :\nf∗ = min v\nT∑\nt=1\nft(v) =\nT∑\nt=1\n||v −∆t||22\nNote that we are in the online setting since ∆t is only known when θt of the generator is updated. The sequence vt generated by MA (moving average) and by AMA (ADAM moving average) is the SGD updates and ADAM updates respectively applied to the cost function ft. Hence we can bound the regret of the sequence {vMAt } and {vAMAt } using known results on SGD and ADAM. Let d be the dimension of the encoding E. For MA, using classic regret bounds for gradient descents we obtain:\nRMAT =\nT∑\nt=1\n||vMAt −∆t||22 − f∗ ≤ O( √ dT ).\nFor AMA, using ADAM regrets bounds from (Reddi et al., 2018). Let us define\nRAMAT =\nT∑\nt=1\n||vAMAt −∆t||22 − f∗.\nWe have:\nRAMAT ≤ O( √ T d∑\ni=1\nû T, 12 i ) + · · ·\nO\n  d∑\ni=1\n√√√√ T∑\nt=1\n(∆t,i − vAMAt,i )2  + C\nwhere û are defined in the ADAM updates as moving averages of second order moments of the gradients. The\nregret bound of AMA is better than MA especially if∑d i=1 û T, 12 i d and\nd∑\ni=1\n√√√√ T∑\nt=1\n(∆t,i − vAMAt,i )2 √ Td."
+    }, {
+      "heading" : "7.3. Mean Matching vs. Mean + Covariance Matching in GFMN",
+      "text" : "In this Appendix, we present comparative results between GFMN with mean feature matching vs. GFMN with mean + covariance feature matching. Using the first and second moments to perform feature matching gives statistical advantage over using the first moment only. In Table 5, we can see that for different feature extractors, performing mean + covariance feature matching produces significantly better results in terms of both IS and FID. Mroueh et al. [29] have also demonstrated the advantages of using mean + covariance matching in the context of GANs."
+    }, {
+      "heading" : "7.4. Neural Network Architectures",
+      "text" : "In Tables 6 and 7, and Figure 6 we detail the neural net architectures used in our experiments. In both DCGAN-like generator and discriminator, an extra layer is added when using images of size 64×64. In VGG19 architecture, after each convolution, we apply batch normalization and ReLU. The Resnet generator is used for CelebA128×128 experiments and also for some experiments with CIFAR10 and STL10. For these two last datasets, the Resnet generator has 3 ResBlocks only, and the output size of the DENSE layer is 4× 4× 512."
+    }, {
+      "heading" : "7.5. Pretraining of ImageNet Classifiers and Autoencoders",
+      "text" : "Both VGG19 and Resnet18 networks are trained with SGD with fixed 10−1 learning rate, 0.9 momentum term, and weight decay set to 5 × 10−4. We pick models with\nbest top-1 accuracy on the validation set over 100 epochs of training; 29.14% for VGG19 (image size 32×32), and 39.63% for Resnet18 (image size 32×32). When training the classifiers we use random cropping and random horizontal flipping for data augmentation. When using VGG19 and Resnet18 as feature extractors in GFMN, we use features from the output of each ReLU that follows a conv. layer, for a total of 16 layers for VGG and 17 for Resnet18.\nIn our experiments with autoencoders (AE) we pretrained them using either mean squared error (MSE) or the Laplacian pyramid loss [23, 4]. Let E and D be the encoder and the decoder networks with parameters φ and ψ, respectively.\nmin φ,ψ\nEpdata ||x−D(E(x;φ);ψ)||2\nor the Laplacian pyramid loss [23]\nLap1(x, x ′) =\n∑\nj\n2−2j |Lj(x)− Lj(x′)|1\nwhere Lj(x) is the j-th level of the Laplacian pyramid representation of x. The Laplacian pyramid loss provides better signal for learning high frequencies of images and overcome some of the blurriness issue known from using a simple MSE loss. [4] recently demonstrated that the Lap1 loss produces better results than L2 loss for both autoencoders and generative models."
+    }, {
+      "heading" : "7.6. Quantitative Evaluation Metrics",
+      "text" : "We evaluate our models using two quantitative metrics: Inception Score (IS) [36] and Fréchet Inception Distance (FID) [15]. We followed the same procedure used in previous work to calculate IS [36, 27, 33]. For each trained generator, we calculate the IS for randomly generated 5000 images and repeat this procedure 10 times (for a total of 50K generated images) and report the average and the standard deviation of the IS.\nWe compute FID using two sample sizes of generated images: 5K and 50K. In order to be consistent with previous works [27, 33] and be able to directly compare our quantitative results with theirs, the FID is computed as follows:\n• CIFAR10: the statistics for the real data are computed using the 50K training images. This (real data) statistics are used in the FID computation of both 5K and 50K samples of generated images. This is consistent with both Miyato et al. [27] and Ravuri et al. [33] procedure to compute FID for CIFAR10 experiments.\n• STL10: when using 5K generated images, the statistics for the real data are computed using the set of 5K (labeled) training images. This is consistent with the FID\nFID computation is repeated 3 times and the average is reported. There is very small variance in the FID results."
+    }, {
+      "heading" : "7.7. Impact of the number of layers used for feature",
+      "text" : "extraction\nFigure 7 shows generated images from generators that were trained with a different number of layers employed to feature matching. In all the results in Fig.7, the VGG19 network was used to perform feature extraction. We can see a significant improvement in image quality when more layers are used. Better results are achieved when 11 or more layers are used, which corroborates the quantitative results in Sec. 5.2."
+    }, {
+      "heading" : "7.8. Pretrained Generator/Discriminator in",
+      "text" : "WGAN-GP\nThe objective of the experiments presented in this section is to evaluate if WGAN-GP can benefit from DCNN classifiers pretrained on ImageNet. In the experiments, we used a WGAN-GP architecture where: (1) the discriminator is a VGG19 or a Resnet18; (2) the discriminator is pretrained on ImageNet; (3) the generator is pretrained on CIFAR10 through autoencoding. Although we tried different hyperparameter combinations, we were not able to successfully train WGAN-GP with VGG19 or Resnet18 discriminators. Indeed, the discriminator, being pretrained on ImageNet, can quickly learn to distinguish between real and fake images. This limits the reliability of the gradient information from the discriminator, which in turn renders the training of a proper generator extremely challenging or even impossible. This is a well-known issue with GAN training [10] where the training of the generator and discriminator must strike a balance. This phenomenon is covered in [2] Section 3 (illustrated in their Figure 2) as one motivation for work like Wassertein GANs. If a discriminator can distinguish perfectly between real and fake early on, the generator cannot learn properly and the min/max game becomes unbalanced, having no good discriminator gradients for the generator to learn from, producing degenerate models. Figure 8 shows some examples of images generated by the unsuccessfully trained models."
+    }, {
+      "heading" : "7.9. Impact of Adam Moving Average for VGG19",
+      "text" : "feature extractor.\nIn this appendix, we present a comparison between the simple moving average (MA) and ADAM moving average (AMA) for the case where VGG19 ImageNet classifier is used as a feature extractor. This experiment uses a minibatch size of 64. We can see in Fig. 9 that AMA has a very positive effect in the quality of generated images. GFMN trained with MA produces various images with some sort of crossing line artifacts."
+    }, {
+      "heading" : "7.10. Visual Comparison between GFMN and GMMN Generated Images.",
+      "text" : "Figure 10 shows a visual comparison between images generated by GFMN (Figs. 10a and 10b) and Generative Moment Matching Networks (GMMN) (Figs. 10c and 10d).\nGMMN [22] generated images were obtained from Li et al. [21]. In this experiment, both GMMN and GFMN use a DCGAN-like architecture in the generator. Images generated by GFMN have significantly better quality compared to the ones generated by GMMN, which corroborates the quantitative results in Sec. 5.4."
+    }, {
+      "heading" : "7.11. Autoencoder features vs. VGG19 features for",
+      "text" : "CelebA.\nIn this appendix, we present a comparison in image quality for autoencoder features vs. VGG19 features for the CelebA dataset. We show results for both simple moving\naverage (MA) and ADAM moving average (AMA), for both cases we use a minibatch size of 64. In Fig. 11, we show generated images from GFMN trained with either VGG19 features (top row) or autoencoder (AE) features (bottom row). We show images generated by GFMN models trained with simple moving average (MA) and Adam moving average (AMA). We can note in the images that, although VGG19 features are from a cross-domain classifier, they lead to much better generation quality than AE features, specially for the MA case."
+    } ],
+    "references" : [ {
+      "title" : "On gradient regularizers for mmd gans",
+      "author" : [ "M. Arbel", "D.J. Sutherland", "M. Bińkowski", "A. Gretton" ],
+      "venue" : "NIPS,",
+      "citeRegEx" : "1",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "Wasserstein generative adversarial networks",
+      "author" : [ "M. Arjovsky", "S. Chintala", "L. Bottou" ],
+      "venue" : "Proc. of ICML, pages 214–223,",
+      "citeRegEx" : "2",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "Demystifying MMD GANs",
+      "author" : [ "M. Bikowski", "D.J. Sutherland", "M. Arbel", "A. Gretton" ],
+      "venue" : "International Conference on Learning Representations,",
+      "citeRegEx" : "3",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "Optimizing the latent space of generative networks, 2018",
+      "author" : [ "P. Bojanowski", "A. Joulin", "D. Lopez-Paz", "A. Szlam" ],
+      "venue" : null,
+      "citeRegEx" : "4",
+      "shortCiteRegEx" : "4",
+      "year" : 2018
+    }, {
+      "title" : "Deep clustering for unsupervised learning of visual features",
+      "author" : [ "M. Caron", "P. Bojanowski", "A. Joulin", "M. Douze" ],
+      "venue" : "European Conference on Computer Vision,",
+      "citeRegEx" : "5",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "An analysis of single-layer networks in unsupervised feature learning",
+      "author" : [ "A. Coates", "A. Ng", "H. Lee" ],
+      "venue" : "Proceedings of the fourteenth international conference on artificial intelligence and statistics, pages 215–223,",
+      "citeRegEx" : "6",
+      "shortCiteRegEx" : null,
+      "year" : 2011
+    }, {
+      "title" : "Generating images with perceptual similarity metrics based on deep networks",
+      "author" : [ "A. Dosovitskiy", "T. Brox" ],
+      "venue" : "D. D. Lee, M. Sugiyama, U. V. Luxburg, I. Guyon, and R. Garnett, editors, Advances in Neural Information Processing Systems 29, pages 658–666. Curran Associates, Inc.,",
+      "citeRegEx" : "7",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Training generative neural networks via maximum mean discrepancy optimization",
+      "author" : [ "G.K. Dziugaite", "D.M. Roy", "Z. Ghahramani" ],
+      "venue" : "Proceedings of the Thirty-First Conference on Uncertainty in Artificial Intelligence, pages 258– 267,",
+      "citeRegEx" : "8",
+      "shortCiteRegEx" : null,
+      "year" : 2015
+    }, {
+      "title" : "Image style transfer using convolutional neural networks",
+      "author" : [ "L.A. Gatys", "A.S. Ecker", "M. Bethge" ],
+      "venue" : "The IEEE Conference on Computer Vision and Pattern Recognition (CVPR), June",
+      "citeRegEx" : "9",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Generative adversarial nets",
+      "author" : [ "I. Goodfellow", "J. Pouget-Abadie", "M. Mirza", "B. Xu", "D. Warde-Farley", "S. Ozair", "A. Courville", "Y. Bengio" ],
+      "venue" : "Proc. of NIPS, page 2672,",
+      "citeRegEx" : "10",
+      "shortCiteRegEx" : null,
+      "year" : 2014
+    }, {
+      "title" : "A kernel method for the two-sample-problem",
+      "author" : [ "A. Gretton", "K.M. Borgwardt", "M. Rasch", "B. Schölkopf", "A.J. Smola" ],
+      "venue" : "Proceedings of the 19th International Conference on Neural Information Processing Systems, pages 513–520,",
+      "citeRegEx" : "11",
+      "shortCiteRegEx" : null,
+      "year" : 2006
+    }, {
+      "title" : "A kernel two-sample test",
+      "author" : [ "A. Gretton", "K.M. Borgwardt", "M.J. Rasch", "B. Schölkopf", "A. Smola" ],
+      "venue" : "Journal of Machine Learning Research, 13:723–773,",
+      "citeRegEx" : "12",
+      "shortCiteRegEx" : null,
+      "year" : 2012
+    }, {
+      "title" : "Improved training of wasserstein gans",
+      "author" : [ "I. Gulrajani", "F. Ahmed", "M. Arjovsky", "V. Dumoulin", "A.C. Courville" ],
+      "venue" : "CoRR,",
+      "citeRegEx" : "13",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "Deep residual learning for image recognition",
+      "author" : [ "K. He", "X. Zhang", "S. Ren", "J. Sun" ],
+      "venue" : "CVPR,",
+      "citeRegEx" : "14",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Gans trained by a two time-scale update rule converge to a nash equilibrium",
+      "author" : [ "M. Heusel", "H. Ramsauer", "T. Unterthiner", "B. Nessler", "G. Klambauer", "S. Hochreiter" ],
+      "venue" : "CoRR, abs/1706.08500,",
+      "citeRegEx" : "15",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "What makes imagenet good for transfer learning",
+      "author" : [ "M. Huh", "P. Agrawal", "A.A. Efros" ],
+      "venue" : "CoRR, abs/1608.08614,",
+      "citeRegEx" : "16",
+      "shortCiteRegEx" : "16",
+      "year" : 2016
+    }, {
+      "title" : "Perceptual losses for real-time style transfer and super-resolution",
+      "author" : [ "J. Johnson", "A. Alahi", "L. Fei-Fei" ],
+      "venue" : "European Conference on Computer Vision,",
+      "citeRegEx" : "17",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Adam: A method for stochastic optimization",
+      "author" : [ "D. Kingma", "J. Ba" ],
+      "venue" : "ICLR,",
+      "citeRegEx" : "18",
+      "shortCiteRegEx" : null,
+      "year" : 2015
+    }, {
+      "title" : "Auto-encoding variational bayes",
+      "author" : [ "D.P. Kingma", "M. Welling" ],
+      "venue" : "arXiv preprint arXiv:1312.6114,",
+      "citeRegEx" : "19",
+      "shortCiteRegEx" : null,
+      "year" : 2013
+    }, {
+      "title" : "Learning multiple layers of features from tiny images",
+      "author" : [ "A. Krizhevsky" ],
+      "venue" : "page 60,",
+      "citeRegEx" : "20",
+      "shortCiteRegEx" : null,
+      "year" : 2009
+    }, {
+      "title" : "MMD GAN: Towards deeper understanding of moment matching network",
+      "author" : [ "C.-L. Li", "W.-C. Chang", "Y. Cheng", "Y. Yang", "B. Poczos" ],
+      "venue" : "Advances in Neural Information Processing Systems, pages 2203–2213.",
+      "citeRegEx" : "21",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "Generative moment matching networks",
+      "author" : [ "Y. Li", "K. Swersky", "R. Zemel" ],
+      "venue" : "Proceedings of the International Conference on International Conference on Machine Learning, pages 1718–1727,",
+      "citeRegEx" : "22",
+      "shortCiteRegEx" : null,
+      "year" : 2015
+    }, {
+      "title" : "Diffusion distance for histogram comparison",
+      "author" : [ "H. Ling", "K. Okada" ],
+      "venue" : "Computer Vision and Pattern Recognition,",
+      "citeRegEx" : "23",
+      "shortCiteRegEx" : null,
+      "year" : 2006
+    }, {
+      "title" : "Deep learning face attributes in the wild",
+      "author" : [ "Z. Liu", "P. Luo", "X. Wang", "X. Tang" ],
+      "venue" : "Proceedings of International Conference on Computer Vision (ICCV),",
+      "citeRegEx" : "24",
+      "shortCiteRegEx" : null,
+      "year" : 2015
+    }, {
+      "title" : "Adversarial autoencoders",
+      "author" : [ "A. Makhzani", "J. Shlens", "N. Jaitly", "I. Goodfellow" ],
+      "venue" : "International Conference on Learning Representations,",
+      "citeRegEx" : "25",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Universal kernels",
+      "author" : [ "C.A. Micchelli", "Y. Xu", "H. Zhang" ],
+      "venue" : "J. Mach. Learn. Res., 7:2651–2667, Dec.",
+      "citeRegEx" : "26",
+      "shortCiteRegEx" : null,
+      "year" : 2006
+    }, {
+      "title" : "Spectral normalization for generative adversarial networks",
+      "author" : [ "T. Miyato", "T. Kataoka", "M. Koyama", "Y. Yoshida" ],
+      "venue" : "International Conference on Learning Representations,",
+      "citeRegEx" : "27",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "Fisher GAN",
+      "author" : [ "Y. Mroueh", "T. Sercu" ],
+      "venue" : "Proceedings of NIPS,",
+      "citeRegEx" : "28",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "McGan: Mean and covariance feature matching GAN",
+      "author" : [ "Y. Mroueh", "T. Sercu", "V. Goel" ],
+      "venue" : "Proceedings of the 34th International Conference on Machine Learning, pages 2527– 2535,",
+      "citeRegEx" : "29",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "Plug & play generative networks: Conditional iterative generation of images in latent space",
+      "author" : [ "A. Nguyen", "J. Clune", "Y. Bengio", "A. Dosovitskiy", "J. Yosinski" ],
+      "venue" : "Conference on Computer Vision and Pattern Recognition, pages 3510– 3520,",
+      "citeRegEx" : "30",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "Automatic differentiation in pytorch",
+      "author" : [ "A. Paszke", "S. Gross", "S. Chintala", "G. Chanan", "E. Yang", "Z. De- Vito", "Z. Lin", "A. Desmaison", "L. Antiga", "A. Lerer" ],
+      "venue" : "NIPS-W,",
+      "citeRegEx" : "31",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "Unsupervised representation learning with deep convolutional generative adversarial networks",
+      "author" : [ "A. Radford", "L. Metz", "S. Chintala" ],
+      "venue" : "ICLR,",
+      "citeRegEx" : "32",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Learning implicit generative models with the method of learned moments",
+      "author" : [ "S.V. Ravuri", "S. Mohamed", "M. Rosca", "O. Vinyals" ],
+      "venue" : "Proceedings of the 35th International Conference on Machine Learning, pages 4311–4320,",
+      "citeRegEx" : "33",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "On the convergence of adam and beyond",
+      "author" : [ "S.J. Reddi", "S. Kale", "S. Kumar" ],
+      "venue" : "ICLR, page 23,",
+      "citeRegEx" : "34",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "Imagenet large scale visual recognition challenge",
+      "author" : [ "O. Russakovsky", "J. Deng", "H. Su", "J. Krause", "S. Satheesh", "S. Ma", "Z. Huang", "A. Karpathy", "A. Khosla", "M. Bernstein", "A.C. Berg", "L. Fei-Fei" ],
+      "venue" : "Int. J. Comput. Vision, 115(3):211–252, Dec.",
+      "citeRegEx" : "35",
+      "shortCiteRegEx" : null,
+      "year" : 2015
+    }, {
+      "title" : "Improved techniques for training gans",
+      "author" : [ "T. Salimans", "I. Goodfellow", "W. Zaremba", "V. Cheung", "A. Radford", "X. Chen" ],
+      "venue" : "Proc. of NIPS, pages 2226–2234,",
+      "citeRegEx" : "36",
+      "shortCiteRegEx" : null,
+      "year" : 2016
+    }, {
+      "title" : "Very deep convolutional networks for large-scale image recognition",
+      "author" : [ "K. Simonyan", "A. Zisserman" ],
+      "venue" : "CoRR, abs/1409.1556,",
+      "citeRegEx" : "37",
+      "shortCiteRegEx" : null,
+      "year" : 2014
+    }, {
+      "title" : "Wasserstein auto-encoders",
+      "author" : [ "I. Tolstikhin", "O. Bousquet", "S. Gelly", "B. Schoelkopf" ],
+      "venue" : "International Conference on Learning Representations,",
+      "citeRegEx" : "38",
+      "shortCiteRegEx" : null,
+      "year" : 2018
+    }, {
+      "title" : "Improving generative adversarial networks with denoising feature matching",
+      "author" : [ "D. Warde-Farley", "Y. Bengio" ],
+      "venue" : "Proceedings of ICLR,",
+      "citeRegEx" : "39",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    }, {
+      "title" : "How transferable are features in deep neural networks",
+      "author" : [ "J. Yosinski", "J. Clune", "Y. Bengio", "H. Lipson" ],
+      "venue" : "In Proceedings of the 27th International Conference on Neural Information Processing Systems - Volume 2,",
+      "citeRegEx" : "40",
+      "shortCiteRegEx" : "40",
+      "year" : 2014
+    }, {
+      "title" : "Lsun: Construction of a large-scale image dataset using deep learning with humans in the loop",
+      "author" : [ "F. Yu", "Y. Zhang", "S. Song", "A. Seff", "J. Xiao" ],
+      "venue" : "arXiv preprint arXiv:1506.03365,",
+      "citeRegEx" : "41",
+      "shortCiteRegEx" : null,
+      "year" : 2015
+    }, {
+      "title" : "Energy-based generative adversarial network",
+      "author" : [ "J.J. Zhao", "M. Mathieu", "Y. LeCun" ],
+      "venue" : "Proceedings of ICLR,",
+      "citeRegEx" : "42",
+      "shortCiteRegEx" : null,
+      "year" : 2017
+    } ],
+    "referenceMentions" : [ {
+      "referenceID" : 34,
+      "context" : "The use of features from deep convolutional neural networks (DCNNs) pretrained on ImageNet [35] has led to important advances in computer vision.",
+      "startOffset" : 91,
+      "endOffset" : 95
+    }, {
+      "referenceID" : 39,
+      "context" : "DCNN features, usually called perceptual features (PFs), have been used in tasks such as transfer learning [40, 16], style transfer [9] and super-resolution [17].",
+      "startOffset" : 107,
+      "endOffset" : 115
+    }, {
+      "referenceID" : 15,
+      "context" : "DCNN features, usually called perceptual features (PFs), have been used in tasks such as transfer learning [40, 16], style transfer [9] and super-resolution [17].",
+      "startOffset" : 107,
+      "endOffset" : 115
+    }, {
+      "referenceID" : 8,
+      "context" : "DCNN features, usually called perceptual features (PFs), have been used in tasks such as transfer learning [40, 16], style transfer [9] and super-resolution [17].",
+      "startOffset" : 132,
+      "endOffset" : 135
+    }, {
+      "referenceID" : 16,
+      "context" : "DCNN features, usually called perceptual features (PFs), have been used in tasks such as transfer learning [40, 16], style transfer [9] and super-resolution [17].",
+      "startOffset" : 157,
+      "endOffset" : 161
+    }, {
+      "referenceID" : 6,
+      "context" : "While there have been previous works on the use of PFs in the context of image generation and transformation [7, 17], exploration of PFs as key source of information for learning generative models is not well studied.",
+      "startOffset" : 109,
+      "endOffset" : 116
+    }, {
+      "referenceID" : 16,
+      "context" : "While there have been previous works on the use of PFs in the context of image generation and transformation [7, 17], exploration of PFs as key source of information for learning generative models is not well studied.",
+      "startOffset" : 109,
+      "endOffset" : 116
+    }, {
+      "referenceID" : 10,
+      "context" : "ods of this family are based on maximum mean discrepancy (MMD) [11, 12, 22] and the method of moments (MoM) [33].",
+      "startOffset" : 63,
+      "endOffset" : 75
+    }, {
+      "referenceID" : 11,
+      "context" : "ods of this family are based on maximum mean discrepancy (MMD) [11, 12, 22] and the method of moments (MoM) [33].",
+      "startOffset" : 63,
+      "endOffset" : 75
+    }, {
+      "referenceID" : 21,
+      "context" : "ods of this family are based on maximum mean discrepancy (MMD) [11, 12, 22] and the method of moments (MoM) [33].",
+      "startOffset" : 63,
+      "endOffset" : 75
+    }, {
+      "referenceID" : 32,
+      "context" : "ods of this family are based on maximum mean discrepancy (MMD) [11, 12, 22] and the method of moments (MoM) [33].",
+      "startOffset" : 108,
+      "endOffset" : 112
+    }, {
+      "referenceID" : 32,
+      "context" : ", matching of a finite number of moments), MMD based methods embed a distribution into an infinite-dimensional vector [33].",
+      "startOffset" : 118,
+      "endOffset" : 122
+    }, {
+      "referenceID" : 20,
+      "context" : "A challenge for MMD methods is to define a kernel function that is statistically efficient and can be used with small minibatch sizes [21].",
+      "startOffset" : 134,
+      "endOffset" : 138
+    }, {
+      "referenceID" : 20,
+      "context" : "A solution comes by using adversarial learning for the online training of kernel functions [21, 3].",
+      "startOffset" : 91,
+      "endOffset" : 98
+    }, {
+      "referenceID" : 2,
+      "context" : "A solution comes by using adversarial learning for the online training of kernel functions [21, 3].",
+      "startOffset" : 91,
+      "endOffset" : 98
+    }, {
+      "referenceID" : 32,
+      "context" : "[33] addressed these two issues by defining the moments as features and derivatives from a moment network that is trained online (together with the generator) by using a specially designed objective function.",
+      "startOffset" : 0,
+      "endOffset" : 4
+    }, {
+      "referenceID" : 17,
+      "context" : "With this interpretation of the moving average, we propose to get a better moving average estimate by using the ADAM optimizer [18] on the loss of the moving average given in Eq.",
+      "startOffset" : 127,
+      "endOffset" : 131
+    }, {
+      "referenceID" : 17,
+      "context" : "m0 and u0 are initialized as proposed by [18].",
+      "startOffset" : 41,
+      "endOffset" : 45
+    }, {
+      "referenceID" : 17,
+      "context" : "We refer to [18] for a detailed ADAM optimizer description.",
+      "startOffset" : 12,
+      "endOffset" : 16
+    }, {
+      "referenceID" : 17,
+      "context" : "In fact, this is a non-stationary estimation since the mean of the generated data changes in the training, and it is well known that ADAM works well for such online non-stationary losses [18].",
+      "startOffset" : 187,
+      "endOffset" : 191
+    }, {
+      "referenceID" : 33,
+      "context" : "We discuss in Appendix 2 the advantage of AMA on MA from a regret bounds point of view [34].",
+      "startOffset" : 87,
+      "endOffset" : 91
+    }, {
+      "referenceID" : 21,
+      "context" : "Our proposed approach is related to the recent body of work on MMD or MM based generative models [22, 8, 21, 3, 33].",
+      "startOffset" : 97,
+      "endOffset" : 115
+    }, {
+      "referenceID" : 7,
+      "context" : "Our proposed approach is related to the recent body of work on MMD or MM based generative models [22, 8, 21, 3, 33].",
+      "startOffset" : 97,
+      "endOffset" : 115
+    }, {
+      "referenceID" : 20,
+      "context" : "Our proposed approach is related to the recent body of work on MMD or MM based generative models [22, 8, 21, 3, 33].",
+      "startOffset" : 97,
+      "endOffset" : 115
+    }, {
+      "referenceID" : 2,
+      "context" : "Our proposed approach is related to the recent body of work on MMD or MM based generative models [22, 8, 21, 3, 33].",
+      "startOffset" : 97,
+      "endOffset" : 115
+    }, {
+      "referenceID" : 32,
+      "context" : "Our proposed approach is related to the recent body of work on MMD or MM based generative models [22, 8, 21, 3, 33].",
+      "startOffset" : 97,
+      "endOffset" : 115
+    }, {
+      "referenceID" : 11,
+      "context" : "Theorem 1 [12] shows that the MMD is a well defined metric for universal kernels.",
+      "startOffset" : 10,
+      "endOffset" : 14
+    }, {
+      "referenceID" : 21,
+      "context" : "Given a Universal kernel such as a Gaussian Kernel as outlined in GMMN [22, 8], one can learn implicit Generative models Gθ that defines a family of distribution {qθ} by minimizing the MMD distance:",
+      "startOffset" : 71,
+      "endOffset" : 78
+    }, {
+      "referenceID" : 7,
+      "context" : "Given a Universal kernel such as a Gaussian Kernel as outlined in GMMN [22, 8], one can learn implicit Generative models Gθ that defines a family of distribution {qθ} by minimizing the MMD distance:",
+      "startOffset" : 71,
+      "endOffset" : 78
+    }, {
+      "referenceID" : 20,
+      "context" : "To remedy that, other discrepancies introduced in [21, 3, 33] compose universal kernels k with a feature map φ ∈ Ψ as follows:",
+      "startOffset" : 50,
+      "endOffset" : 61
+    }, {
+      "referenceID" : 2,
+      "context" : "To remedy that, other discrepancies introduced in [21, 3, 33] compose universal kernels k with a feature map φ ∈ Ψ as follows:",
+      "startOffset" : 50,
+      "endOffset" : 61
+    }, {
+      "referenceID" : 32,
+      "context" : "To remedy that, other discrepancies introduced in [21, 3, 33] compose universal kernels k with a feature map φ ∈ Ψ as follows:",
+      "startOffset" : 50,
+      "endOffset" : 61
+    }, {
+      "referenceID" : 21,
+      "context" : "GMMN [22, 8] MMD(k, p, q) Universal k min prob.",
+      "startOffset" : 5,
+      "endOffset" : 12
+    }, {
+      "referenceID" : 7,
+      "context" : "GMMN [22, 8] MMD(k, p, q) Universal k min prob.",
+      "startOffset" : 5,
+      "endOffset" : 12
+    }, {
+      "referenceID" : 20,
+      "context" : "[21, 3, 33] k Fixed universal & lipschitz φ lipschitz learned",
+      "startOffset" : 0,
+      "endOffset" : 11
+    }, {
+      "referenceID" : 2,
+      "context" : "[21, 3, 33] k Fixed universal & lipschitz φ lipschitz learned",
+      "startOffset" : 0,
+      "endOffset" : 11
+    }, {
+      "referenceID" : 32,
+      "context" : "[21, 3, 33] k Fixed universal & lipschitz φ lipschitz learned",
+      "startOffset" : 0,
+      "endOffset" : 11
+    }, {
+      "referenceID" : 25,
+      "context" : "Theoretically GFMN converges to the real data distribution if the feature extractor used was universal (See text for definition of Universal features as given in [26] ) .",
+      "startOffset" : 162,
+      "endOffset" : 166
+    }, {
+      "referenceID" : 20,
+      "context" : "For learning implicit generative models [21] replaces MMD in Eq.",
+      "startOffset" : 40,
+      "endOffset" : 44
+    }, {
+      "referenceID" : 9,
+      "context" : "Nevertheless, learning generative models remains challenging with it as it boils down to a min/max game as in original GAN [10].",
+      "startOffset" : 123,
+      "endOffset" : 127
+    }, {
+      "referenceID" : 25,
+      "context" : "[26] define universality of feature maps and how it connects to their corresponding kernels.",
+      "startOffset" : 0,
+      "endOffset" : 4
+    }, {
+      "referenceID" : 25,
+      "context" : "S is universal =⇒ kΦ is universal [26].",
+      "startOffset" : 34,
+      "endOffset" : 38
+    }, {
+      "referenceID" : 25,
+      "context" : "Note that this is the definition of universal feature as given in [26]: continuous functions can be approximated in the linear span of those features.",
+      "startOffset" : 66,
+      "endOffset" : 70
+    }, {
+      "referenceID" : 21,
+      "context" : "GFMN is related to the recent body of work on MMD and moment matching based generative models [22, 8, 21, 3, 33].",
+      "startOffset" : 94,
+      "endOffset" : 112
+    }, {
+      "referenceID" : 7,
+      "context" : "GFMN is related to the recent body of work on MMD and moment matching based generative models [22, 8, 21, 3, 33].",
+      "startOffset" : 94,
+      "endOffset" : 112
+    }, {
+      "referenceID" : 20,
+      "context" : "GFMN is related to the recent body of work on MMD and moment matching based generative models [22, 8, 21, 3, 33].",
+      "startOffset" : 94,
+      "endOffset" : 112
+    }, {
+      "referenceID" : 2,
+      "context" : "GFMN is related to the recent body of work on MMD and moment matching based generative models [22, 8, 21, 3, 33].",
+      "startOffset" : 94,
+      "endOffset" : 112
+    }, {
+      "referenceID" : 32,
+      "context" : "GFMN is related to the recent body of work on MMD and moment matching based generative models [22, 8, 21, 3, 33].",
+      "startOffset" : 94,
+      "endOffset" : 112
+    }, {
+      "referenceID" : 21,
+      "context" : "The closest to our method is the Generative Moment Matching Network + Autoencoder (GMMN+AE) proposed in [22].",
+      "startOffset" : 104,
+      "endOffset" : 108
+    }, {
+      "referenceID" : 20,
+      "context" : "[21] demonstrate that GMMN+AE is not competitive with GANs for challenging datasets such as CIFAR10.",
+      "startOffset" : 0,
+      "endOffset" : 4
+    }, {
+      "referenceID" : 20,
+      "context" : "MMD-GANs, discussed in Section 3, demonstrated competitive results with the use of adversarial learning by learning a feature map in conjuction with a Gaussian kernel [21, 3].",
+      "startOffset" : 167,
+      "endOffset" : 174
+    }, {
+      "referenceID" : 2,
+      "context" : "MMD-GANs, discussed in Section 3, demonstrated competitive results with the use of adversarial learning by learning a feature map in conjuction with a Gaussian kernel [21, 3].",
+      "startOffset" : 167,
+      "endOffset" : 174
+    }, {
+      "referenceID" : 32,
+      "context" : "[33] recently proposed a method to perform online learning of the moments while training the generator.",
+      "startOffset" : 0,
+      "endOffset" : 4
+    }, {
+      "referenceID" : 3,
+      "context" : "[4] proposed the Generative Latent Optimization (GLO) model that jointly optimizes model parameters and noise input vectors z, while avoiding adversarial training.",
+      "startOffset" : 0,
+      "endOffset" : 3
+    }, {
+      "referenceID" : 29,
+      "context" : "Our work relates also to plug and play generative models of [30] where a pretrained classifier is used to sample new images, using MCMC sampling methods.",
+      "startOffset" : 60,
+      "endOffset" : 64
+    }, {
+      "referenceID" : 18,
+      "context" : "Our work is also related to AE-based generative models variational AE (VAE) [19], adversarial AE (AAE) [25] and Wasserstein AE (WAE) [38].",
+      "startOffset" : 76,
+      "endOffset" : 80
+    }, {
+      "referenceID" : 24,
+      "context" : "Our work is also related to AE-based generative models variational AE (VAE) [19], adversarial AE (AAE) [25] and Wasserstein AE (WAE) [38].",
+      "startOffset" : 103,
+      "endOffset" : 107
+    }, {
+      "referenceID" : 37,
+      "context" : "Our work is also related to AE-based generative models variational AE (VAE) [19], adversarial AE (AAE) [25] and Wasserstein AE (WAE) [38].",
+      "startOffset" : 133,
+      "endOffset" : 137
+    }, {
+      "referenceID" : 41,
+      "context" : "Another recent line of work that involves the use of AEs in generative models consists in applying AEs to improve GANs stability [42, 39].",
+      "startOffset" : 129,
+      "endOffset" : 137
+    }, {
+      "referenceID" : 38,
+      "context" : "Another recent line of work that involves the use of AEs in generative models consists in applying AEs to improve GANs stability [42, 39].",
+      "startOffset" : 129,
+      "endOffset" : 137
+    }, {
+      "referenceID" : 28,
+      "context" : "Finally, our objective function is related to the McGan loss function [29], where authors match first and second order moments.",
+      "startOffset" : 70,
+      "endOffset" : 74
+    }, {
+      "referenceID" : 19,
+      "context" : "Experimental Setup Datasets: We evaluate our proposed approach on images from CIFAR10 [20] (50k train.",
+      "startOffset" : 86,
+      "endOffset" : 90
+    }, {
+      "referenceID" : 5,
+      "context" : ", 10k test, 10 classes), STL10 [6] (5k train.",
+      "startOffset" : 31,
+      "endOffset" : 34
+    }, {
+      "referenceID" : 23,
+      "context" : ", 8k test, 100k unlabeled, 10 classes), CelebA [24] (200k) and LSUN bedrooms [41] datasets.",
+      "startOffset" : 47,
+      "endOffset" : 51
+    }, {
+      "referenceID" : 40,
+      "context" : ", 8k test, 100k unlabeled, 10 classes), CelebA [24] (200k) and LSUN bedrooms [41] datasets.",
+      "startOffset" : 77,
+      "endOffset" : 81
+    }, {
+      "referenceID" : 31,
+      "context" : "GFMN Generator: In most of our experiments the generator G uses a DCGAN-like architecture [32].",
+      "startOffset" : 90,
+      "endOffset" : 94
+    }, {
+      "referenceID" : 27,
+      "context" : "For CIFAR10, STL10, LSUN and CelebA64×64, we use two extra layers as commonly used in previous works [28, 13].",
+      "startOffset" : 101,
+      "endOffset" : 109
+    }, {
+      "referenceID" : 12,
+      "context" : "For CIFAR10, STL10, LSUN and CelebA64×64, we use two extra layers as commonly used in previous works [28, 13].",
+      "startOffset" : 101,
+      "endOffset" : 109
+    }, {
+      "referenceID" : 12,
+      "context" : "For CelebA128×128 and some experiments with CIFAR10 and STL10, we use a ResNet-based generator such as the one in [13].",
+      "startOffset" : 114,
+      "endOffset" : 118
+    }, {
+      "referenceID" : 36,
+      "context" : "Classifier Features: We perform our experiments on classifier features with VGG19 [37] and Resnet18 networks [14] which we pretrained using the whole ImageNet dataset [35] with 1000 classes.",
+      "startOffset" : 82,
+      "endOffset" : 86
+    }, {
+      "referenceID" : 13,
+      "context" : "Classifier Features: We perform our experiments on classifier features with VGG19 [37] and Resnet18 networks [14] which we pretrained using the whole ImageNet dataset [35] with 1000 classes.",
+      "startOffset" : 109,
+      "endOffset" : 113
+    }, {
+      "referenceID" : 34,
+      "context" : "Classifier Features: We perform our experiments on classifier features with VGG19 [37] and Resnet18 networks [14] which we pretrained using the whole ImageNet dataset [35] with 1000 classes.",
+      "startOffset" : 167,
+      "endOffset" : 171
+    }, {
+      "referenceID" : 35,
+      "context" : "2 shows the Inception Score (IS) [36] and Fréchet Inception Distance (FID) [15] for GFMN trained on CIFAR10 using different feature extractors E.",
+      "startOffset" : 33,
+      "endOffset" : 37
+    }, {
+      "referenceID" : 14,
+      "context" : "2 shows the Inception Score (IS) [36] and Fréchet Inception Distance (FID) [15] for GFMN trained on CIFAR10 using different feature extractors E.",
+      "startOffset" : 75,
+      "endOffset" : 79
+    }, {
+      "referenceID" : 12,
+      "context" : "Finally, we achieve the best performance in terms of both IS and FID (last row1) when using a generator architecture that contains residual blocks, similar to the one propose in [13].",
+      "startOffset" : 178,
+      "endOffset" : 182
+    }, {
+      "referenceID" : 30,
+      "context" : "Our Pytorch [31] implementation of GFMN can only handle minibatches of size up to 160 when using VGG19 as a feature extractor and image size 64×64 on a Tesla K40 GPU w/ 12GB of memory.",
+      "startOffset" : 12,
+      "endOffset" : 16
+    }, {
+      "referenceID" : 26,
+      "context" : "4 show that GFMN achieves better or similar results compared to the state-ofthe-art Spectral GAN (SN-GAN) [27] for both CIFAR10 and STL10.",
+      "startOffset" : 106,
+      "endOffset" : 110
+    }, {
+      "referenceID" : 21,
+      "context" : "When compared to MMD approaches [22, 8, 21, 3, 33], GFMN presents important distinctions (some of them already listed in Secs.",
+      "startOffset" : 32,
+      "endOffset" : 50
+    }, {
+      "referenceID" : 7,
+      "context" : "When compared to MMD approaches [22, 8, 21, 3, 33], GFMN presents important distinctions (some of them already listed in Secs.",
+      "startOffset" : 32,
+      "endOffset" : 50
+    }, {
+      "referenceID" : 20,
+      "context" : "When compared to MMD approaches [22, 8, 21, 3, 33], GFMN presents important distinctions (some of them already listed in Secs.",
+      "startOffset" : 32,
+      "endOffset" : 50
+    }, {
+      "referenceID" : 2,
+      "context" : "When compared to MMD approaches [22, 8, 21, 3, 33], GFMN presents important distinctions (some of them already listed in Secs.",
+      "startOffset" : 32,
+      "endOffset" : 50
+    }, {
+      "referenceID" : 32,
+      "context" : "When compared to MMD approaches [22, 8, 21, 3, 33], GFMN presents important distinctions (some of them already listed in Secs.",
+      "startOffset" : 32,
+      "endOffset" : 50
+    }, {
+      "referenceID" : 21,
+      "context" : "Compared to GMMN and GMMN+AE [22], we can see in Tab.",
+      "startOffset" : 29,
+      "endOffset" : 33
+    }, {
+      "referenceID" : 20,
+      "context" : "Compared to recent adversarial MMD methods (MMD GAN) [21, 3] GFMN also presents significantly better results while avoiding the problematic min/max game.",
+      "startOffset" : 53,
+      "endOffset" : 60
+    }, {
+      "referenceID" : 2,
+      "context" : "Compared to recent adversarial MMD methods (MMD GAN) [21, 3] GFMN also presents significantly better results while avoiding the problematic min/max game.",
+      "startOffset" : 53,
+      "endOffset" : 60
+    }, {
+      "referenceID" : 32,
+      "context" : "GFMN achieves better results than the Method of Learned Moments (MoLM) [33], while using a much smaller number of features to perform matching.",
+      "startOffset" : 71,
+      "endOffset" : 75
+    }, {
+      "referenceID" : 32,
+      "context" : "The best performing model from [33], MoLM1536, uses around 42 million moments to train the CIFAR10 generator, while our best GFMN model uses around 850K moments/features only, almost 50x less.",
+      "startOffset" : 31,
+      "endOffset" : 35
+    }, {
+      "referenceID" : 4,
+      "context" : "We are confident that GFMN can achieve state-ofthe-art results with features from classifiers trained with unsupervised methods such as [5].",
+      "startOffset" : 136,
+      "endOffset" : 139
+    } ],
+    "year" : 2019,
+    "abstractText" : "Perceptual features (PFs) have been used with great success in tasks such as transfer learning, style transfer, and super-resolution. However, the efficacy of PFs as key source of information for learning generative models is not well studied. We investigate here the use of PFs in the context of learning implicit generative models through moment matching (MM). More specifically, we propose a new effective MM approach that learns implicit generative models by performing mean and covariance matching of features extracted from pretrained ConvNets. Our proposed approach improves upon existing MM methods by: (1) breaking away from the problematic min/max game of adversarial learning; (2) avoiding online learning of kernel functions; and (3) being efficient with respect to both number of used moments and required minibatch size. Our experimental results demonstrate that, due to the expressiveness of PFs from pretrained deep ConvNets, our method achieves stateof-the-art results for challenging benchmarks.",
+    "creator" : "LaTeX with hyperref package"
+  }
+}

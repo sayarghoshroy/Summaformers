@@ -1,0 +1,663 @@
+15:17:09.984 [main] DEBUG com.amazonaws.AmazonWebServiceClient - Internal logging successfully configured to commons logger: true
+15:17:10.050 [main] DEBUG com.amazonaws.metrics.AwsSdkMetrics - Admin mbean registered under com.amazonaws.management:type=AwsSdkMetrics
+15:17:10.119 [main] DEBUG c.a.internal.config.InternalConfig - Configuration override awssdk_config_override.json not found.
+15:17:10.445 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:17:10.445 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loading model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:17:10.446 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:17:10.450 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Creating gazetteer cache at /tmp/gazetteer-v5.json-fa485aef.gazetteerCache.bin
+15:17:22.891 [scala-execution-context-global-12] INFO  o.a.scienceparse.ParserGroundTruth - Read 1609659 papers.
+15:17:43.959 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loaded model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:17:56.665 [scala-execution-context-global-12] INFO  o.a.scienceparse.ExtractReferences - could not load kermit gazetter
+15:17:56.729 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:17:56.730 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:17:56.734 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.RunSP$ - Starting /home/risubaba/LongSumm/pdf/1811.00436.pdf
+{
+  "name" : "/home/risubaba/LongSumm/pdf/1811.00436.pdf",
+  "metadata" : {
+    "source" : "CRF",
+    "title" : "Unsupervised Dual-Cascade Learning with Pseudo-Feedback Distillation for Query-based Extractive Summarization",
+    "authors" : [ "Haggai Roitman", "Guy Feigenblat", "David Konopnicki", "Doron Cohen", "Odellia Boni" ],
+    "emails" : [ "haggai@il.ibm.com" ],
+    "sections" : [ {
+      "heading" : null,
+      "text" : "ar X\niv :1\n81 1.\n00 43\n6v 1\n[ cs\nWe propose Dual-CES – a novel unsupervised, query-focused, multi-document extractive summarizer. Dual-CES is designed to better handle the tradeoff between saliency and focus in summarization. To this end, Dual-CES employs a two-step dual-cascade optimization approach with saliency-based pseudo-feedback distillation. Overall, Dual-CES significantly outperforms all other state-of-the-art unsupervised alternatives. Dual-CES is even shown to be able to outperform strong supervised summarizers."
+    }, {
+      "heading" : "1 Introduction",
+      "text" : "The vast amounts of textual data end users need to consume motivates the need for automatic summarization [7]. An automatic summarizer gets as an input one or more documents and possibly also a limit on summary length (e.g., maximum number of words). The summarizer then needs to produce a textual summary that captures the most salient (general and informative) content parts within input documents. Moreover, the summarizer may also be required to satisfy a specific user information need, expressed by one or more queries. Therefore, the summarizer will need to produce a focused summary which includes the most relevant information to that need."
+    }, {
+      "heading" : "1.1 Motivation",
+      "text" : "While both saliency and focus goals should be considered within a query-focused summarization setting, these goals may be actually conflicting with each other [2]. Higher saliency usually comes at the expense of lower focus and vice-versa. Moreover, such a tradeoff may directly depend on summary length.\n∗Contact author: haggai@il.ibm.com\nTo illustrate the effect of summary length on this tradeoff, using the DUC 2007 dataset, Figure 1 reports the summarization quality which was obtained by the Cross Entropy Summarizer (CES) – a state of the art unsupervised query-focused multidocument extractive summarizer [6]. Saliency was measured according to cosine similarity between the summary’s bigram representation and that of the input documents. Focus was further measured relatively to how much the summary’s induced unigram model is “concentrated” around query-related words.\nAs we can observe in Figure 1, with the relaxation of the summary length limit, where a more lengthy summary is being allowed, saliency increases at the expense of focus. Laying towards more saliency would result in a better coverage of general and more informative content. Yet, this would result in the inclusion of less relevant content to the specific information need in mind."
+    }, {
+      "heading" : "1.2 Towards a better tradeoff handling",
+      "text" : "Aiming at better handling the saliency versus focus tradeoff, in this work, we propose Dual-CES – an extended CES summarizer [6]. Similar to CES, Dual-CES is an unsupervised query-focused, multi-document, extractive summarizer. To this end, like CES, Dual-CES utilizes the Cross Entropy method [21] for selecting a subset of sentences extracted from input documents, whose combination is predicted to produce a good summary.\nYet, differently from CES, Dual-CES does not attempt to address both saliency and focus goals in a single optimization step. Instead, Dual-CES implements a novel two-step dual-cascade optimization approach, which utilizes two sequential CES-like invocations. Using such an approach, Dual-CES tries to handle the tradeoff by gradually shifting from generating a long summary that is more salient in the first step to generating a short summary that is more focused in the second step. Moreover, DualCES utilizes the long summary that was generated in the first step for saliency-based pseudo-feedback distillation, which allows to generate a final focused summary with better saliency. Dual-CES provides a fully unsupervised end-to-end query-focused multi-document extractive summarization solution.\nUsing an evaluation with the DUC 2005, 2006 and 2007 benchmarks, we show that, Dual-CES generates a focused (and shorter) summary which has much higher saliency (and hence a better tradeoff handling). Overall, Dual-CES provides a significantly better summarization quality compared to other alternative unsupervised summarizers; and in many cases, it even outperforms that of state-of-the art supervised summarizers."
+    }, {
+      "heading" : "2 Related Work",
+      "text" : "In this work we employ an unsupervised learning approach for the task of query-based multi-document extractive summarization. Many previous works have employed various unsupervised and/or supervised learning methods for the same task. Some learning systems rank sentences based on their surface and/or graph level features [3, 15, 18]. Others have used various sparse coding techniques for selecting a subset of sentences that minimizes a given documents reconstruction error [12, 26, 16, 9, 11] or used a variational auto-encoder for sentence representation [13].\nAttention models incorporated within deep-learning summarization architectures have further been suggested for improving sentence ranking and selection [1, 12, 20]. Such models try to simulate a human attentive reading behaviour. This allows to better account for context-sensitive features during summarization. Compared to these works, we do not try to attend for sentence ranking or selection. Alternatively, we distill informative hints from summarized documents, aiming to improve the saliency of produced focused summaries.\nFinally, reinforcement learning methods have been recently considered [4, 6, 17, 19]. Among such methods, the CES summarizer [6] is the only one which is both query-sensitive and unsupervised. Similar to CES, we also utilize the Cross Entropy (CE) method [21], a global policy search optimization framework, for solving the sentence subset selection problem. Yet, differently from CES, we utilize the CE method twice, each time with a slightly-different summarization goal in mind (i.e., first saliency and then focus). Moreover, we utilize the distilled saliency-based pseudo-feedback to improve the summarization policy search between such switched (dual) goals. To the best of our knowledge, this on its own, serves as a novel aspect of our work."
+    }, {
+      "heading" : "3 Background",
+      "text" : "Here we provide background details on our summarization task and the Cross Entropy method which we use for implementing Dual-CES."
+    }, {
+      "heading" : "3.1 Summarization task",
+      "text" : "We address the query-focused, multi-document summarization task. Formally, let q denote some user information need for documents summarization, which may be expressed by one or more queries. Let D denote a set of one or more matching documents to be summarized and Lmax be the maximum allowed summary length (in words).\nWe implement an extractive summarization approach. Our goal is to produce a length-limited summary S by extracting salient content parts in D which are further relevant (focused) to q.\nFollowing [6], we now cast the summarization task as a sentence subset selection problem. To this end, we produce summary S (with maximum length Lmax) by choosing a subset of sentences s ∈ D which maximizes a given quality target Q(S|q,D)."
+    }, {
+      "heading" : "3.2 Unsupervised summarization",
+      "text" : "Dual-CES is an unsupervised summarizer. Similar to CES, it utilizes the Cross Entropy method [21] for selecting the most “promising” subset of sentences in D. Since we assume an unsupervised setting, no actual reference summaries are available for training nor can we directly optimize an actual quality target Q(S|q,D). Instead, following [6], Q(S|q,D) is “surrogated” by several summary quality prediction measures Q̂i(S|q,D) (i = 1, 2, . . . ,m). Each “predictor” Q̂i(S|q,D) is designed to estimate the level of saliency or focus of a given candidate summary S and is presumed to correlate (up to some extent) with actual summarization quality, e.g., ROUGE [14]. For simplicity, similar to CES, various predictions are assumed to be independent and are combined into a single optimization objective by taking their product, i.e.: Q̂(S|q,D) def =\n∏m i=1 Q̂i(S|q,D)."
+    }, {
+      "heading" : "3.3 Using the Cross Entropy method",
+      "text" : "The CE-method provides a generic Monte-Carlo optimization framework for solving hard combinatorial problems [21]. Previously, it was utilized for solving the sentence subset selection problem [6].\nTo this end, the CE-method gets as an input Q̂(·|q,D), a constraint on maximum summary length L and an optional pseudo-reference summary SL, whose usage will be explained later on. Let CEM(Q̂(·|q,D), L, SL) denote a single invocation of the CE-method. The result of such an invocation is a single length-feasible summary S∗ which contains a subset of sentences selected from D which maximizes Q̂(·|q,D). For example, CES is implemented by invoking CEM(Q̂CES(·|q,D), Lmax, ∅).\nWe next briefly explain how the CE-method solves this problem. For a given sentence s ∈ D, let ϕ(s) denote the likelihood that it should be included in summary S. Starting with a selection policy with the highest entropy (i.e.: ϕ0(s) = 0.5), the CEMethod learns a selection policy ϕ∗(·) that maximizes Q̂(·|q,D). To this end, ϕ∗(·) is incrementally learned using an importance sampling approach [21]. At each iteration t = 1, 2, . . ., a sample of N sentence-subsets Sj is generated according to the selection policy ϕt−1(·) which was learned in the previous iteration t − 1. The likelihood of picking a sentence s ∈ D at iteration t is estimated (via cross-entropy minimization) as follows:\nϕt(s) def = ∑N j=1 δ[Q̂(Sj |q,D)≥γt]δ[s∈Sj ] ∑N\nj=1 δ[Q̂(Sj |q,D)≥γt]\n. (1)\nHere, δ[·] denotes the Kronecker-delta (indicator) function and γt denotes the (1− ρ)-quantile (ρ ∈ (0, 1)) of the sample performances Q̂(Sj |q,D) (j = 1, 2, . . . , N). Therefore, the likelihood of picking a sentence s ∈ D will increase when it is being included in more (subset) samples whose performance is above the current minimum required quality target value γt. We further smooth ϕt(·) as follows: ϕt(·) ′ = αϕt−1(·) + (1− α)ϕt(·); with α ∈ [0, 1] [21]. Upon its termination, the CE-method is expected to converge to the global optimal selection policy ϕ∗(·) [21]. We then produce a single summary S∗ ∼ ϕ∗(·). To enforce\nthat only feasible summaries will be produced, following [6], we set Q̂(Sj |q,D) = −∞ whenever a sampled summary Sj length exceeds the L word limit."
+    }, {
+      "heading" : "4 The Dual-CES summarizer",
+      "text" : "Differently from CES, Dual-CES does not attempt to maximize both saliency and focus goals in a single optimization step. Instead, Dual-CES implements a novel twostep dual-cascade optimization approach (see Figure 2), which utilizes two CES-like invocations. Both invocations consider the same sentences powerset solution space. Yet, each such invocation utilizes a bit different set of summary quality predictors Q̂i(S|q,D), depending on whether the summarizer’s goal should lay towards higher summary saliency or focus.\nIn the first step, Dual-CES relaxes the summary length constraint, aiming at producing a longer and more salient summary. This summary is then treated as a pseudoeffective reference summary from which saliency-based pseudo-feedback is distilled. Such pseudo-feedback is then utilized in the second step of the cascade for setting an additional auxiliary saliency-driven goal. Yet, at the second step, similar to CES, the primary goal is actually to produce a focused summary (with maximum length limit Lmax). Overall, Dual-CES is simply implemented as follows:\nCEM(Q̂Foc(·|q,D), Lmax,CEM(Q̂Sal(·|q,D), L̄, ∅)).\nHere, Q̂Sal(·|q,D) and Q̂Foc(·|q,D) denote the saliency and focus summary quality objectives which are optimized during the cascade, respectively. Both Q̂Sal(·|q,D) and Q̂Foc(·|q,D) are implemented as a product of several basic predictors. L̄ ≥ Lmax denotes the relaxed summary length hyperparameter. We next elaborate the implementation details of Dual-CES’s dual optimization steps."
+    }, {
+      "heading" : "4.1 Step 1: Saliency-oriented summarization",
+      "text" : "The purpose of the first step is to produce a single longer summary (with length L̄ ≥ Lmax) which will be used as a pseudo-reference for saliency-based feedback distillation. As illustrated in Figure 1, with a longer summary length – a more salient summary may be produced.\nThis step is simply implemented by invoking the CE-method with CEM(Q̂Sal(·|q,D), L̄, ∅). The target measure Q̂Sal(·|q,D) guides the optimization towards the production of a summary with the highest possible saliency. Similar to CES, Q̂Sal(·|q,D) is calculated as the product of several summary quality predictors. Overall, we use five different\npredictors, four of which were previously used in CES [6]. The additional predictor that we introduce is designed to “drive” the optimization even further towards higher saliency. Next, we shortly describe each predictor. The symbol † marks whether it was originally employed in CES [6]."
+    }, {
+      "heading" : "4.1.1 Predictor 1: coverage†",
+      "text" : "This predictor estimates to what extent (candidate) summary S (generally) covers the document set D. Here, we represent both S and D as term-frequency vectors, considering only bigrams, which commonly represent more important content units [6]. For a given text x, let cos(S, x) def = ~S·~x\n‖~S‖‖~x‖ . The coverage predictor is then defined by\nQ̂cov(S|q,D) def = cos(S,D)."
+    }, {
+      "heading" : "4.1.2 Predictor 2: position-bias†",
+      "text" : "This predictor biases sentence selection towards sentences that appear earlier in their containing documents. It is calculated as Q̂pos(S|q,D) def = |S| √ ∏\ns∈S\n(\n1 + 1log(b+pos(s))\n)\n,\nwhere pos(s) is the relative start position (in characters) of sentence s in its containing document and b is a position-bias hyperparameter (fixed to b = 2, following [6])."
+    }, {
+      "heading" : "4.1.3 Predictor 3: summary length†",
+      "text" : "This predictor biases towards selection of summaries that are closer to the maximum permitted length. Such summaries contain fewer and longer sentences, and therefore, tend to be more informative. Let len(x) denote the length of text x (in number of words). Here, x may either be a single sentence s ∈ D or a whole summary S. This predictor is then calculated as Q̂len(S|q,D) def = 1|S| len(S), where len(S) = ∑\ns∈S len(s)."
+    }, {
+      "heading" : "4.1.4 Predictor 4: asymmetric coverage",
+      "text" : "To target even higher saliency, we suggest a fourth predictor, inspired by the risk minimization framework [27]. To this end, we measure the Kullback-Leibler (KL) “similarity” between the two (unsmoothed) unigram language models induced from the centroid representation1 of S (θ̂S) and D (θ̂D), formally:\nQ̂KL(S|q,D) def = exp\n(\n− ∑ w p(w|θ̂S) log p(w|θ̂S)\np(w|θ̂D)\n)\n."
+    }, {
+      "heading" : "4.1.5 Predictor 5: focus-drift†",
+      "text" : "While producing a longer summary may result in higher saliency, as was further illustrated in Figure 1, such a summary may be less focused. Hence, to avoid such focusdrift, while we opt to optimize for higher saliency at this step, the target information\n1Such centroid representation is simply given by concatenating the text of sentences in S or documents\nin D.\nneed q should be still considered. To this end, we add a predictor: Q̂qf (S|q,D) def =\n∑\nw∈q p(w|θ̂S), which acts as a “query-anchor” and measures to what extent summary S’s unigram model is devoted to the information need q."
+    }, {
+      "heading" : "4.2 Step 2: Focus-oriented summarization",
+      "text" : "The input to the second step of the cascade consists of the same set of documents D, summary length constraint Lmax and the pseudo-reference summary SL̄ that was generated in the previous step. This step is simply implemented by invoking the CEmethod with CEM(Q̂Foc(·|q,D), Lmax, SL̄). Here, the target measure Q̂Foc(·|q,D) guides the optimization towards the production of a focused summary, while still keeping high saliency as much as possible. To achieve that, we use an additional focusdriven predictor which bias summary production towards higher focus. Moreover, using the pseudo-reference summary SL̄ we introduce an additional auxiliary saliencybased predictor, whose goal is to enhance the saliency of produced focused summary. Overall, Q̂Foc(·|q,D) is calculated as the product of the previous five summary quality predictors (Predictors 1−5) and the two additional predictors, whose details are described next."
+    }, {
+      "heading" : "4.2.1 Predictor 6: query-relevancy†",
+      "text" : "This predictor estimates the relevancy of summary S to q. For that, we use two similarity measures. The first, following [6], measures the Bhattacharyya similarity (coefficient) between the two (unsmoothed) unigram language models of q and S, i.e.: Q̂sim1(S|q,D) def = ∑\nw∈q\n√\np(w|θ̂q)p(w|θ̂S). The second measures the cosine simi-\nlarity between q and S unigram term-frequency representations, i.e.: Q̂sim2(S|q,D) def = cos(S, q). The two similarity measures are then combined into a single measure using their geometric mean, i.e.: Q̂sim(S|q,D) def = √ Q̂sim1(S|q,D) · Q̂sim2(S|q,D)."
+    }, {
+      "heading" : "4.2.2 Predictor 7: reference summary (distillation) coverage",
+      "text" : "We further make use of the pseudo-reference summary SL̄, which was produced in the first step, and introduce an additional auxiliary saliency-based predictor. This predictor utilizes pseudo-feedback that is distilled from unique unigram words in SL̄. It is calculated as: Q̂cov′(S|q,D) def = ∑\nw∈SL̄ δ[w∈S]. Following [10, 27], we only consider the\ntop-100 most frequent unigrams in SL̄.\nIntuitively speaking, SL̄ usually will be longer (in words) than any candidate summary S that may be chosen in the second step; hence, SL̄ is expected to be more salient than S. Therefore, such a predictor is expected to “drive” the optimization to prefer those candidate summaries S that include as many salient words from SL̄, acting as if they were by themselves longer (and more salient) summaries (than those candidates that include less salient words from SL̄)."
+    }, {
+      "heading" : "4.2.3 Adaptive hyperparameter b adjustment",
+      "text" : "Apart from salient words in SL̄ that are used as feedback, we note that, sentences in SL̄ may also provide additional “hints” about other properties of informative sentences in D, which may potentially be selected to improve saliency. One such property is the relative start-positions of sentences in SL̄. To this end, we now assign b = 1|SL̄| ∑ s∈SL̄ pos(s) (i.e., the average start-position of feedback sentences in SL̄) as the value of the position-bias hyperparameter within Q̂pos(S|q,D) (Predictor 2)."
+    }, {
+      "heading" : "4.3 An extension: Length-adaptive Dual-CES",
+      "text" : "We conclude this section with a suggestion of an extension to Dual-CES that adaptively adjusts the value of hyperparameter L̄. To this end, we introduce a new learning parameter Lt which defines the maximum length limit for summary production (sampling) that is allowed at iteration t of the CE-method. We now assume that summary lengths have a Poisson(Lt) distribution of word occurrences with mean Lt. Using importance sampling, this parameter is estimated at iteration t as follows:\nLt def = ∑N j=1 len(Sj) · δ[Q̂(Sj |q,D)≥γt] ∑N\nj=1 δ[Q̂(Sj |q,D)≥γt]\n. (2)\nSimilar to ϕ(·), we further smooth Lt as follows: Lt ′ def= αLt−1+(1−α)Lt. Here, α ∈ [0, 1] is the same smoothing hyperparameter which was used to smooth ϕ(·) and Lt=0 def = L̄."
+    }, {
+      "heading" : "5 Evaluation",
+      "text" : ""
+    }, {
+      "heading" : "5.1 Datasets",
+      "text" : "Our evaluation is based on the Document Understanding Conferences (DUC) 2005, 2006 and 2007 benchmarks2. These benchmarks are commonly used for evaluating the query-based multi-document summarization task by all of our related works. Given a topic statement, which is expressed by one or more questions, and a set of English documents, the main task is to produce a 250-word (i.e., Lmax = 250) topic-focused summary [5]. The number of topics per benchmark are 50, 50 and 45 in the DUC 2005, 2006 and 2007 benchmarks, respectively. The number of documents to be summarized per topic is 32, 25 and 25 in the DUC 2005, 2006 and 2007 benchmarks, respectively. Each document was pre-segmented (by NIST) into sentences. Following [6], we use Lucene’s English analysis3 for processing the text of topics and documents.\n2http://www-nlpir.nist.gov/projects/duc/data.html 3https://lucene.apache.org/"
+    }, {
+      "heading" : "5.1.1 Dual-CES implementation",
+      "text" : "We evaluated both Dual-CES and its adaptive-length variant (hereinafter denoted DualCES-A). To this end, on the first saliency-driven step, for Dual-CES, we fixed the (strict) upper bound limit on summary length to L̄ = 1500. Dual-CES-A, on the other hand, adaptively adjusts such length limit and was initialized with Lt=0 = 3000. Both variants were further set with a summary limit Lmax = 250 for their second focus-driven step.\nWe implemented both Dual-CES and Dual-CES-A in Java (JRE8). Further following [6], to reduce CE-method’s runtime, we applied a preliminary step of sentence pruning, where only the top-150 sentences s ∈ D with the highest (unigram) Bhattacharyya similarity to the topic’s queries were considered for summarization. Similar to [6], the CE-method hyperparameters were fixed as follows: N = 10, 000, ρ = 0.01 and α = 0.7.\nFinally, to handle DUC’s complex information needs, we closely followed [6], as follows. First, for each summarized topic, we calculated the query-focused predictions (i.e., Q̂qf (·|q,D) and Q̂sim(·|q,D)) per each one of its questions. To this end, each question was represented as a sub-query by concatenating the main topic’s text to the question’s text. Each sub-query was further expanded with top-100 (unigram) Wikipedia related-words [25]. We then obtained the topic query-sensitive predictions by summing up its various sub-queries’ predictions."
+    }, {
+      "heading" : "5.1.2 Evaluation measures",
+      "text" : "The three DUC benchmarks include four reference (ground-truth) human-written summaries per each topic [5]. We measured summarization quality using the ROUGE measure [14], which is the official one for this task [5]. To this end, we used the ROUGE 1.5.5 toolkit with its standard parameters setting4. We report both Recall and F-Measure of ROUGE-1, ROUGE-2 and ROUGE-SU4. ROUGE-1 and ROUGE-2 measure the overlap in unigrams and bigrams between the produced and the reference summaries, respectively. ROUGE-SU4 measures the overlap in skip-grams separated by up to four words.\nFinally, since Dual-CES essentially depends on the CE-method which has a stochastic nature, its quality may depend on the specific seed that was used for random sampling. Hence, following [6], to reduce sensitivity to random seed selection, per each summarization task (i.e., topic and documents pair), we run each Dual-CES variant 30 times (each time with a different random seed) and recorded its mean performance (and 95% confidence interval)."
+    }, {
+      "heading" : "5.2 Baselines",
+      "text" : "We compare the summary quality of Dual-CES to the results that were previously reported for several competitive summarization baselines. These baselines include both supervised and unsupervised methods and apply various strategies for handling the\n4ROUGE-1.5.5.pl -a -c 95 -m -n 2 -2 4 -u -p 0.5 -l 250\nsaliency versus focus tradeoff. To distinguish between both types of works, we mark supervised method names with a superscript §. The first line of baselines utilize various surface and graph level features, namely: BI-PLSA [22], CTSUM [24], HierSum [8], HybHSum§ [3], MultiMR [23], QODE [28] and SubMod-F§ [15]. The second line of baselines apply various sparse-coding or auto-encoding techniques, namely: DocRebuild [16], RA-MDS [11], SpOpt [26], and VAEs-A [13]. The third line of baselines incorporate various attention models, namely: AttSum§ [1], C-Attention [12] and CRSum+SF§ [20]. We further note that, some baselines, like DocRebuild, SpOpt and C-Attention, use hand-crafted rules for sentence compression.\nFinally, we directly compare with two CES variants, which serve as direct alternatives to Dual-CES. The first one, is the original CES summarizer, whose results are reported in [6]. The second one, denoted hereinafter CES+, utilizes Predictors 1−6, which are combined within a single optimized objective (by taking their product). This variant, therefore, allows to directly evaluate the contribution of our proposed dualcascade learning approach which is employed by the two Dual-CES variants."
+    }, {
+      "heading" : "5.3 Results",
+      "text" : "The main results of our evaluation are reported in Table 1 (ROUGE-X F-Measure) and Table 2 (ROUGE-X Recall). The numbers reported for the various baselines are the best numbers reported in their respective works. Unfortunately, not all baselines fully reported their results for all benchmarks and measures. Whenever a report on a measure is missing, we further use the symbol ’-’."
+    }, {
+      "heading" : "5.3.1 Dual-CES vs. other baselines",
+      "text" : "First we note that, among the various baseline methods that we have compared with, CES on its own, serves as the strongest baseline to outperform in most cases. Overall, Dual-CES provides better results compared to any other baseline (and specifically the unsupervised ones). Specifically, on F-Measure, Dual-CES has achieved between 6%−14% and 1%−3% better ROUGE-2 and ROUGE-1, respectively. On recall, DualCES has achieved between 3%−9% better ROUGE-1. On ROUGE-2, in the DUC 2006 and 2007 benchmarks, Dual-CES was about 1%− 9% better, while it was slightly inferior to SubMod-F and CRSum+SF in the DUC 2005 benchmark. Yet, SubMod-F and CRSum+SF are actually supervised, while Dual-CES is fully unsupervised. Therefore, overall, Dual-CES’s ability to reach (even to outperform in many cases) the quality of strong supervised counterparts actually only emphasizes more its potential."
+    }, {
+      "heading" : "5.3.2 Dual-CES vs. CES variants",
+      "text" : "Dual-CES significantly improves over the two CES variants in all benchmarks. On F-Measure, Dual-CES has achieved at least between 4% − 5% and 1% − 2% better ROUGE-2 and ROUGE-1, respectively. On recall, Dual-CES has achieved at least between 2%−4% and 1%−2% better ROUGE-2 and ROUGE-1, respectively. By distilling saliency-based pseudo-feedback between step transitions, Dual-CES manages\nto better utilize the CE-method for selecting a more promising subset of sentences. A case in point is the CES+ variant which is even inferior to CES. A simple combination of all predictors (except Predictor 7 which is unique to Dual-CES since it requires a pseudo-reference summary) does not directly translates to a better tradeoff handling. This, therefore, serves as a strong empirical evidence of the importance of the dualcascade optimization approach implemented by Dual-CES, which allows to produce focused summarizes with better saliency."
+    }, {
+      "heading" : "5.3.3 Comparison with attentive baselines",
+      "text" : "The pseudo-feedback distillation approach employed between the two steps of DualCES has some resemblance to attention models that are used by state-of-the-art deep learning summarization methods [1, 12, 20]. First we note that, Dual-CES significantly improves over these attentive baselines on ROUGE-1. On ROUGE-2, Dual-CES is significantly better than C-Attention and AttSum, while it provides (more or less) similar quality to CRSum+SF.\nCloser analysis of the various attention strategies that are employed within these\nbaselines, reveals that, while AttSum only attends on a sentence representation level, C-Attention and CRSum+SF further attend on a word level. Such a more fine-granular attendance results in an improved saliency for the two latter. Yet, while C-Attention first attends on sentences then on words, CRSum+SF performs its attentions reversely. Using Dual-CES as a reference method for comparison, apparently, CRSum+SF attendance on salient words first and then on salient sentences based on such words seems as the better strategy.\nIn a sense, similar to CRSum+SF, Dual-CES also first “attends” on salient words which are distilled from the pseudo-feedback reference summary. Dual-CES then utilizes such salient words for better selection of salient sentences within its second step of\nfocused summary production. Yet, compared to CRSum+SF and similar to C-Attention, Dual-CES’s saliency “attention” process is unsupervised. Moreover, Dual-CES further “attends” on salient sentence positions, which result in better tuning of the position-bias b hyperparameter."
+    }, {
+      "heading" : "L̄ R-1 R-2 R-SU4",
+      "text" : ""
+    }, {
+      "heading" : "5.3.4 Hyperparamter L̄ sensitivity analysis",
+      "text" : "Table 3 reports the sensitivity of Dual-CES (measured by ROUGE-X Recall) to the value of hyperparameter L̄, using the DUC 2007 benchmark. To this end, we ran DualCES with an increasing L̄ value. For further comparison, we also report in Table 3 the results of its adaptive-length version Dual-CES-A. Dual-CES-A is still initialized with Lt=0 = 3000 and adaptively adjusts this hyperparameter. Figure 3 illustrates the (average) learning curve of its adaptive-length parameter Lt.\nOverall, Dual-CES’s summarization quality remains quite stable, exhibiting low sensitivity to L̄. Similar stability was further observed for the two other DUC benchmarks. In addition, Figure 3 depicts an interesting empirical outcome: Dual-CES-A converges (more or less) to the best hyperparameter L̄ value (i.e., L̄ = 1500 in Table 3). Dual-CES-A, therefore, serves as a robust alternative for flexibly estimating such hyperparameter value during runtime. Dual-CES-A can provide similar quality and may outperform Dual-CES."
+    }, {
+      "heading" : "6 Conclusions and Future work",
+      "text" : "We proposed Dual-CES, an unsupervised, query-focused, extractive multi-document summarizer. Dual-CES was shown to better handle the tradeoff between saliency and focus, providing the best summarization quality compared to other alternative stateof-the-art unsupervised summarizers. Moreover, in many cases, Dual-CES even outperforms state-of-the-art supervised summarizers. As a future work, we would like to learn to distill from additional pseudo-feedback sources."
+    } ],
+    "references" : [ {
+      "title" : "Attsum: Joint learning of focusing and summarization with neural attention",
+      "author" : [ "Ziqiang Cao", "Wenjie Li", "Sujian Li", "Furu Wei", "Yanran Li" ],
+      "venue" : null,
+      "citeRegEx" : "1",
+      "shortCiteRegEx" : "1",
+      "year" : 2016
+    }, {
+      "title" : "The use of mmr, diversity-based reranking for reordering documents and producing summaries",
+      "author" : [ "Jaime Carbonell", "Jade Goldstein" ],
+      "venue" : "In Proceedings of the 21st Annual International ACM SIGIR Conference on Research and Development in Information Retrieval,",
+      "citeRegEx" : "2",
+      "shortCiteRegEx" : "2",
+      "year" : 1998
+    }, {
+      "title" : "A hybrid hierarchical model for multidocument summarization",
+      "author" : [ "Asli Celikyilmaz", "Dilek Hakkani-Tur" ],
+      "venue" : "In Proceedings of the 48th Annual Meeting of the Association for Computational Linguistics,",
+      "citeRegEx" : "3",
+      "shortCiteRegEx" : "3",
+      "year" : 2010
+    }, {
+      "title" : "Fast abstractive summarization with reinforce-selected sentence",
+      "author" : [ "Yen-Chun Chen", "Mohit Bansal" ],
+      "venue" : "rewriting. CoRR,",
+      "citeRegEx" : "4",
+      "shortCiteRegEx" : "4",
+      "year" : 2018
+    }, {
+      "title" : "Overview of duc 2005",
+      "author" : [ "Hoa Trang Dang" ],
+      "venue" : "In Proceedings of the document understanding conference,",
+      "citeRegEx" : "5",
+      "shortCiteRegEx" : "5",
+      "year" : 2005
+    }, {
+      "title" : "Unsupervised query-focused multi-document summarization using the cross entropy method",
+      "author" : [ "Guy Feigenblat", "Haggai Roitman", "Odellia Boni", "David Konopnicki" ],
+      "venue" : "In Proceedings of the 37th International ACM SIGIR Conference on Research & Development in Information Retrieval,",
+      "citeRegEx" : "6",
+      "shortCiteRegEx" : "6",
+      "year" : 2017
+    }, {
+      "title" : "Recent automatic text summarization techniques: A survey",
+      "author" : [ "Mahak Gambhir", "Vishal Gupta" ],
+      "venue" : "Artif. Intell. Rev.,",
+      "citeRegEx" : "7",
+      "shortCiteRegEx" : "7",
+      "year" : 2017
+    }, {
+      "title" : "Exploring content models for multidocument summarization",
+      "author" : [ "Aria Haghighi", "Lucy Vanderwende" ],
+      "venue" : "In Proceedings of the 2009 Annual Conference of the North American Chapter of the Association for Computational Linguistics,",
+      "citeRegEx" : "8",
+      "shortCiteRegEx" : "8",
+      "year" : 2009
+    }, {
+      "title" : "Document summarization based on data reconstruction",
+      "author" : [ "Zhanying He", "Chun Chen", "Jiajun Bu", "Can Wang", "Lijun Zhang", "Deng Cai", "Xiaofei He" ],
+      "venue" : "In Proceedings of the Twenty-Sixth AAAI Conference on Artificial Intelligence,",
+      "citeRegEx" : "9",
+      "shortCiteRegEx" : "9",
+      "year" : 2012
+    }, {
+      "title" : "Relevance based language models",
+      "author" : [ "Victor Lavrenko", "W. Bruce Croft" ],
+      "venue" : "In Proceedings of the 24th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval,",
+      "citeRegEx" : "10",
+      "shortCiteRegEx" : "10",
+      "year" : 2001
+    }, {
+      "title" : "Reader-aware multidocument summarization via sparse coding",
+      "author" : [ "Piji Li", "Lidong Bing", "Wai Lam", "Hang Li", "Yi Liao" ],
+      "venue" : "In Proceedings of the 24th International Conference on Artificial Intelligence,",
+      "citeRegEx" : "11",
+      "shortCiteRegEx" : "11",
+      "year" : 2015
+    }, {
+      "title" : "Cascaded attention based unsupervised information distillation for compressive summarization",
+      "author" : [ "Piji Li", "Wai Lam", "Lidong Bing", "Weiwei Guo", "Hang Li" ],
+      "venue" : "In Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing,",
+      "citeRegEx" : "12",
+      "shortCiteRegEx" : "12",
+      "year" : 2017
+    }, {
+      "title" : "Salience estimation via variational auto-encoders for multi-document summarization",
+      "author" : [ "Piji Li", "Zihao Wang", "Wai Lam", "Zhaochun Ren", "Lidong Bing" ],
+      "venue" : "In AAAI,",
+      "citeRegEx" : "13",
+      "shortCiteRegEx" : "13",
+      "year" : 2017
+    }, {
+      "title" : "Rouge: A package for automatic evaluation of summaries. In Text summarization branches out",
+      "author" : [ "Chin-Yew Lin" ],
+      "venue" : "Proceedings of the ACL-04 workshop,",
+      "citeRegEx" : "14",
+      "shortCiteRegEx" : "14",
+      "year" : 2004
+    }, {
+      "title" : "A class of submodular functions for document summarization. In Proceedings of the 49th Annual Meeting of the Association for Computational Linguistics: Human Language Technologies ",
+      "author" : [ "Hui Lin", "Jeff Bilmes" ],
+      "venue" : "Volume 1,",
+      "citeRegEx" : "15",
+      "shortCiteRegEx" : "15",
+      "year" : 2011
+    }, {
+      "title" : "An unsupervised multi-document summarization framework based on neural document model",
+      "author" : [ "Shulei Ma", "Zhi-Hong Deng", "Yunlun Yang" ],
+      "venue" : "In Proceedings of the 26th International Conference on Computational Linguistics: Technical Papers,",
+      "citeRegEx" : "16",
+      "shortCiteRegEx" : "16",
+      "year" : 2016
+    }, {
+      "title" : "Ranking sentences for extractive summarization with reinforcement learning",
+      "author" : [ "Shashi Narayan", "Shay B. Cohen", "Lapata Mirella" ],
+      "venue" : null,
+      "citeRegEx" : "17",
+      "shortCiteRegEx" : "17",
+      "year" : 2018
+    }, {
+      "title" : "Applying regression models to query-focused multi-document summarization",
+      "author" : [ "You Ouyang", "Wenjie Li", "Sujian Li", "Qin Lu" ],
+      "venue" : "Information Processing & Management,",
+      "citeRegEx" : "18",
+      "shortCiteRegEx" : "18",
+      "year" : 2011
+    }, {
+      "title" : "A deep reinforced model for abstractive summarization",
+      "author" : [ "Romain Paulus", "Caiming Xiong", "Richard Socher" ],
+      "venue" : "Proceedings of the 6th International Conference on Learning Representations,",
+      "citeRegEx" : "19",
+      "shortCiteRegEx" : "19",
+      "year" : 2018
+    }, {
+      "title" : "Leveraging contextual sentence relations for extractive summarization 15 using a neural attention model",
+      "author" : [ "Pengjie Ren", "Zhumin Chen", "Zhaochun Ren", "Furu Wei", "Jun Ma", "Maarten de Rijke" ],
+      "venue" : "In Proceedings of the 40th International ACM SI- GIR Conference on Research and Development in Information Retrieval,",
+      "citeRegEx" : "20",
+      "shortCiteRegEx" : "20",
+      "year" : 2017
+    }, {
+      "title" : "The cross-entropy method: a unified approach to combinatorial optimization, Monte-Carlo simulation and machine",
+      "author" : [ "Reuven Y Rubinstein", "Dirk P Kroese" ],
+      "venue" : null,
+      "citeRegEx" : "21",
+      "shortCiteRegEx" : "21",
+      "year" : 2004
+    }, {
+      "title" : "Integrating clustering and multidocument summarization by bi-mixture probabilistic latent semantic analysis (plsa) with sentence bases",
+      "author" : [ "Chao Shen", "Tao Li", "Chris H.Q. Ding" ],
+      "venue" : "In Proceedings of the Twenty-Fifth AAAI Conference on Artificial Intelligence,",
+      "citeRegEx" : "22",
+      "shortCiteRegEx" : "22",
+      "year" : 2011
+    }, {
+      "title" : "Graph-based multi-modality learning for topicfocused multi-document summarization",
+      "author" : [ "Xiaojun Wan", "Jianguo Xiao" ],
+      "venue" : "In Proceedings of the 21st International Jont Conference on Artifical Intelligence,",
+      "citeRegEx" : "23",
+      "shortCiteRegEx" : "23",
+      "year" : 2009
+    }, {
+      "title" : "Ctsum: Extracting more certain summaries for news articles",
+      "author" : [ "Xiaojun Wan", "Jianmin Zhang" ],
+      "venue" : "In Proceedings of the 37th International ACM SIGIR Conference on Research  Development in Information Retrieval,",
+      "citeRegEx" : "24",
+      "shortCiteRegEx" : "24",
+      "year" : 2014
+    }, {
+      "title" : "Query dependent pseudo-relevance feedback based on wikipedia",
+      "author" : [ "Yang Xu", "Gareth J.F. Jones", "Bin Wang" ],
+      "venue" : "In Proceedings of the 32nd International ACM SIGIR Conference on Research and Development in Information Retrieval,",
+      "citeRegEx" : "25",
+      "shortCiteRegEx" : "25",
+      "year" : 2009
+    }, {
+      "title" : "Compressive document summarization via sparse optimization",
+      "author" : [ "Jin-ge Yao", "Xiaojun Wan", "Jianguo Xiao" ],
+      "venue" : "In Proceedings of the 24th International Conference on Artificial Intelligence,",
+      "citeRegEx" : "26",
+      "shortCiteRegEx" : "26",
+      "year" : 2015
+    }, {
+      "title" : "A risk minimization framework for information retrieval",
+      "author" : [ "ChengXiang Zhai", "John Lafferty" ],
+      "venue" : "Inf. Process. Manage.,",
+      "citeRegEx" : "27",
+      "shortCiteRegEx" : "27",
+      "year" : 2006
+    }, {
+      "title" : "Query-oriented unsupervised multi-document summarization via deep learning model",
+      "author" : [ "Sheng-hua Zhong", "Yan Liu", "Bin Li", "Jing Long" ],
+      "venue" : "Expert Syst. Appl.,",
+      "citeRegEx" : "28",
+      "shortCiteRegEx" : "28",
+      "year" : 2015
+    } ],
+    "referenceMentions" : [ {
+      "referenceID" : 6,
+      "context" : "The vast amounts of textual data end users need to consume motivates the need for automatic summarization [7].",
+      "startOffset" : 106,
+      "endOffset" : 109
+    }, {
+      "referenceID" : 1,
+      "context" : "While both saliency and focus goals should be considered within a query-focused summarization setting, these goals may be actually conflicting with each other [2].",
+      "startOffset" : 159,
+      "endOffset" : 162
+    }, {
+      "referenceID" : 5,
+      "context" : "To illustrate the effect of summary length on this tradeoff, using the DUC 2007 dataset, Figure 1 reports the summarization quality which was obtained by the Cross Entropy Summarizer (CES) – a state of the art unsupervised query-focused multidocument extractive summarizer [6].",
+      "startOffset" : 273,
+      "endOffset" : 276
+    }, {
+      "referenceID" : 5,
+      "context" : "2 Towards a better tradeoff handling Aiming at better handling the saliency versus focus tradeoff, in this work, we propose Dual-CES – an extended CES summarizer [6].",
+      "startOffset" : 162,
+      "endOffset" : 165
+    }, {
+      "referenceID" : 20,
+      "context" : "To this end, like CES, Dual-CES utilizes the Cross Entropy method [21] for selecting a subset of sentences extracted from input documents, whose combination is predicted to produce a good summary.",
+      "startOffset" : 66,
+      "endOffset" : 70
+    }, {
+      "referenceID" : 2,
+      "context" : "Some learning systems rank sentences based on their surface and/or graph level features [3, 15, 18].",
+      "startOffset" : 88,
+      "endOffset" : 99
+    }, {
+      "referenceID" : 14,
+      "context" : "Some learning systems rank sentences based on their surface and/or graph level features [3, 15, 18].",
+      "startOffset" : 88,
+      "endOffset" : 99
+    }, {
+      "referenceID" : 17,
+      "context" : "Some learning systems rank sentences based on their surface and/or graph level features [3, 15, 18].",
+      "startOffset" : 88,
+      "endOffset" : 99
+    }, {
+      "referenceID" : 11,
+      "context" : "Others have used various sparse coding techniques for selecting a subset of sentences that minimizes a given documents reconstruction error [12, 26, 16, 9, 11] or used a variational auto-encoder for sentence representation [13].",
+      "startOffset" : 140,
+      "endOffset" : 159
+    }, {
+      "referenceID" : 25,
+      "context" : "Others have used various sparse coding techniques for selecting a subset of sentences that minimizes a given documents reconstruction error [12, 26, 16, 9, 11] or used a variational auto-encoder for sentence representation [13].",
+      "startOffset" : 140,
+      "endOffset" : 159
+    }, {
+      "referenceID" : 15,
+      "context" : "Others have used various sparse coding techniques for selecting a subset of sentences that minimizes a given documents reconstruction error [12, 26, 16, 9, 11] or used a variational auto-encoder for sentence representation [13].",
+      "startOffset" : 140,
+      "endOffset" : 159
+    }, {
+      "referenceID" : 8,
+      "context" : "Others have used various sparse coding techniques for selecting a subset of sentences that minimizes a given documents reconstruction error [12, 26, 16, 9, 11] or used a variational auto-encoder for sentence representation [13].",
+      "startOffset" : 140,
+      "endOffset" : 159
+    }, {
+      "referenceID" : 10,
+      "context" : "Others have used various sparse coding techniques for selecting a subset of sentences that minimizes a given documents reconstruction error [12, 26, 16, 9, 11] or used a variational auto-encoder for sentence representation [13].",
+      "startOffset" : 140,
+      "endOffset" : 159
+    }, {
+      "referenceID" : 12,
+      "context" : "Others have used various sparse coding techniques for selecting a subset of sentences that minimizes a given documents reconstruction error [12, 26, 16, 9, 11] or used a variational auto-encoder for sentence representation [13].",
+      "startOffset" : 223,
+      "endOffset" : 227
+    }, {
+      "referenceID" : 0,
+      "context" : "Attention models incorporated within deep-learning summarization architectures have further been suggested for improving sentence ranking and selection [1, 12, 20].",
+      "startOffset" : 152,
+      "endOffset" : 163
+    }, {
+      "referenceID" : 11,
+      "context" : "Attention models incorporated within deep-learning summarization architectures have further been suggested for improving sentence ranking and selection [1, 12, 20].",
+      "startOffset" : 152,
+      "endOffset" : 163
+    }, {
+      "referenceID" : 19,
+      "context" : "Attention models incorporated within deep-learning summarization architectures have further been suggested for improving sentence ranking and selection [1, 12, 20].",
+      "startOffset" : 152,
+      "endOffset" : 163
+    }, {
+      "referenceID" : 3,
+      "context" : "Finally, reinforcement learning methods have been recently considered [4, 6, 17, 19].",
+      "startOffset" : 70,
+      "endOffset" : 84
+    }, {
+      "referenceID" : 5,
+      "context" : "Finally, reinforcement learning methods have been recently considered [4, 6, 17, 19].",
+      "startOffset" : 70,
+      "endOffset" : 84
+    }, {
+      "referenceID" : 16,
+      "context" : "Finally, reinforcement learning methods have been recently considered [4, 6, 17, 19].",
+      "startOffset" : 70,
+      "endOffset" : 84
+    }, {
+      "referenceID" : 18,
+      "context" : "Finally, reinforcement learning methods have been recently considered [4, 6, 17, 19].",
+      "startOffset" : 70,
+      "endOffset" : 84
+    }, {
+      "referenceID" : 5,
+      "context" : "Among such methods, the CES summarizer [6] is the only one which is both query-sensitive and unsupervised.",
+      "startOffset" : 39,
+      "endOffset" : 42
+    }, {
+      "referenceID" : 20,
+      "context" : "Similar to CES, we also utilize the Cross Entropy (CE) method [21], a global policy search optimization framework, for solving the sentence subset selection problem.",
+      "startOffset" : 62,
+      "endOffset" : 66
+    }, {
+      "referenceID" : 5,
+      "context" : "Following [6], we now cast the summarization task as a sentence subset selection problem.",
+      "startOffset" : 10,
+      "endOffset" : 13
+    }, {
+      "referenceID" : 20,
+      "context" : "Similar to CES, it utilizes the Cross Entropy method [21] for selecting the most “promising” subset of sentences in D.",
+      "startOffset" : 53,
+      "endOffset" : 57
+    }, {
+      "referenceID" : 5,
+      "context" : "Instead, following [6], Q(S|q,D) is “surrogated” by several summary quality prediction measures Q̂i(S|q,D) (i = 1, 2, .",
+      "startOffset" : 19,
+      "endOffset" : 22
+    }, {
+      "referenceID" : 20,
+      "context" : "The CE-method provides a generic Monte-Carlo optimization framework for solving hard combinatorial problems [21].",
+      "startOffset" : 108,
+      "endOffset" : 112
+    }, {
+      "referenceID" : 5,
+      "context" : "Previously, it was utilized for solving the sentence subset selection problem [6].",
+      "startOffset" : 78,
+      "endOffset" : 81
+    }, {
+      "referenceID" : 20,
+      "context" : "To this end, φ(·) is incrementally learned using an importance sampling approach [21].",
+      "startOffset" : 81,
+      "endOffset" : 85
+    }, {
+      "referenceID" : 20,
+      "context" : "We further smooth φt(·) as follows: φt(·) ′ = αφt−1(·) + (1− α)φt(·); with α ∈ [0, 1] [21].",
+      "startOffset" : 86,
+      "endOffset" : 90
+    }, {
+      "referenceID" : 20,
+      "context" : "Upon its termination, the CE-method is expected to converge to the global optimal selection policy φ(·) [21].",
+      "startOffset" : 104,
+      "endOffset" : 108
+    }, {
+      "referenceID" : 5,
+      "context" : "that only feasible summaries will be produced, following [6], we set Q̂(Sj |q,D) = −∞ whenever a sampled summary Sj length exceeds the L word limit.",
+      "startOffset" : 57,
+      "endOffset" : 60
+    }, {
+      "referenceID" : 5,
+      "context" : "predictors, four of which were previously used in CES [6].",
+      "startOffset" : 54,
+      "endOffset" : 57
+    }, {
+      "referenceID" : 5,
+      "context" : "The symbol † marks whether it was originally employed in CES [6].",
+      "startOffset" : 61,
+      "endOffset" : 64
+    }, {
+      "referenceID" : 5,
+      "context" : "Here, we represent both S and D as term-frequency vectors, considering only bigrams, which commonly represent more important content units [6].",
+      "startOffset" : 139,
+      "endOffset" : 142
+    }, {
+      "referenceID" : 5,
+      "context" : "where pos(s) is the relative start position (in characters) of sentence s in its containing document and b is a position-bias hyperparameter (fixed to b = 2, following [6]).",
+      "startOffset" : 168,
+      "endOffset" : 171
+    }, {
+      "referenceID" : 26,
+      "context" : "To target even higher saliency, we suggest a fourth predictor, inspired by the risk minimization framework [27].",
+      "startOffset" : 107,
+      "endOffset" : 111
+    }, {
+      "referenceID" : 5,
+      "context" : "The first, following [6], measures the Bhattacharyya similarity (coefficient) between the two (unsmoothed) unigram language models of q and S, i.",
+      "startOffset" : 21,
+      "endOffset" : 24
+    }, {
+      "referenceID" : 9,
+      "context" : "Following [10, 27], we only consider the top-100 most frequent unigrams in SL̄.",
+      "startOffset" : 10,
+      "endOffset" : 18
+    }, {
+      "referenceID" : 26,
+      "context" : "Following [10, 27], we only consider the top-100 most frequent unigrams in SL̄.",
+      "startOffset" : 10,
+      "endOffset" : 18
+    }, {
+      "referenceID" : 4,
+      "context" : ", Lmax = 250) topic-focused summary [5].",
+      "startOffset" : 36,
+      "endOffset" : 39
+    }, {
+      "referenceID" : 5,
+      "context" : "Following [6], we use Lucene’s English analysis(3) for processing the text of topics and documents.",
+      "startOffset" : 10,
+      "endOffset" : 13
+    }, {
+      "referenceID" : 5,
+      "context" : "Further following [6], to reduce CE-method’s runtime, we applied a preliminary step of sentence pruning, where only the top-150 sentences s ∈ D with the highest (unigram) Bhattacharyya similarity to the topic’s queries were considered for summarization.",
+      "startOffset" : 18,
+      "endOffset" : 21
+    }, {
+      "referenceID" : 5,
+      "context" : "Similar to [6], the CE-method hyperparameters were fixed as follows: N = 10, 000, ρ = 0.",
+      "startOffset" : 11,
+      "endOffset" : 14
+    }, {
+      "referenceID" : 5,
+      "context" : "Finally, to handle DUC’s complex information needs, we closely followed [6], as follows.",
+      "startOffset" : 72,
+      "endOffset" : 75
+    }, {
+      "referenceID" : 24,
+      "context" : "Each sub-query was further expanded with top-100 (unigram) Wikipedia related-words [25].",
+      "startOffset" : 83,
+      "endOffset" : 87
+    }, {
+      "referenceID" : 4,
+      "context" : "The three DUC benchmarks include four reference (ground-truth) human-written summaries per each topic [5].",
+      "startOffset" : 102,
+      "endOffset" : 105
+    }, {
+      "referenceID" : 13,
+      "context" : "We measured summarization quality using the ROUGE measure [14], which is the official one for this task [5].",
+      "startOffset" : 58,
+      "endOffset" : 62
+    }, {
+      "referenceID" : 4,
+      "context" : "We measured summarization quality using the ROUGE measure [14], which is the official one for this task [5].",
+      "startOffset" : 104,
+      "endOffset" : 107
+    }, {
+      "referenceID" : 5,
+      "context" : "Hence, following [6], to reduce sensitivity to random seed selection, per each summarization task (i.",
+      "startOffset" : 17,
+      "endOffset" : 20
+    }, {
+      "referenceID" : 21,
+      "context" : "The first line of baselines utilize various surface and graph level features, namely: BI-PLSA [22], CTSUM [24], HierSum [8], HybHSum [3], MultiMR [23], QODE [28] and SubMod-F [15].",
+      "startOffset" : 94,
+      "endOffset" : 98
+    }, {
+      "referenceID" : 23,
+      "context" : "The first line of baselines utilize various surface and graph level features, namely: BI-PLSA [22], CTSUM [24], HierSum [8], HybHSum [3], MultiMR [23], QODE [28] and SubMod-F [15].",
+      "startOffset" : 106,
+      "endOffset" : 110
+    }, {
+      "referenceID" : 7,
+      "context" : "The first line of baselines utilize various surface and graph level features, namely: BI-PLSA [22], CTSUM [24], HierSum [8], HybHSum [3], MultiMR [23], QODE [28] and SubMod-F [15].",
+      "startOffset" : 120,
+      "endOffset" : 123
+    }, {
+      "referenceID" : 2,
+      "context" : "The first line of baselines utilize various surface and graph level features, namely: BI-PLSA [22], CTSUM [24], HierSum [8], HybHSum [3], MultiMR [23], QODE [28] and SubMod-F [15].",
+      "startOffset" : 133,
+      "endOffset" : 136
+    }, {
+      "referenceID" : 22,
+      "context" : "The first line of baselines utilize various surface and graph level features, namely: BI-PLSA [22], CTSUM [24], HierSum [8], HybHSum [3], MultiMR [23], QODE [28] and SubMod-F [15].",
+      "startOffset" : 146,
+      "endOffset" : 150
+    }, {
+      "referenceID" : 27,
+      "context" : "The first line of baselines utilize various surface and graph level features, namely: BI-PLSA [22], CTSUM [24], HierSum [8], HybHSum [3], MultiMR [23], QODE [28] and SubMod-F [15].",
+      "startOffset" : 157,
+      "endOffset" : 161
+    }, {
+      "referenceID" : 14,
+      "context" : "The first line of baselines utilize various surface and graph level features, namely: BI-PLSA [22], CTSUM [24], HierSum [8], HybHSum [3], MultiMR [23], QODE [28] and SubMod-F [15].",
+      "startOffset" : 175,
+      "endOffset" : 179
+    }, {
+      "referenceID" : 15,
+      "context" : "The second line of baselines apply various sparse-coding or auto-encoding techniques, namely: DocRebuild [16], RA-MDS [11], SpOpt [26], and VAEs-A [13].",
+      "startOffset" : 105,
+      "endOffset" : 109
+    }, {
+      "referenceID" : 10,
+      "context" : "The second line of baselines apply various sparse-coding or auto-encoding techniques, namely: DocRebuild [16], RA-MDS [11], SpOpt [26], and VAEs-A [13].",
+      "startOffset" : 118,
+      "endOffset" : 122
+    }, {
+      "referenceID" : 25,
+      "context" : "The second line of baselines apply various sparse-coding or auto-encoding techniques, namely: DocRebuild [16], RA-MDS [11], SpOpt [26], and VAEs-A [13].",
+      "startOffset" : 130,
+      "endOffset" : 134
+    }, {
+      "referenceID" : 12,
+      "context" : "The second line of baselines apply various sparse-coding or auto-encoding techniques, namely: DocRebuild [16], RA-MDS [11], SpOpt [26], and VAEs-A [13].",
+      "startOffset" : 147,
+      "endOffset" : 151
+    }, {
+      "referenceID" : 0,
+      "context" : "The third line of baselines incorporate various attention models, namely: AttSum [1], C-Attention [12] and CRSum+SF [20].",
+      "startOffset" : 81,
+      "endOffset" : 84
+    }, {
+      "referenceID" : 11,
+      "context" : "The third line of baselines incorporate various attention models, namely: AttSum [1], C-Attention [12] and CRSum+SF [20].",
+      "startOffset" : 98,
+      "endOffset" : 102
+    }, {
+      "referenceID" : 19,
+      "context" : "The third line of baselines incorporate various attention models, namely: AttSum [1], C-Attention [12] and CRSum+SF [20].",
+      "startOffset" : 116,
+      "endOffset" : 120
+    }, {
+      "referenceID" : 5,
+      "context" : "The first one, is the original CES summarizer, whose results are reported in [6].",
+      "startOffset" : 77,
+      "endOffset" : 80
+    }, {
+      "referenceID" : 0,
+      "context" : "The pseudo-feedback distillation approach employed between the two steps of DualCES has some resemblance to attention models that are used by state-of-the-art deep learning summarization methods [1, 12, 20].",
+      "startOffset" : 195,
+      "endOffset" : 206
+    }, {
+      "referenceID" : 11,
+      "context" : "The pseudo-feedback distillation approach employed between the two steps of DualCES has some resemblance to attention models that are used by state-of-the-art deep learning summarization methods [1, 12, 20].",
+      "startOffset" : 195,
+      "endOffset" : 206
+    }, {
+      "referenceID" : 19,
+      "context" : "The pseudo-feedback distillation approach employed between the two steps of DualCES has some resemblance to attention models that are used by state-of-the-art deep learning summarization methods [1, 12, 20].",
+      "startOffset" : 195,
+      "endOffset" : 206
+    } ],
+    "year" : 2018,
+    "abstractText" : "We propose Dual-CES – a novel unsupervised, query-focused, multi-document extractive summarizer. Dual-CES is designed to better handle the tradeoff between saliency and focus in summarization. To this end, Dual-CES employs a two-step dual-cascade optimization approach with saliency-based pseudo-feedback distillation. Overall, Dual-CES significantly outperforms all other state-of-the-art unsupervised alternatives. Dual-CES is even shown to be able to outperform strong supervised summarizers.",
+    "creator" : "LaTeX with hyperref package"
+  }
+}

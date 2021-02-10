@@ -1,0 +1,467 @@
+15:24:08.374 [main] DEBUG com.amazonaws.AmazonWebServiceClient - Internal logging successfully configured to commons logger: true
+15:24:08.439 [main] DEBUG com.amazonaws.metrics.AwsSdkMetrics - Admin mbean registered under com.amazonaws.management:type=AwsSdkMetrics
+15:24:08.506 [main] DEBUG c.a.internal.config.InternalConfig - Configuration override awssdk_config_override.json not found.
+15:24:08.901 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:24:08.901 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loading model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:24:08.903 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loading bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:24:08.907 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Creating gazetteer cache at /tmp/gazetteer-v5.json-fa485aef.gazetteerCache.bin
+15:24:20.231 [scala-execution-context-global-12] INFO  o.a.scienceparse.ParserGroundTruth - Read 1609659 papers.
+15:24:35.529 [ModelLoaderThread] INFO  org.allenai.scienceparse.Parser - Loaded model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionModel-v9.dat
+15:24:50.366 [scala-execution-context-global-12] INFO  o.a.scienceparse.ExtractReferences - could not load kermit gazetter
+15:24:50.426 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded gazetteer from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/gazetteer-v5.json
+15:24:50.426 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.Parser - Loaded bib model from /home/risubaba/.ai2/datastore/public/org.allenai.scienceparse/productionBibModel-v7.dat
+15:24:50.430 [scala-execution-context-global-12] INFO  org.allenai.scienceparse.RunSP$ - Starting /home/risubaba/LongSumm/pdf/P11-1061.pdf
+{
+  "name" : "/home/risubaba/LongSumm/pdf/P11-1061.pdf",
+  "metadata" : {
+    "source" : "META",
+    "title" : "Unsupervised Part-of-Speech Tagging with Bilingual Graph-Based Projections",
+    "authors" : [ "Dipanjan Das", "Slav Petrov" ],
+    "emails" : [ "dipanjan@cs.cmu.edu", "slav@google.com" ],
+    "sections" : [ {
+      "heading" : null,
+      "text" : "Proceedings of the 49th Annual Meeting of the Association for Computational Linguistics, pages 600–609, Portland, Oregon, June 19-24, 2011. c©2011 Association for Computational Linguistics"
+    }, {
+      "heading" : "1 Introduction",
+      "text" : "Supervised learning approaches have advanced the state-of-the-art on a variety of tasks in natural language processing, resulting in highly accurate systems. Supervised part-of-speech (POS) taggers, for example, approach the level of inter-annotator agreement (Shen et al., 2007, 97.3% accuracy for English). However, supervised methods rely on labeled training data, which is time-consuming and expensive to generate. Unsupervised learning approaches appear to be a natural solution to this problem, as they require only unannotated text for train∗This research was carried out during an internship at Google Research.\ning models. Unfortunately, the best completely unsupervised English POS tagger (that does not make use of a tagging dictionary) reaches only 76.1% accuracy (Christodoulopoulos et al., 2010), making its practical usability questionable at best.\nTo bridge this gap, we consider a practically motivated scenario, in which we want to leverage existing resources from a resource-rich language (like English) when building tools for resource-poor foreign languages.1 We assume that absolutely no labeled training data is available for the foreign language of interest, but that we have access to parallel data with a resource-rich language. This scenario is applicable to a large set of languages and has been considered by a number of authors in the past (Alshawi et al., 2000; Xi and Hwa, 2005; Ganchev et al., 2009). Naseem et al. (2009) and Snyder et al. (2009) study related but different multilingual grammar and tagger induction tasks, where it is assumed that no labeled data at all is available.\nOur work is closest to that of Yarowsky and Ngai (2001), but differs in two important ways. First, we use a novel graph-based framework for projecting syntactic information across language boundaries. To this end, we construct a bilingual graph over word types to establish a connection between the two languages (§3), and then use graph label propagation to project syntactic information from English to the foreign language (§4). Second, we treat the projected labels as features in an unsuper-\n1For simplicity of exposition we refer to the resource-poor language as the “foreign language.” Similarly, we use English as the resource-rich language, but any other language with labeled resources could be used instead.\n600\nvised model (§5), rather than using them directly for supervised training. To make the projection practical, we rely on the twelve universal part-of-speech tags of Petrov et al. (2011). Syntactic universals are a well studied concept in linguistics (Carnie, 2002; Newmeyer, 2005), and were recently used in similar form by Naseem et al. (2010) for multilingual grammar induction. Because there might be some controversy about the exact definitions of such universals, this set of coarse-grained POS categories is defined operationally, by collapsing language (or treebank) specific distinctions to a set of categories that exists across all languages. These universal POS categories not only facilitate the transfer of POS information from one language to another, but also relieve us from using controversial evaluation metrics,2 by establishing a direct correspondence between the induced hidden states in the foreign language and the observed English labels.\nWe evaluate our approach on eight European languages (§6), and show that both our contributions provide consistent and statistically significant improvements. Our final average POS tagging accuracy of 83.4% compares very favorably to the average accuracy of Berg-Kirkpatrick et al.’s monolingual unsupervised state-of-the-art model (73.0%), and considerably bridges the gap to fully supervised POS tagging performance (96.6%)."
+    }, {
+      "heading" : "2 Approach Overview",
+      "text" : "The focus of this work is on building POS taggers for foreign languages, assuming that we have an English POS tagger and some parallel text between the two languages. Central to our approach (see Algorithm 1) is a bilingual similarity graph built from a sentence-aligned parallel corpus. As discussed in more detail in §3, we use two types of vertices in our graph: on the foreign language side vertices correspond to trigram types, while the vertices on the English side are individual word types. Graph construction does not require any labeled data, but makes use of two similarity functions. The edge weights between the foreign language trigrams are computed using a co-occurence based similarity function, designed to indicate how syntactically\n2See Christodoulopoulos et al. (2010) for a discussion of metrics for evaluating unsupervised POS induction systems.\nAlgorithm 1 Bilingual POS Induction Require: Parallel English and foreign language\ndata De and Df , unlabeled foreign training data Γf ; English tagger. Ensure: Θf , a set of parameters learned using a constrained unsupervised model (§5).\n1: De↔f ← word-align-bitext(De,Df ) 2: D̂e ← pos-tag-supervised(De) 3: A ← extract-alignments(De↔f , D̂e) 4: G← construct-graph(Γf ,Df ,A) 5: G̃← graph-propagate(G) 6: ∆← extract-word-constraints(G̃) 7: Θf ← pos-induce-constrained(Γf ,∆) 8: Return Θf\nsimilar the middle words of the connected trigrams are (§3.2). To establish a soft correspondence between the two languages, we use a second similarity function, which leverages standard unsupervised word alignment statistics (§3.3).3\nSince we have no labeled foreign data, our goal is to project syntactic information from the English side to the foreign side. To initialize the graph we tag the English side of the parallel text using a supervised model. By aggregating the POS labels of the English tokens to types, we can generate label distributions for the English vertices. Label propagation can then be used to transfer the labels to the peripheral foreign vertices (i.e. the ones adjacent to the English vertices) first, and then among all of the foreign vertices (§4). The POS distributions over the foreign trigram types are used as features to learn a better unsupervised POS tagger (§5). The following three sections elaborate these different stages is more detail."
+    }, {
+      "heading" : "3 Graph Construction",
+      "text" : "In graph-based learning approaches one constructs a graph whose vertices are labeled and unlabeled examples, and whose weighted edges encode the degree to which the examples they link have the same label (Zhu et al., 2003). Graph construction for structured prediction problems such as POS tagging is non-trivial: on the one hand, using individual words as the vertices throws away the context\n3The word alignment methods do not use POS information.\nnecessary for disambiguation; on the other hand, it is unclear how to define (sequence) similarity if the vertices correspond to entire sentences. Altun et al. (2005) proposed a technique that uses graph based similarity between labeled and unlabeled parts of structured data in a discriminative framework for semi-supervised learning. More recently, Subramanya et al. (2010) defined a graph over the cliques in an underlying structured prediction model. They considered a semi-supervised POS tagging scenario and showed that one can use a graph over trigram types, and edge weights based on distributional similarity, to improve a supervised conditional random field tagger."
+    }, {
+      "heading" : "3.1 Graph Vertices",
+      "text" : "We extend Subramanya et al.’s intuitions to our bilingual setup. Because the information flow in our graph is asymmetric (from English to the foreign language), we use different types of vertices for each language. The foreign language vertices (denoted by Vf ) correspond to foreign trigram types, exactly as in Subramanya et al. (2010). On the English side, however, the vertices (denoted by Ve) correspond to word types. Because all English vertices are going to be labeled, we do not need to disambiguate them by embedding them in trigrams. Furthermore, we do not connect the English vertices to each other, but only to foreign language vertices.4\nThe graph vertices are extracted from the different sides of a parallel corpus (De, Df ) and an additional unlabeled monolingual foreign corpus Γf , which will be used later for training. We use two different similarity functions to define the edge weights among the foreign vertices and between vertices from different languages."
+    }, {
+      "heading" : "3.2 Monolingual Similarity Function",
+      "text" : "Our monolingual similarity function (for connecting pairs of foreign trigram types) is the same as the one used by Subramanya et al. (2010). We briefly review it here for completeness. We define a symmetric similarity function K(ui, uj) over two for-\n4This is because we are primarily interested in learning foreign language taggers, rather than improving supervised English taggers. Note, however, that it would be possible to use our graph-based framework also for completely unsupervised POS induction in both languages, similar to Snyder et al. (2009).\neign language vertices ui, uj ∈ Vf based on the co-occurrence statistics of the nine feature concepts given in Table 1. Each feature concept is akin to a random variable and its occurrence in the text corresponds to a particular instantiation of that random variable. For each trigram type x2 x3 x4 in a sequence x1 x2 x3 x4 x5, we count how many times that trigram type co-occurs with the different instantiations of each concept, and compute the point-wise mutual information (PMI) between the two.5 The similarity between two trigram types is given by summing over the PMI values over feature instantiations that they have in common. This is similar to stacking the different feature instantiations into long (sparse) vectors and computing the cosine similarity between them. Finally, note that while most feature concepts are lexicalized, others, such as the suffix concept, are not.\nGiven this similarity function, we define a nearest neighbor graph, where the edge weight for the n most similar vertices is set to the value of the similarity function and to 0 for all other vertices. We use N (u) to denote the neighborhood of vertex u, and fixed n = 5 in our experiments."
+    }, {
+      "heading" : "3.3 Bilingual Similarity Function",
+      "text" : "To define a similarity function between the English and the foreign vertices, we rely on high-confidence word alignments. Since our graph is built from a parallel corpus, we can use standard word alignment techniques to align the English sentences De\n5Note that many combinations are impossible giving a PMI value of 0; e.g., when the trigram type and the feature instantiation don’t have words in common.\nand their foreign language translations Df .6 Label propagation in the graph will provide coverage and high recall, and we therefore extract only intersected high-confidence (> 0.9) alignments De↔f .\nBased on these high-confidence alignments we can extract tuples of the form [u ↔ v], where u is a foreign trigram type, whose middle word aligns to an English word type v. Our bilingual similarity function then sets the edge weights in proportion to these tuple counts."
+    }, {
+      "heading" : "3.4 Graph Initialization",
+      "text" : "So far the graph has been completely unlabeled. To initialize the graph for label propagation we use a supervised English tagger to label the English side of the bitext.7 We then simply count the individual labels of the English tokens and normalize the counts to produce tag distributions over English word types. These tag distributions are used to initialize the label distributions over the English vertices in the graph. Note that since all English vertices were extracted from the parallel text, we will have an initial label distribution for all vertices in Ve."
+    }, {
+      "heading" : "3.5 Graph Example",
+      "text" : "A very small excerpt from an Italian-English graph is shown in Figure 1. As one can see, only the trigrams [suo incarceramento ,], [suo iter ,] and [suo carattere ,] are connected to English words. In this particular case, all English vertices are labeled as nouns by the supervised tagger. In general, the neighborhoods can be more diverse and we allow a soft label distribution over the vertices. It is worth noting that the middle words of the Italian trigrams are nouns too, which exhibits the fact that the similarity metric connects types having the same syntactic category. In the label propagation stage, we propagate the automatic English tags to the aligned Italian trigram types, followed by further propagation solely among the Italian vertices. 6We ran six iterations of IBM Model 1 (Brown et al., 1993), followed by six iterations of the HMM model (Vogel et al., 1996) in both directions. 7We used a tagger based on a trigram Markov model (Brants, 2000) trained on the Wall Street Journal portion of the Penn Treebank (Marcus et al., 1993), for its fast speed and reasonable accuracy (96.7% on sections 22-24 of the treebank, but presumably much lower on the (out-of-domain) parallel corpus)."
+    }, {
+      "heading" : "4 POS Projection",
+      "text" : "Given the bilingual graph described in the previous section, we can use label propagation to project the English POS labels to the foreign language. We use label propagation in two stages to generate soft labels on all the vertices in the graph. In the first stage, we run a single step of label propagation, which transfers the label distributions from the English vertices to the connected foreign language vertices (say, V lf ) at the periphery of the graph. Note that because we extracted only high-confidence alignments, many foreign vertices will not be connected to any English vertices. This stage of label propagation results in a tag distribution ri over labels y, which encodes the proportion of times the middle word of ui ∈ Vf aligns to English words vy tagged with label y:\nri(y) =\n∑ vy\n#[ui ↔ vy]∑ y′ ∑ vy′ #[ui ↔ vy′ ] (1)\nThe second stage consists of running traditional label propagation to propagate labels from these peripheral vertices V lf to all foreign language vertices\nin the graph, optimizing the following objective: C(q) = ∑\nui∈Vf\\V lf ,uj∈N (ui)\nwij‖qi − qj‖2\n+ ν ∑\nui∈Vf\\V lf\n‖qi − U‖2\ns.t. ∑\ny\nqi(y) = 1 ∀ui\nqi(y) ≥ 0 ∀ui, y qi = ri ∀ui ∈ V lf (2)\nwhere the qi (i = 1, . . . , |Vf |) are the label distributions over the foreign language vertices and µ and ν are hyperparameters that we discuss in §6.4. We use a squared loss to penalize neighboring vertices that have different label distributions: ‖qi − qj‖2 =∑\ny(qi(y)−qj(y))2, and additionally regularize the label distributions towards the uniform distribution U over all possible labels Y . It can be shown that this objective is convex in q.\nThe first term in the objective function is the graph smoothness regularizer which encourages the distributions of similar vertices (large wij) to be similar. The second term is a regularizer and encourages all type marginals to be uniform to the extent that is allowed by the first two terms (cf. maximum entropy principle). If an unlabeled vertex does not have a path to any labeled vertex, this term ensures that the converged marginal for this vertex will be uniform over all tags, allowing the middle word of such an unlabeled vertex to take on any of the possible tags.\nWhile it is possible to derive a closed form solution for this convex objective function, it would require the inversion of a matrix of order |Vf |. Instead, we resort to an iterative update based method. We formulate the update as follows:\nq (m) i (y) = ri(y) if ui ∈ V l f γi(y)\nκi otherwise\n(3)\nwhere ∀ui ∈ Vf \\ V lf , γi(y) and κi are defined as: γi(y) = ∑\nuj∈N (ui)\nwijq (m−1) j (y) + ν U(y) (4)\nκi = ν + ∑\nuj∈N (ui)\nwij (5)\nWe ran this procedure for 10 iterations."
+    }, {
+      "heading" : "5 POS Induction",
+      "text" : "After running label propagation (LP), we compute tag probabilities for foreign word types x by marginalizing the POS tag distributions of foreign trigrams ui = x− x x+ over the left and right context words:\np(y|x) =\n∑ x−,x+\nqi(y)∑ x−,x+,y′ qi(y ′)\n(6)\nWe then extract a set of possible tags tx(y) by eliminating labels whose probability is below a threshold value τ :\ntx(y) = { 1 if p(y|x) ≥ τ 0 otherwise\n(7)\nWe describe how we choose τ in §6.4. This vector tx is constructed for every word in the foreign vocabulary and will be used to provide features for the unsupervised foreign language POS tagger.\nWe develop our POS induction model based on the feature-based HMM of Berg-Kirkpatrick et al. (2010). For a sentence x and a state sequence z, a first order Markov model defines a distribution:\nPΘ(X = x,Z = z) = PΘ(Z1 = z1)·∏|x| i=1 PΘ(Zi+1 = zi+1 | Zi = zi)︸ ︷︷ ︸\ntransition\n·\nPΘ(Xi = xi | Zi = zi)︸ ︷︷ ︸ emission\n(8)\nIn a traditional Markov model, the emission distribution PΘ(Xi = xi | Zi = zi) is a set of multinomials. The feature-based model replaces the emission distribution with a log-linear model, such that:\nPΘ(X = x | Z = z) = exp Θ>f(x, z)∑\nx′∈Val(X)\nexp Θ>f(x′, z)\n(9) where Val(X) corresponds to the entire vocabulary. This locally normalized log-linear model can look at various aspects of the observation x, incorporating overlapping features of the observation. In our experiments, we used the same set of features as BergKirkpatrick et al. (2010): an indicator feature based\non the word identity x, features checking whether x contains digits or hyphens, whether the first letter of x is upper case, and suffix features up to length 3. All features were conjoined with the state z.\nWe trained this model by optimizing the following objective function:\nL(Θ) = N∑\ni=1 log ∑ z PΘ(X = x (i),Z = z(i))\n−C‖Θ‖22 (10)\nNote that this involves marginalizing out all possible state configurations z for a sentence x, resulting in a non-convex objective. To optimize this function, we used L-BFGS, a quasi-Newton method (Liu and Nocedal, 1989). For English POS tagging, BergKirkpatrick et al. (2010) found that this direct gradient method performed better (>7% absolute accuracy) than using a feature-enhanced modification of the Expectation-Maximization (EM) algorithm (Dempster et al., 1977).8 Moreover, this route of optimization outperformed a vanilla HMM trained with EM by 12%.\nWe adopted this state-of-the-art model because it makes it easy to experiment with various ways of incorporating our novel constraint feature into the log-linear emission model. This feature ft incorporates information from the smoothed graph and prunes hidden states that are inconsistent with the thresholded vector tx. The function λ : F → C maps from the language specific fine-grained tagset F to the coarser universal tagset C and is described in detail in §6.2:\nft(x, z) = log(tx(y)), if λ(z) = y (11)\nNote that when tx(y) = 1 the feature value is 0 and has no effect on the model, while its value is −∞ when tx(y) = 0 and constrains the HMM’s state space. This formulation of the constraint feature is equivalent to the use of a tagging dictionary extracted from the graph using a threshold τ on the posterior distribution of tags for a given word type (Eq. 7). It would have therefore also been possible to use the integer programming (IP) based approach of 8See §3.1 of Berg-Kirkpatrick et al. (2010) for more details about their modification of EM, and how gradients are computed for L-BFGS.\nRavi and Knight (2009) instead of the feature-HMM for POS induction on the foreign side. However, we do not explore this possibility in the current work."
+    }, {
+      "heading" : "6 Experiments and Results",
+      "text" : "Before presenting our results, we describe the datasets that we used, as well as two baselines."
+    }, {
+      "heading" : "6.1 Datasets",
+      "text" : "We utilized two kinds of datasets in our experiments: (i) monolingual treebanks9 and (ii) large amounts of parallel text with English on one side. The availability of these resources guided our selection of foreign languages. For monolingual treebank data we relied on the CoNLL-X and CoNLL-2007 shared tasks on dependency parsing (Buchholz and Marsi, 2006; Nivre et al., 2007). The parallel data came from the Europarl corpus (Koehn, 2005) and the ODS United Nations dataset (UN, 2006). Taking the intersection of languages in these resources, and selecting languages with large amounts of parallel data, yields the following set of eight Indo-European languages: Danish, Dutch, German, Greek, Italian, Portuguese, Spanish and Swedish.\nOf course, we are primarily interested in applying our techniques to languages for which no labeled resources are available. However, we needed to restrict ourselves to these languages in order to be able to evaluate the performance of our approach. We paid particular attention to minimize the number of free parameters, and used the same hyperparameters for all language pairs, rather than attempting language-specific tuning. We hope that this will allow practitioners to apply our approach directly to languages for which no resources are available."
+    }, {
+      "heading" : "6.2 Part-of-Speech Tagset and HMM States",
+      "text" : "We use the universal POS tagset of Petrov et al. (2011) in our experiments.10 This set C consists of the following 12 coarse-grained tags: NOUN (nouns), VERB (verbs), ADJ (adjectives), ADV (adverbs), PRON (pronouns), DET (determiners), ADP (prepositions or postpositions), NUM (numerals), CONJ (conjunctions), PRT (particles), PUNC\n9We extracted only the words and their POS tags from the treebanks. 10Available at http://code.google.com/p/universal-pos-tags/.\n(punctuation marks) and X (a catch-all for other categories such as abbreviations or foreign words). While there might be some controversy about the exact definition of such a tagset, these 12 categories cover the most frequent part-of-speech and exist in one form or another in all of the languages that we studied.\nFor each language under consideration, Petrov et al. (2011) provide a mapping λ from the fine-grained language specific POS tags in the foreign treebank to the universal POS tags. The supervised POS tagging accuracies (on this tagset) are shown in the last row of Table 2. The taggers were trained on datasets labeled with the universal tags.\nThe number of latent HMM states for each language in our experiments was set to the number of fine tags in the language’s treebank. In other words, the set of hidden states F was chosen to be the fine set of treebank tags. Therefore, the number of fine tags varied across languages for our experiments; however, one could as well have fixed the set of HMM states to be a constant across languages, and created one mapping to the universal POS tagset."
+    }, {
+      "heading" : "6.3 Various Models",
+      "text" : "To provide a thorough analysis, we evaluated three baselines and two oracles in addition to two variants of our graph-based approach. We were intentionally lenient with our baselines:\n• EM-HMM: A traditional HMM baseline, with multinomial emission and transition distributions estimated by the Expectation Maximization algorithm. We evaluated POS tagging accuracy using the lenient many-to-1 evaluation approach (Johnson, 2007).\n• Feature-HMM: The vanilla feature-HMM of Berg-Kirkpatrick et al. (2010) (i.e. no additional constraint feature) served as a second baseline. Model parameters were estimated with L-BFGS and evaluation again used a greedy many-to-1 mapping.\n• Projection: Our third baseline incorporates bilingual information by projecting POS tags directly across alignments in the parallel data. For unaligned words, we set the tag to the most frequent tag in the corresponding treebank. For\neach language, we took the same number of sentences from the bitext as there are in its treebank, and trained a supervised feature-HMM. This can be seen as a rough approximation of Yarowsky and Ngai (2001).\nWe tried two versions of our graph-based approach:\n• No LP: Our first version takes advantage of our bilingual graph, but extracts the constraint feature after the first stage of label propagation (Eq. 1). Because many foreign word types are not aligned to an English word (see Table 3), and we do not run label propagation on the foreign side, we expect the projected information to have less coverage. Furthermore we expect the label distributions on the foreign to be fairly noisy, because the graph constraints have not been taken into account yet.\n• With LP: Our full model uses both stages of label propagation (Eq. 2) before extracting the constraint features. As a result, we are able to extract the constraint feature for all foreign word types and furthermore expect the projected tag distributions to be smoother and more stable.\nOur oracles took advantage of the labeled treebanks:\n• TB Dictionary: We extracted tagging dictionaries from the treebanks and and used them as constraint features in the feature-based HMM. Evaluation was done using the prespecified mappings.\n• Supervised: We trained the supervised model of Brants (2000) on the original treebanks and mapped the language-specific tags to the universal tags for evaluation."
+    }, {
+      "heading" : "6.4 Experimental Setup",
+      "text" : "While we tried to minimize the number of free parameters in our model, there are a few hyperparameters that need to be set. Fortunately, performance was stable across various values, and we were able to use the same hyperparameters for all languages.\nWe used C = 1.0 as the L2 regularization constant in (Eq. 10) and trained both EM and L-BFGS for 1000 iterations. When extracting the vector\ntx used to compute the constraint feature from the graph, we tried three threshold values for τ (see Eq. 7). Because we don’t have a separate development set, we used the training set to select among them and found 0.2 to work slightly better than 0.1 and 0.3. For seven out of eight languages a threshold of 0.2 gave the best results for our final model, which indicates that for languages without any validation set, τ = 0.2 can be used. For graph propagation, the hyperparameter ν was set to 2 × 10−6 and was not tuned. The graph was constructed using 2 million trigrams; we chose these by truncating the parallel datasets up to the number of sentence pairs that contained 2 million trigrams."
+    }, {
+      "heading" : "6.5 Results",
+      "text" : "Table 2 shows our complete set of results. As expected, the vanilla HMM trained with EM performs the worst. The feature-HMM model works better for all languages, generalizing the results achieved for English by Berg-Kirkpatrick et al. (2010). Our “Projection” baseline is able to benefit from the bilingual information and greatly improves upon the monolingual baselines, but falls short of the “No LP” model by 2.5% on an average. The “No LP” model does not outperform direct projection for German and Greek, but performs better for six out of eight languages. Overall, it gives improvements ranging from 1.1% for German to 14.7% for Italian, for an average improvement of 8.3% over the unsupervised feature-HMM model. For comparison, the completely unsupervised feature-HMM baseline accuracy on the universal POS tags for English is 79.4%, and goes up to 88.7% with a treebank dictionary.\nOur full model (“With LP”) outperforms the unsupervised baselines and the “No LP” setting for all\nlanguages. It falls short of the “Projection” baseline for German, but is statistically indistinguishable in terms of accuracy. As indicated by bolding, for seven out of eight languages the improvements of the “With LP” setting are statistically significant with respect to the other models, including the “No LP” setting.11 Overall, it performs 10.4% better than the hitherto state-of-the-art feature-HMM baseline, and 4.6% better than direct projection, when we macro-average the accuracy over all languages."
+    }, {
+      "heading" : "6.6 Discussion",
+      "text" : "Our full model outperforms the “No LP” setting because it has better vocabulary coverage and allows the extraction of a larger set of constraint features. We tabulate this increase in Table 3. For all languages, the vocabulary sizes increase by several thousand words. Although the tag distributions of the foreign words (Eq. 6) are noisy, the results confirm that label propagation within the foreign language part of the graph adds significant quality for every language.\nFigure 2 shows an excerpt of a sentence from the Italian test set and the tags assigned by four different models, as well as the gold tags. While the first three models get three to four tags wrong, our best model gets only one word wrong and is the most accurate among the four models for this example. Examining the word fidanzato for the “No LP” and “With LP” models is particularly instructive. As Figure 1 shows, this word has no high-confidence alignment in the Italian-English bitext. As a result, its POS tag needs to be induced in the “No LP” case, while the\n11A word level paired-t-test is significant at p < 0.01 for Danish, Greek, Italian, Portuguese, Spanish and Swedish, and p < 0.05 for Dutch.\nGold:\nsi trovava in un parco con il fidanzato Paolo F. , 27 anni , rappresentante\nEM-HMM:\nFeature-HMM:\nNo LP:\nWith LP:\nCONJ NOUN DET DET NOUN ADP DET NOUN . NOUN . NUM NOUN . NOUN PRON VERB ADP DET NOUN CONJ DET NOUN NOUN NOUN . ADP NOUN . VERB\nPRON VERB ADP DET NOUN ADP DET NOUN NOUN NOUN . NUM NOUN . NOUN\nVERB VERB ADP DET NOUN ADP DET ADJ NOUN ADJ . NUM NOUN . NOUN VERB VERB ADP DET NOUN ADP DET NOUN NOUN NOUN . NUM NOUN . NOUN\nFigure 2: Tags produced by the different models along with the reference set of tags for a part of a sentence from the Italian test set. Italicized tags denote incorrect labels.\ncorrect tag is available as a constraint feature in the “With LP” case."
+    }, {
+      "heading" : "7 Conclusion",
+      "text" : "We have shown the efficacy of graph-based label propagation for projecting part-of-speech information across languages. Because we are interested in applying our techniques to languages for which no labeled resources are available, we paid particular attention to minimize the number of free parameters and used the same hyperparameters for all language pairs. Our results suggest that it is possible to learn accurate POS taggers for languages which do not have any annotated data, but have translations into a resource-rich language. Our results outperform strong unsupervised baselines as well as approaches that rely on direct projections, and bridge the gap between purely supervised and unsupervised POS tagging models."
+    }, {
+      "heading" : "Acknowledgements",
+      "text" : "We would like to thank Ryan McDonald for numerous discussions on this topic. We would also like to\nthank Amarnag Subramanya for helping us with the implementation of label propagation and Shankar Kumar for access to the parallel data. Finally, we thank Kuzman Ganchev and the three anonymous reviewers for helpful suggestions and comments on earlier drafts of this paper."
+    } ],
+    "references" : [ {
+      "title" : "Head-transducer models for speech translation and their automatic acquisition from bilingual data",
+      "author" : [ "Hiyan Alshawi", "Srinivas Bangalore", "Shona Douglas." ],
+      "venue" : "Machine Translation, 15.",
+      "citeRegEx" : "Alshawi et al\\.,? 2000",
+      "shortCiteRegEx" : "Alshawi et al\\.",
+      "year" : 2000
+    }, {
+      "title" : "Maximum margin semi-supervised learning for structured variables",
+      "author" : [ "Yasemin Altun", "David McAllester", "Mikhail Belkin." ],
+      "venue" : "Proc. of NIPS.",
+      "citeRegEx" : "Altun et al\\.,? 2005",
+      "shortCiteRegEx" : "Altun et al\\.",
+      "year" : 2005
+    }, {
+      "title" : "Painless unsupervised learning with features",
+      "author" : [ "Taylor Berg-Kirkpatrick", "Alexandre B. Côté", "John DeNero", "Dan Klein." ],
+      "venue" : "Proc. of NAACL-HLT.",
+      "citeRegEx" : "Berg.Kirkpatrick et al\\.,? 2010",
+      "shortCiteRegEx" : "Berg.Kirkpatrick et al\\.",
+      "year" : 2010
+    }, {
+      "title" : "TnT - a statistical part-of-speech tagger",
+      "author" : [ "Thorsten Brants." ],
+      "venue" : "Proc. of ANLP.",
+      "citeRegEx" : "Brants.,? 2000",
+      "shortCiteRegEx" : "Brants.",
+      "year" : 2000
+    }, {
+      "title" : "The mathematics of statistical machine translation: parameter estimation",
+      "author" : [ "Peter F. Brown", "Vincent J. Della Pietra", "Stephen A. Della Pietra", "Robert L. Mercer." ],
+      "venue" : "Computational Linguistics, 19.",
+      "citeRegEx" : "Brown et al\\.,? 1993",
+      "shortCiteRegEx" : "Brown et al\\.",
+      "year" : 1993
+    }, {
+      "title" : "CoNLL-X shared task on multilingual dependency parsing",
+      "author" : [ "Sabine Buchholz", "Erwin Marsi." ],
+      "venue" : "Proc. of CoNLL.",
+      "citeRegEx" : "Buchholz and Marsi.,? 2006",
+      "shortCiteRegEx" : "Buchholz and Marsi.",
+      "year" : 2006
+    }, {
+      "title" : "Syntax: A Generative Introduction (Introducing Linguistics)",
+      "author" : [ "Andrew Carnie." ],
+      "venue" : "Blackwell Publishing.",
+      "citeRegEx" : "Carnie.,? 2002",
+      "shortCiteRegEx" : "Carnie.",
+      "year" : 2002
+    }, {
+      "title" : "Two decades of unsupervised POS induction: How far have we come? In Proc",
+      "author" : [ "Christos Christodoulopoulos", "Sharon Goldwater", "Mark Steedman." ],
+      "venue" : "of EMNLP.",
+      "citeRegEx" : "Christodoulopoulos et al\\.,? 2010",
+      "shortCiteRegEx" : "Christodoulopoulos et al\\.",
+      "year" : 2010
+    }, {
+      "title" : "Maximum likelihood from incomplete data via the EM algorithm",
+      "author" : [ "Arthur P. Dempster", "Nan M. Laird", "Donald B. Rubin." ],
+      "venue" : "Journal of the Royal Statistical Society, Series B, 39.",
+      "citeRegEx" : "Dempster et al\\.,? 1977",
+      "shortCiteRegEx" : "Dempster et al\\.",
+      "year" : 1977
+    }, {
+      "title" : "Dependency grammar induction via bitext projection constraints",
+      "author" : [ "Kuzman Ganchev", "Jennifer Gillenwater", "Ben Taskar." ],
+      "venue" : "Proc. of ACL-IJCNLP.",
+      "citeRegEx" : "Ganchev et al\\.,? 2009",
+      "shortCiteRegEx" : "Ganchev et al\\.",
+      "year" : 2009
+    }, {
+      "title" : "Why doesn’t EM find good HMM POS-taggers? In Proc",
+      "author" : [ "Mark Johnson." ],
+      "venue" : "of EMNLP-CoNLL.",
+      "citeRegEx" : "Johnson.,? 2007",
+      "shortCiteRegEx" : "Johnson.",
+      "year" : 2007
+    }, {
+      "title" : "Europarl: A parallel corpus for statistical machine translation",
+      "author" : [ "Philipp Koehn." ],
+      "venue" : "MT Summit.",
+      "citeRegEx" : "Koehn.,? 2005",
+      "shortCiteRegEx" : "Koehn.",
+      "year" : 2005
+    }, {
+      "title" : "On the limited memory BFGS method for large scale optimization",
+      "author" : [ "Dong C. Liu", "Jorge Nocedal." ],
+      "venue" : "Mathematical Programming, 45.",
+      "citeRegEx" : "Liu and Nocedal.,? 1989",
+      "shortCiteRegEx" : "Liu and Nocedal.",
+      "year" : 1989
+    }, {
+      "title" : "Building a large annotated corpus of English: the Penn treebank",
+      "author" : [ "Mitchell P. Marcus", "Mary Ann Marcinkiewicz", "Beatrice Santorini." ],
+      "venue" : "Computational Linguistics, 19.",
+      "citeRegEx" : "Marcus et al\\.,? 1993",
+      "shortCiteRegEx" : "Marcus et al\\.",
+      "year" : 1993
+    }, {
+      "title" : "Multilingual part-of-speech tagging: Two unsupervised approaches",
+      "author" : [ "Tahira Naseem", "Benjamin Snyder", "Jacob Eisenstein", "Regina Barzilay." ],
+      "venue" : "JAIR, 36.",
+      "citeRegEx" : "Naseem et al\\.,? 2009",
+      "shortCiteRegEx" : "Naseem et al\\.",
+      "year" : 2009
+    }, {
+      "title" : "Using universal linguistic knowledge to guide grammar induction",
+      "author" : [ "Tahira Naseem", "Harr Chen", "Regina Barzilay", "Mark Johnson." ],
+      "venue" : "Proc. of EMNLP.",
+      "citeRegEx" : "Naseem et al\\.,? 2010",
+      "shortCiteRegEx" : "Naseem et al\\.",
+      "year" : 2010
+    }, {
+      "title" : "Possible and Probable Languages: A Generative Perspective on Linguistic Typology",
+      "author" : [ "Frederick J. Newmeyer." ],
+      "venue" : "Oxford University Press.",
+      "citeRegEx" : "Newmeyer.,? 2005",
+      "shortCiteRegEx" : "Newmeyer.",
+      "year" : 2005
+    }, {
+      "title" : "The CoNLL 2007 shared task on dependency parsing",
+      "author" : [ "Joakim Nivre", "Johan Hall", "Sandra Kübler", "Ryan McDonald", "Jens Nilsson", "Sebastian Riedel", "Deniz Yuret." ],
+      "venue" : "Proceedings of CoNLL.",
+      "citeRegEx" : "Nivre et al\\.,? 2007",
+      "shortCiteRegEx" : "Nivre et al\\.",
+      "year" : 2007
+    }, {
+      "title" : "A universal part-of-speech tagset",
+      "author" : [ "Slav Petrov", "Dipanjan Das", "Ryan McDonald." ],
+      "venue" : "ArXiv:1104.2086.",
+      "citeRegEx" : "Petrov et al\\.,? 2011",
+      "shortCiteRegEx" : "Petrov et al\\.",
+      "year" : 2011
+    }, {
+      "title" : "Minimized models for unsupervised part-of-speech tagging",
+      "author" : [ "Sujith Ravi", "Kevin Knight." ],
+      "venue" : "Proc. of ACL-IJCNLP.",
+      "citeRegEx" : "Ravi and Knight.,? 2009",
+      "shortCiteRegEx" : "Ravi and Knight.",
+      "year" : 2009
+    }, {
+      "title" : "Guided learning for bidirectional sequence classification",
+      "author" : [ "Libin Shen", "Giorgio Satta", "Aravind Joshi." ],
+      "venue" : "Proc. of ACL.",
+      "citeRegEx" : "Shen et al\\.,? 2007",
+      "shortCiteRegEx" : "Shen et al\\.",
+      "year" : 2007
+    }, {
+      "title" : "Unsupervised multilingual grammar induction",
+      "author" : [ "Benjamin Snyder", "Tahira Naseem", "Regina Barzilay." ],
+      "venue" : "Proc. of ACL-IJCNLP.",
+      "citeRegEx" : "Snyder et al\\.,? 2009",
+      "shortCiteRegEx" : "Snyder et al\\.",
+      "year" : 2009
+    }, {
+      "title" : "Efficient graph-based semi-supervised learning of structured tagging models",
+      "author" : [ "Amar Subramanya", "Slav Petrov", "Fernando Pereira." ],
+      "venue" : "Proc. of EMNLP.",
+      "citeRegEx" : "Subramanya et al\\.,? 2010",
+      "shortCiteRegEx" : "Subramanya et al\\.",
+      "year" : 2010
+    }, {
+      "title" : "HMM-based word alignment in statistical translation",
+      "author" : [ "Stephan Vogel", "Hermann Ney", "Christoph Tillmann." ],
+      "venue" : "Proc. of COLING.",
+      "citeRegEx" : "Vogel et al\\.,? 1996",
+      "shortCiteRegEx" : "Vogel et al\\.",
+      "year" : 1996
+    }, {
+      "title" : "A backoff model for bootstrapping resources for non-English languages",
+      "author" : [ "Chenhai Xi", "Rebecca Hwa." ],
+      "venue" : "Proc. of HLT-EMNLP.",
+      "citeRegEx" : "Xi and Hwa.,? 2005",
+      "shortCiteRegEx" : "Xi and Hwa.",
+      "year" : 2005
+    }, {
+      "title" : "Inducing multilingual POS taggers and NP bracketers via robust projection across aligned corpora",
+      "author" : [ "David Yarowsky", "Grace Ngai." ],
+      "venue" : "Proc. of NAACL.",
+      "citeRegEx" : "Yarowsky and Ngai.,? 2001",
+      "shortCiteRegEx" : "Yarowsky and Ngai.",
+      "year" : 2001
+    }, {
+      "title" : "Semi-supervised learning using gaussian fields and harmonic functions",
+      "author" : [ "Xiaojin Zhu", "Zoubin Ghahramani", "John D. Lafferty." ],
+      "venue" : "Proc. of ICML.",
+      "citeRegEx" : "Zhu et al\\.,? 2003",
+      "shortCiteRegEx" : "Zhu et al\\.",
+      "year" : 2003
+    } ],
+    "referenceMentions" : [ {
+      "referenceID" : 7,
+      "context" : "1% accuracy (Christodoulopoulos et al., 2010), making its practical usability questionable at best.",
+      "startOffset" : 12,
+      "endOffset" : 45
+    }, {
+      "referenceID" : 0,
+      "context" : "This scenario is applicable to a large set of languages and has been considered by a number of authors in the past (Alshawi et al., 2000; Xi and Hwa, 2005; Ganchev et al., 2009).",
+      "startOffset" : 115,
+      "endOffset" : 177
+    }, {
+      "referenceID" : 24,
+      "context" : "This scenario is applicable to a large set of languages and has been considered by a number of authors in the past (Alshawi et al., 2000; Xi and Hwa, 2005; Ganchev et al., 2009).",
+      "startOffset" : 115,
+      "endOffset" : 177
+    }, {
+      "referenceID" : 9,
+      "context" : "This scenario is applicable to a large set of languages and has been considered by a number of authors in the past (Alshawi et al., 2000; Xi and Hwa, 2005; Ganchev et al., 2009).",
+      "startOffset" : 115,
+      "endOffset" : 177
+    }, {
+      "referenceID" : 0,
+      "context" : "This scenario is applicable to a large set of languages and has been considered by a number of authors in the past (Alshawi et al., 2000; Xi and Hwa, 2005; Ganchev et al., 2009). Naseem et al. (2009) and Snyder et al.",
+      "startOffset" : 116,
+      "endOffset" : 200
+    }, {
+      "referenceID" : 0,
+      "context" : "This scenario is applicable to a large set of languages and has been considered by a number of authors in the past (Alshawi et al., 2000; Xi and Hwa, 2005; Ganchev et al., 2009). Naseem et al. (2009) and Snyder et al. (2009) study related but different multilingual grammar and tagger induction tasks, where it is assumed that no labeled data at all is available.",
+      "startOffset" : 116,
+      "endOffset" : 225
+    }, {
+      "referenceID" : 25,
+      "context" : "Our work is closest to that of Yarowsky and Ngai (2001), but differs in two important ways.",
+      "startOffset" : 31,
+      "endOffset" : 56
+    }, {
+      "referenceID" : 6,
+      "context" : "Syntactic universals are a well studied concept in linguistics (Carnie, 2002; Newmeyer, 2005), and were recently used in similar form by Naseem et al.",
+      "startOffset" : 63,
+      "endOffset" : 93
+    }, {
+      "referenceID" : 16,
+      "context" : "Syntactic universals are a well studied concept in linguistics (Carnie, 2002; Newmeyer, 2005), and were recently used in similar form by Naseem et al.",
+      "startOffset" : 63,
+      "endOffset" : 93
+    }, {
+      "referenceID" : 14,
+      "context" : "To make the projection practical, we rely on the twelve universal part-of-speech tags of Petrov et al. (2011). Syntactic universals are a well studied concept in linguistics (Carnie, 2002; Newmeyer, 2005), and were recently used in similar form by Naseem et al.",
+      "startOffset" : 89,
+      "endOffset" : 110
+    }, {
+      "referenceID" : 6,
+      "context" : "Syntactic universals are a well studied concept in linguistics (Carnie, 2002; Newmeyer, 2005), and were recently used in similar form by Naseem et al. (2010) for multilingual grammar induction.",
+      "startOffset" : 64,
+      "endOffset" : 158
+    }, {
+      "referenceID" : 7,
+      "context" : "See Christodoulopoulos et al. (2010) for a discussion of metrics for evaluating unsupervised POS induction systems.",
+      "startOffset" : 4,
+      "endOffset" : 37
+    }, {
+      "referenceID" : 26,
+      "context" : "In graph-based learning approaches one constructs a graph whose vertices are labeled and unlabeled examples, and whose weighted edges encode the degree to which the examples they link have the same label (Zhu et al., 2003).",
+      "startOffset" : 204,
+      "endOffset" : 222
+    }, {
+      "referenceID" : 1,
+      "context" : "Altun et al. (2005) proposed a technique that uses graph based similarity between labeled and unlabeled parts of structured data in a discriminative framework for semi-supervised learning.",
+      "startOffset" : 0,
+      "endOffset" : 20
+    }, {
+      "referenceID" : 1,
+      "context" : "Altun et al. (2005) proposed a technique that uses graph based similarity between labeled and unlabeled parts of structured data in a discriminative framework for semi-supervised learning. More recently, Subramanya et al. (2010) defined a graph over the cliques in an underlying structured prediction model.",
+      "startOffset" : 0,
+      "endOffset" : 229
+    }, {
+      "referenceID" : 22,
+      "context" : "We extend Subramanya et al.’s intuitions to our bilingual setup. Because the information flow in our graph is asymmetric (from English to the foreign language), we use different types of vertices for each language. The foreign language vertices (denoted by Vf ) correspond to foreign trigram types, exactly as in Subramanya et al. (2010). On the English side, however, the vertices (denoted by Ve) correspond to word types.",
+      "startOffset" : 10,
+      "endOffset" : 338
+    }, {
+      "referenceID" : 22,
+      "context" : "Our monolingual similarity function (for connecting pairs of foreign trigram types) is the same as the one used by Subramanya et al. (2010). We briefly review it here for completeness.",
+      "startOffset" : 115,
+      "endOffset" : 140
+    }, {
+      "referenceID" : 21,
+      "context" : "Note, however, that it would be possible to use our graph-based framework also for completely unsupervised POS induction in both languages, similar to Snyder et al. (2009). Description Feature Trigram + Context x1 x2 x3 x4 x5 Trigram x2 x3 x4 Left Context x1 x2 Right Context x4 x5 Center Word x3 Trigram − Center Word x2 x4 Left Word + Right Context x2 x4 x5 Left Context + Right Word x1 x2 x4 Suffix HasSuffix(x3)",
+      "startOffset" : 151,
+      "endOffset" : 172
+    }, {
+      "referenceID" : 4,
+      "context" : "We ran six iterations of IBM Model 1 (Brown et al., 1993), followed by six iterations of the HMM model (Vogel et al.",
+      "startOffset" : 37,
+      "endOffset" : 57
+    }, {
+      "referenceID" : 23,
+      "context" : ", 1993), followed by six iterations of the HMM model (Vogel et al., 1996) in both directions.",
+      "startOffset" : 53,
+      "endOffset" : 73
+    }, {
+      "referenceID" : 3,
+      "context" : "(7)We used a tagger based on a trigram Markov model (Brants, 2000) trained on the Wall Street Journal portion of the Penn Treebank (Marcus et al.",
+      "startOffset" : 52,
+      "endOffset" : 66
+    }, {
+      "referenceID" : 13,
+      "context" : "(7)We used a tagger based on a trigram Markov model (Brants, 2000) trained on the Wall Street Journal portion of the Penn Treebank (Marcus et al., 1993), for its fast speed and reasonable accuracy (96.",
+      "startOffset" : 131,
+      "endOffset" : 152
+    }, {
+      "referenceID" : 2,
+      "context" : "We develop our POS induction model based on the feature-based HMM of Berg-Kirkpatrick et al. (2010). For a sentence x and a state sequence z, a first order Markov model defines a distribution:",
+      "startOffset" : 69,
+      "endOffset" : 100
+    }, {
+      "referenceID" : 12,
+      "context" : "To optimize this function, we used L-BFGS, a quasi-Newton method (Liu and Nocedal, 1989).",
+      "startOffset" : 65,
+      "endOffset" : 88
+    }, {
+      "referenceID" : 8,
+      "context" : "(2010) found that this direct gradient method performed better (>7% absolute accuracy) than using a feature-enhanced modification of the Expectation-Maximization (EM) algorithm (Dempster et al., 1977).",
+      "startOffset" : 177,
+      "endOffset" : 200
+    }, {
+      "referenceID" : 11,
+      "context" : "To optimize this function, we used L-BFGS, a quasi-Newton method (Liu and Nocedal, 1989). For English POS tagging, BergKirkpatrick et al. (2010) found that this direct gradient method performed better (>7% absolute accuracy) than using a feature-enhanced modification of the Expectation-Maximization (EM) algorithm (Dempster et al.",
+      "startOffset" : 66,
+      "endOffset" : 145
+    }, {
+      "referenceID" : 2,
+      "context" : "1 of Berg-Kirkpatrick et al. (2010) for more details about their modification of EM, and how gradients are computed for L-BFGS.",
+      "startOffset" : 5,
+      "endOffset" : 36
+    }, {
+      "referenceID" : 2,
+      "context" : "1 of Berg-Kirkpatrick et al. (2010) for more details about their modification of EM, and how gradients are computed for L-BFGS. Ravi and Knight (2009) instead of the feature-HMM for POS induction on the foreign side.",
+      "startOffset" : 5,
+      "endOffset" : 151
+    }, {
+      "referenceID" : 5,
+      "context" : "For monolingual treebank data we relied on the CoNLL-X and CoNLL-2007 shared tasks on dependency parsing (Buchholz and Marsi, 2006; Nivre et al., 2007).",
+      "startOffset" : 105,
+      "endOffset" : 151
+    }, {
+      "referenceID" : 17,
+      "context" : "For monolingual treebank data we relied on the CoNLL-X and CoNLL-2007 shared tasks on dependency parsing (Buchholz and Marsi, 2006; Nivre et al., 2007).",
+      "startOffset" : 105,
+      "endOffset" : 151
+    }, {
+      "referenceID" : 11,
+      "context" : "The parallel data came from the Europarl corpus (Koehn, 2005) and the ODS United Nations dataset (UN, 2006).",
+      "startOffset" : 48,
+      "endOffset" : 61
+    }, {
+      "referenceID" : 18,
+      "context" : "We use the universal POS tagset of Petrov et al. (2011) in our experiments.",
+      "startOffset" : 35,
+      "endOffset" : 56
+    }, {
+      "referenceID" : 18,
+      "context" : "For each language under consideration, Petrov et al. (2011) provide a mapping λ from the fine-grained language specific POS tags in the foreign treebank to the universal POS tags.",
+      "startOffset" : 39,
+      "endOffset" : 60
+    }, {
+      "referenceID" : 10,
+      "context" : "We evaluated POS tagging accuracy using the lenient many-to-1 evaluation approach (Johnson, 2007).",
+      "startOffset" : 82,
+      "endOffset" : 97
+    }, {
+      "referenceID" : 2,
+      "context" : "• Feature-HMM: The vanilla feature-HMM of Berg-Kirkpatrick et al. (2010) (i.",
+      "startOffset" : 42,
+      "endOffset" : 73
+    }, {
+      "referenceID" : 25,
+      "context" : "This can be seen as a rough approximation of Yarowsky and Ngai (2001).",
+      "startOffset" : 45,
+      "endOffset" : 70
+    }, {
+      "referenceID" : 3,
+      "context" : "• Supervised: We trained the supervised model of Brants (2000) on the original treebanks and mapped the language-specific tags to the universal tags for evaluation.",
+      "startOffset" : 49,
+      "endOffset" : 63
+    }, {
+      "referenceID" : 2,
+      "context" : "The feature-HMM model works better for all languages, generalizing the results achieved for English by Berg-Kirkpatrick et al. (2010). Our “Projection” baseline is able to benefit from the bilingual information and greatly improves upon the monolingual baselines, but falls short of the “No LP” model by 2.",
+      "startOffset" : 103,
+      "endOffset" : 134
+    } ],
+    "year" : 2011,
+    "abstractText" : "We describe a novel approach for inducing unsupervised part-of-speech taggers for languages that have no labeled training data, but have translated text in a resource-rich language. Our method does not assume any knowledge about the target language (in particular no tagging dictionary is assumed), making it applicable to a wide array of resource-poor languages. We use graph-based label propagation for cross-lingual knowledge transfer and use the projected labels as features in an unsupervised model (BergKirkpatrick et al., 2010). Across eight European languages, our approach results in an average absolute improvement of 10.4% over a state-of-the-art baseline, and 16.7% over vanilla hidden Markov models induced with the Expectation Maximization algorithm.",
+    "creator" : "LaTeX with hyperref package"
+  }
+}
